@@ -130,7 +130,20 @@ switch($ploopi_op)
         }
         else $return = _WEBEDIT_SUBSCRIPTION_ERROR_PARAM;
 
-        ploopi\output::redirect("index.php?".(empty($_GET['webedit_mode']) ? '' : "webedit_mode={$_GET['webedit_mode']}&")."headingid={$_GET['headingid']}".(empty($_GET['articleid']) ? '' : "&articleid={$_GET['articleid']}")."&subscription_return={$return}");
+        /**
+         * Les paramètres repris dans la redirection viennent de l'URL : on ne garde que
+         * des valeurs simples (webedit_mode : chaîne sans caractère dangereux, headingid et
+         * articleid : entiers).
+         */
+        $strMode = empty($_GET['webedit_mode']) ? '' : (preg_match('/^[A-Za-z0-9_-]+$/', $_GET['webedit_mode']) ? $_GET['webedit_mode'] : '');
+        $intHeading = empty($_GET['headingid']) ? '' : (is_numeric($_GET['headingid']) ? (int)$_GET['headingid'] : '');
+        $intArticle = empty($_GET['articleid']) ? '' : (is_numeric($_GET['articleid']) ? (int)$_GET['articleid'] : '');
+        $strQuery = '';
+        if ($strMode !== '') $strQuery .= "webedit_mode={$strMode}&";
+        $strQuery .= "headingid={$intHeading}";
+        if ($intArticle !== '') $strQuery .= "&articleid={$intArticle}";
+        $strQuery .= "&subscription_return={$return}";
+        ploopi\output::redirect("index.php?".$strQuery);
     break;
 
     case 'webedit_sitemap':

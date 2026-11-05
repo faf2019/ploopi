@@ -172,7 +172,7 @@ function foforms_formulaire($strLabel, $strType, $intModule)
                     `user_firstname` VARCHAR(255) DEFAULT '', `user_lastname` VARCHAR(255) DEFAULT '',
                     `workspace_id` INT(10) UNSIGNED DEFAULT 0, `workspace_label` VARCHAR(255) DEFAULT '',
                     `workspace_code` VARCHAR(255) DEFAULT '', `champ_1` VARCHAR(255) DEFAULT NULL
-                 ) ENGINE=MyISAM");
+                 ) ENGINE=InnoDB");
 
     return array($intForm, $intField);
 }

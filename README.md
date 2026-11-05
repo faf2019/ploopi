@@ -32,6 +32,8 @@ Guide pas à pas : [`docker/LISEZMOI.md`](docker/LISEZMOI.md).
 |---|---|
 | [Déploiement](doc/deploiement.md) | installation manuelle (Apache + PHP 8.1–8.5 + MariaDB), configuration, mises à jour, sauvegardes |
 | [Développement](doc/developpement.md) | environnement DDEV, modules, tests, scripts de `tools/`, conventions |
+| [Événements RabbitMQ](doc/events.md) | outbox transactionnelle, workers, suivi système et extension aux modules métiers |
+| [API REST](doc/api.md) | clés d’accès, ressources en lecture, tableau de bord système, OpenAPI et extension par module |
 | [Licence](doc/licence.md) | GPL-2.0-or-later, composants tiers, contributions |
 | [Référence technique](doc/reference.md) | architecture et API du socle et des modules |
 

@@ -62,14 +62,19 @@ if ($op == 'system_update_execute')
     {
         if (is_readable("{$strInstallPath}{$strFile}"))
         {
-            foreach(ploopi\db::split_sql(file_get_contents("{$strInstallPath}{$strFile}")) as $strQuery)
+            try { ploopi\schema::upgrade("{$strInstallPath}{$strFile}", $strVersion); }
+            catch (\Throwable $objError)
             {
-                $strQuery = trim($strQuery);
-                if ($strQuery != '') ploopi\db::get()->query($strQuery);
+                echo ui::callout('danger', ui::e($objError->getMessage()));
+                return;
             }
             $arrReport[] = array('operation' => $strFile, 'detail' => str_replace('<VERSION>', $strVersion, _SYSTEM_SYSUPD_APPLIED), 'res' => true);
         }
-        else $arrReport[] = array('operation' => $strFile, 'detail' => _SYSTEM_SYSUPD_UNREADABLE, 'res' => false);
+        else
+        {
+            echo ui::callout('danger', ui::e(_SYSTEM_SYSUPD_UNREADABLE.' : '.$strFile));
+            return;
+        }
     }
 
     ploopi\user_action_log::record(_SYSTEM_ACTION_UPDATEMODULE, "system {$strFrom} => "._PLOOPI_VERSION);

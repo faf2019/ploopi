@@ -108,13 +108,13 @@ switch($op)
                 // Vérification de l'ancien mot de passe
                 // bcrypt tire un sel à chaque empreinte : comparer deux empreintes ne
                 // réussissait jamais, il faut vérifier le mot de passe contre l'empreinte
-                if (user::password_verify($_POST['useroldpass'], $user->fields['login'], $user->fields['password']))
+                if (ploopi\user::password_verify($_POST['useroldpass'], $user->fields['login'], $user->fields['password']))
                 {
                     // Mots de passes équivalents
                     if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                     {
                         // Complexité ok
-                        if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
+                        if (ploopi\security::passwordallowed($_POST['usernewpass']))
                         {
                             // Affectation du mot de passe
                             $user->setpassword($_POST['usernewpass']);

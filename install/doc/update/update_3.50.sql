@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `dims_mod_doc_keyword` (
   PRIMARY KEY  (`id`),
   KEY `twoletter` (`twoletters`),
   KEY `keyword` (`keyword`)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `dims_mod_doc_keyword_file` (
   KEY `id_file` (`id_file`),
   KEY `id_keyword` (`id_keyword`),
   KEY `weight` (`weight`)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `dims_mod_doc_meta` (
   KEY `value` (`value`),
   KEY `meta` (`meta`),
   KEY `id_file` (`id_file`)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `dims_mod_doc_parser` (
   `path` varchar(255) NOT NULL default '',
   `extension` varchar(10) NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 
 
 INSERT INTO `dims_mod_doc_parser` (`id`, `label`, `path`, `extension`) VALUES

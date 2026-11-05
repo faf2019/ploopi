@@ -34,6 +34,9 @@ use ploopi;
  */
 
 class news2 extends ploopi\data_object {
+    protected $strEventPrefix = 'news.article';
+    protected $arrEventFields = array('title', 'resume', 'content', 'published', 'date_publish', 'id_cat');
+
 
     /**
      * Constructeur de la classe

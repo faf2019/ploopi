@@ -14,6 +14,18 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <name>ploopi_api_key</name>
+        <label>ploopi_api_key</label>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <name>ploopi_api_request</name>
+        <label>ploopi_api_request</label>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <name>ploopi_captcha</name>
         <label>ploopi_captcha</label>
         <visible>0</visible>
@@ -22,7 +34,7 @@
     <row>
         <name>ploopi_confirmation_code</name>
         <label>ploopi_confirmation_code</label>
-        <visible>1</visible>
+        <visible>0</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -50,6 +62,18 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <name>ploopi_event_inbox</name>
+        <label>ploopi_event_inbox</label>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <name>ploopi_event_outbox</name>
+        <label>ploopi_event_outbox</label>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <name>ploopi_group</name>
         <label>ploopi_group</label>
         <visible>1</visible>
@@ -68,20 +92,14 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <name>ploopi_index_keyword</name>
-        <label>ploopi_index_keyword</label>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
         <name>ploopi_index_keyword_element</name>
         <label>ploopi_index_keyword_element</label>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <name>ploopi_index_stem</name>
-        <label>ploopi_index_stem</label>
+        <name>ploopi_index_phonetic_element</name>
+        <label>ploopi_index_phonetic_element</label>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -208,13 +226,13 @@
     <row>
         <name>ploopi_serializedvar</name>
         <label>ploopi_serializedvar</label>
-        <visible>1</visible>
+        <visible>0</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
         <name>ploopi_session</name>
         <label>ploopi_session</label>
-        <visible>1</visible>
+        <visible>0</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -444,6 +462,166 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>id</name>
+        <label>id</label>
+        <type>int(10) unsigned</type>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>label</name>
+        <label>label</label>
+        <type>varchar(100)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>id_user</name>
+        <label>id_user</label>
+        <type>int(10) unsigned</type>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>id_workspace</name>
+        <label>id_workspace</label>
+        <type>int(10) unsigned</type>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>prefix</name>
+        <label>prefix</label>
+        <type>varchar(16)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>scopes</name>
+        <label>scopes</label>
+        <type>text</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>created_at</name>
+        <label>created_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>expires_at</name>
+        <label>expires_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>revoked_at</name>
+        <label>revoked_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>last_used_at</name>
+        <label>last_used_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>request_count</name>
+        <label>request_count</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>failure_count</name>
+        <label>failure_count</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>window_start</name>
+        <label>window_start</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_key</tablename>
+        <name>window_count</name>
+        <label>window_count</label>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_request</tablename>
+        <name>id</name>
+        <label>id</label>
+        <type>bigint(20) unsigned</type>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_request</tablename>
+        <name>id_key</name>
+        <label>id_key</label>
+        <type>int(10) unsigned</type>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_request</tablename>
+        <name>route</name>
+        <label>route</label>
+        <type>varchar(255)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_request</tablename>
+        <name>status</name>
+        <label>status</label>
+        <type>smallint(5) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_request</tablename>
+        <name>duration_ms</name>
+        <label>duration_ms</label>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_api_request</tablename>
+        <name>created_at</name>
+        <label>created_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablename>ploopi_captcha</tablename>
         <name>id</name>
         <label>id</label>
@@ -455,23 +633,7 @@
         <tablename>ploopi_captcha</tablename>
         <name>cptuse</name>
         <label>cptuse</label>
-        <type>int(10)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_captcha</tablename>
-        <name>codesound</name>
-        <label>codesound</label>
-        <type>varchar(20)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_captcha</tablename>
-        <name>code</name>
-        <label>code</label>
-        <type>varchar(20)</type>
+        <type>int(10) unsigned</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -479,7 +641,7 @@
         <tablename>ploopi_captcha</tablename>
         <name>time</name>
         <label>time</label>
-        <type>int(20)</type>
+        <type>int(20) unsigned</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -500,26 +662,10 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablename>ploopi_confirmation_code</tablename>
-        <name>code</name>
-        <label>code</label>
-        <type>varchar(32)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_connecteduser</tablename>
-        <name>sid</name>
-        <label>sid</label>
-        <type>char(32)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
         <tablename>ploopi_connecteduser</tablename>
         <name>ip</name>
         <label>ip</label>
-        <type>char(15)</type>
+        <type>varchar(45)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -585,6 +731,14 @@
         <label>id</label>
         <type>int(10) unsigned</type>
         <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_documents_file</tablename>
+        <name>md5id</name>
+        <label>md5id</label>
+        <type>varchar(32)</type>
+        <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -740,11 +894,27 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablename>ploopi_documents_file</tablename>
+        <name>s3_bucket</name>
+        <label>s3_bucket</label>
+        <type>text</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablename>ploopi_documents_folder</tablename>
         <name>id</name>
         <label>id</label>
         <type>int(10) unsigned</type>
         <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_documents_folder</tablename>
+        <name>md5id</name>
+        <label>md5id</label>
+        <type>varchar(32)</type>
+        <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -860,6 +1030,134 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablename>ploopi_event_inbox</tablename>
+        <name>consumer</name>
+        <label>consumer</label>
+        <type>varchar(120)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_inbox</tablename>
+        <name>event_id</name>
+        <label>event_id</label>
+        <type>varchar(128)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_inbox</tablename>
+        <name>source_hash</name>
+        <label>source_hash</label>
+        <type>char(64)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_inbox</tablename>
+        <name>type</name>
+        <label>type</label>
+        <type>varchar(190)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_inbox</tablename>
+        <name>processed_at</name>
+        <label>processed_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>id</name>
+        <label>id</label>
+        <type>char(32)</type>
+        <visible>0</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>type</name>
+        <label>type</label>
+        <type>varchar(190)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>payload</name>
+        <label>payload</label>
+        <type>mediumtext</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>status</name>
+        <label>status</label>
+        <type>varchar(16)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>attempts</name>
+        <label>attempts</label>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>created_at</name>
+        <label>created_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>next_attempt_at</name>
+        <label>next_attempt_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>locked_by</name>
+        <label>locked_by</label>
+        <type>char(32)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>locked_until</name>
+        <label>locked_until</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>published_at</name>
+        <label>published_at</label>
+        <type>bigint(20) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_event_outbox</tablename>
+        <name>last_error</name>
+        <label>last_error</label>
+        <type>varchar(255)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablename>ploopi_group</tablename>
         <name>id</name>
         <label>id</label>
@@ -951,7 +1249,7 @@
         <tablename>ploopi_index_element</tablename>
         <name>id</name>
         <label>id</label>
-        <type>char(32)</type>
+        <type>int(10) unsigned</type>
         <visible>0</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -1028,58 +1326,18 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablename>ploopi_index_keyword</tablename>
-        <name>id</name>
-        <label>id</label>
-        <type>char(32)</type>
-        <visible>0</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_index_keyword</tablename>
-        <name>keyword</name>
-        <label>keyword</label>
-        <type>char(20)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_index_keyword</tablename>
-        <name>twoletters</name>
-        <label>twoletters</label>
-        <type>char(2)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_index_keyword</tablename>
-        <name>length</name>
-        <label>length</label>
-        <type>tinyint(2) unsigned</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_index_keyword</tablename>
-        <name>id_stem</name>
-        <label>id_stem</label>
-        <type>char(32)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_index_keyword_element</tablename>
-        <name>id_keyword</name>
-        <label>id_keyword</label>
-        <type>char(32)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
         <tablename>ploopi_index_keyword_element</tablename>
         <name>id_element</name>
         <label>id_element</label>
-        <type>char(32)</type>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_index_keyword_element</tablename>
+        <name>keyword</name>
+        <label>keyword</label>
+        <type>char(20)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -1108,26 +1366,42 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablename>ploopi_index_stem</tablename>
-        <name>id</name>
-        <label>id</label>
-        <type>char(32)</type>
+        <tablename>ploopi_index_phonetic_element</tablename>
+        <name>id_element</name>
+        <label>id_element</label>
+        <type>int(10) unsigned</type>
         <visible>0</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablename>ploopi_index_stem</tablename>
-        <name>stem</name>
-        <label>stem</label>
+        <tablename>ploopi_index_phonetic_element</tablename>
+        <name>phonetic</name>
+        <label>phonetic</label>
         <type>char(20)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablename>ploopi_index_stem_element</tablename>
-        <name>id_stem</name>
-        <label>id_stem</label>
-        <type>char(32)</type>
+        <tablename>ploopi_index_phonetic_element</tablename>
+        <name>weight</name>
+        <label>weight</label>
+        <type>mediumint(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_index_phonetic_element</tablename>
+        <name>ratio</name>
+        <label>ratio</label>
+        <type>float unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_index_phonetic_element</tablename>
+        <name>relevance</name>
+        <label>relevance</label>
+        <type>tinyint(3) unsigned</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -1135,7 +1409,15 @@
         <tablename>ploopi_index_stem_element</tablename>
         <name>id_element</name>
         <label>id_element</label>
-        <type>char(32)</type>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_index_stem_element</tablename>
+        <name>stem</name>
+        <label>stem</label>
+        <type>char(20)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2132,42 +2414,10 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablename>ploopi_serializedvar</tablename>
-        <name>id_session</name>
-        <label>id_session</label>
-        <type>char(32)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_serializedvar</tablename>
-        <name>data</name>
-        <label>data</label>
-        <type>longtext</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_session</tablename>
-        <name>id</name>
-        <label>id</label>
-        <type>char(32)</type>
-        <visible>0</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
         <tablename>ploopi_session</tablename>
         <name>access</name>
         <label>access</label>
         <type>int(10) unsigned</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_session</tablename>
-        <name>data</name>
-        <label>data</label>
-        <type>longtext</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2605,14 +2855,6 @@
     </row>
     <row>
         <tablename>ploopi_user</tablename>
-        <name>password</name>
-        <label>password</label>
-        <type>varchar(32)</type>
-        <visible>1</visible>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablename>ploopi_user</tablename>
         <name>date_creation</name>
         <label>date_creation</label>
         <type>bigint(14)</type>
@@ -2677,9 +2919,25 @@
     </row>
     <row>
         <tablename>ploopi_user</tablename>
+        <name>entity</name>
+        <label>entity</label>
+        <type>varchar(255)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
         <name>service</name>
         <label>service</label>
-        <type>varchar(64)</type>
+        <type>varchar(255)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>service2</name>
+        <label>service2</label>
+        <type>varchar(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2687,7 +2945,7 @@
         <tablename>ploopi_user</tablename>
         <name>function</name>
         <label>function</label>
-        <type>varchar(64)</type>
+        <type>varchar(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2711,7 +2969,7 @@
         <tablename>ploopi_user</tablename>
         <name>city</name>
         <label>city</label>
-        <type>varchar(64)</type>
+        <type>varchar(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2719,7 +2977,7 @@
         <tablename>ploopi_user</tablename>
         <name>country</name>
         <label>country</label>
-        <type>varchar(64)</type>
+        <type>varchar(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2767,7 +3025,7 @@
         <tablename>ploopi_user</tablename>
         <name>floor</name>
         <label>floor</label>
-        <type>varchar(32)</type>
+        <type>varchar(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2775,7 +3033,7 @@
         <tablename>ploopi_user</tablename>
         <name>office</name>
         <label>office</label>
-        <type>varchar(64)</type>
+        <type>varchar(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2791,7 +3049,63 @@
         <tablename>ploopi_user</tablename>
         <name>rank</name>
         <label>rank</label>
-        <type>varchar(32)</type>
+        <type>varchar(255)</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>password_force_update</name>
+        <label>password_force_update</label>
+        <type>tinyint(1) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>password_validity</name>
+        <label>password_validity</label>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>password_last_update</name>
+        <label>password_last_update</label>
+        <type>bigint(14) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>disabled</name>
+        <label>disabled</label>
+        <type>tinyint(1) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>failed_attemps</name>
+        <label>failed_attemps</label>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>jailed_since</name>
+        <label>jailed_since</label>
+        <type>bigint(14) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_user</tablename>
+        <name>last_connection</name>
+        <label>last_connection</label>
+        <type>bigint(14) unsigned</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2839,7 +3153,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>id_record</name>
         <label>id_record</label>
-        <type>varchar(255)</type>
+        <type>char(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2847,7 +3161,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>ip</name>
         <label>ip</label>
-        <type>varchar(64)</type>
+        <type>varchar(45)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2855,7 +3169,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>timestp</name>
         <label>timestp</label>
-        <type>varchar(14)</type>
+        <type>bigint(14)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2863,7 +3177,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>user</name>
         <label>user</label>
-        <type>varchar(100)</type>
+        <type>char(100)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2871,7 +3185,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>workspace</name>
         <label>workspace</label>
-        <type>varchar(100)</type>
+        <type>char(100)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2879,7 +3193,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>action</name>
         <label>action</label>
-        <type>varchar(100)</type>
+        <type>char(100)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2887,7 +3201,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>module_type</name>
         <label>module_type</label>
-        <type>varchar(100)</type>
+        <type>char(100)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2895,7 +3209,7 @@
         <tablename>ploopi_user_action_log</tablename>
         <name>module</name>
         <label>module</label>
-        <type>varchar(100)</type>
+        <type>char(100)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -2983,7 +3297,7 @@
         <tablename>ploopi_workspace</tablename>
         <name>code</name>
         <label>code</label>
-        <type>text</type>
+        <type>varchar(255)</type>
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
@@ -3132,6 +3446,22 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablename>ploopi_workspace</tablename>
+        <name>priority</name>
+        <label>priority</label>
+        <type>int(10) unsigned</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablename>ploopi_workspace</tablename>
+        <name>mail_model</name>
+        <label>mail_model</label>
+        <type>text</type>
+        <visible>1</visible>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablename>ploopi_workspace_group</tablename>
         <name>id_group</name>
         <label>id_group</label>
@@ -3235,26 +3565,26 @@
         <visible>1</visible>
         <id_module_type>1</id_module_type>
     </row>
-  </ploopi_mb_field>  
+  </ploopi_mb_field>
   <ploopi_mb_schema>
     <row>
         <tablesrc>ploopi_annotation</tablesrc>
-        <tabledest>module_type</tabledest>
+        <tabledest>ploopi_module</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_param_user</tablesrc>
-        <tabledest>module_type</tabledest>
+        <tablesrc>ploopi_annotation</tablesrc>
+        <tabledest>ploopi_module_type</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_ticket</tablesrc>
-        <tabledest>module_type</tabledest>
+        <tablesrc>ploopi_annotation</tablesrc>
+        <tabledest>ploopi_user</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_user_action_log</tablesrc>
-        <tabledest>module_type</tabledest>
+        <tablesrc>ploopi_annotation</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3263,63 +3593,23 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_documents_file</tablesrc>
-        <tabledest>ploopi_documents_folder</tabledest>
+        <tablesrc>ploopi_annotation_tag</tablesrc>
+        <tabledest>ploopi_tag</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_documents_folder</tablesrc>
-        <tabledest>ploopi_documents_folder</tabledest>
+        <tablesrc>ploopi_api_key</tablesrc>
+        <tabledest>ploopi_user</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_group</tablesrc>
-        <tabledest>ploopi_group</tabledest>
+        <tablesrc>ploopi_api_key</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_group_user</tablesrc>
-        <tabledest>ploopi_group</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_workspace_group</tablesrc>
-        <tabledest>ploopi_group</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_workspace_group_role</tablesrc>
-        <tabledest>ploopi_group</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_keyword_element</tablesrc>
-        <tabledest>ploopi_index_element</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_stem_element</tablesrc>
-        <tabledest>ploopi_index_element</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_keyword_element</tablesrc>
-        <tabledest>ploopi_index_keyword</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_keyword</tablesrc>
-        <tabledest>ploopi_index_stem</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_stem_element</tablesrc>
-        <tabledest>ploopi_index_stem</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_annotation</tablesrc>
-        <tabledest>ploopi_module</tabledest>
+        <tablesrc>ploopi_api_request</tablesrc>
+        <tabledest>ploopi_api_key</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3328,8 +3618,38 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablesrc>ploopi_connecteduser</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_connecteduser</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_documents_file</tablesrc>
+        <tabledest>ploopi_documents_folder</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablesrc>ploopi_documents_file</tablesrc>
         <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_documents_file</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_documents_file</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_documents_folder</tablesrc>
+        <tabledest>ploopi_documents_folder</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3338,63 +3658,68 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablesrc>ploopi_documents_folder</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_documents_folder</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_group</tablesrc>
+        <tabledest>ploopi_group</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_group</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_group_user</tablesrc>
+        <tabledest>ploopi_group</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_group_user</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablesrc>ploopi_index_element</tablesrc>
         <tabledest>ploopi_module</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_module_workspace</tablesrc>
-        <tabledest>ploopi_module</tabledest>
+        <tablesrc>ploopi_index_element</tablesrc>
+        <tabledest>ploopi_user</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_param_default</tablesrc>
-        <tabledest>ploopi_module</tabledest>
+        <tablesrc>ploopi_index_element</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_param_user</tablesrc>
-        <tabledest>ploopi_module</tabledest>
+        <tablesrc>ploopi_index_keyword_element</tablesrc>
+        <tabledest>ploopi_index_element</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_param_workspace</tablesrc>
-        <tabledest>ploopi_module</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_role</tablesrc>
-        <tabledest>ploopi_module</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_share</tablesrc>
-        <tabledest>ploopi_module</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_subscription</tablesrc>
-        <tabledest>ploopi_module</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket</tablesrc>
-        <tabledest>ploopi_module</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_user_action_log</tablesrc>
-        <tabledest>ploopi_module</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_validation</tablesrc>
-        <tabledest>ploopi_module</tabledest>
+        <tablesrc>ploopi_index_stem_element</tablesrc>
+        <tabledest>ploopi_index_element</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
         <tablesrc>ploopi_mb_action</tablesrc>
         <tabledest>ploopi_module_type</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_mb_action</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3433,8 +3758,28 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablesrc>ploopi_module</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_module_workspace</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_module_workspace</tablesrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablesrc>ploopi_param_choice</tablesrc>
         <tabledest>ploopi_module_type</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_param_default</tablesrc>
+        <tabledest>ploopi_module</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3448,103 +3793,13 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_param_workspace</tablesrc>
+        <tablesrc>ploopi_param_user</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_param_user</tablesrc>
         <tabledest>ploopi_module_type</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_role_action</tablesrc>
-        <tabledest>ploopi_module_type</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_share</tablesrc>
-        <tabledest>ploopi_module_type</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_validation</tablesrc>
-        <tabledest>ploopi_module_type</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_role_action</tablesrc>
-        <tabledest>ploopi_role</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_workspace_group_role</tablesrc>
-        <tabledest>ploopi_role</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_workspace_user_role</tablesrc>
-        <tabledest>ploopi_role</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_serializedvar</tablesrc>
-        <tabledest>ploopi_session</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_subscription_action</tablesrc>
-        <tabledest>ploopi_subscription</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_annotation_tag</tablesrc>
-        <tabledest>ploopi_tag</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket</tablesrc>
-        <tabledest>ploopi_ticket</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_dest</tablesrc>
-        <tabledest>ploopi_ticket</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_status</tablesrc>
-        <tabledest>ploopi_ticket</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_watch</tablesrc>
-        <tabledest>ploopi_ticket</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_annotation</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_connecteduser</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_documents_file</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_documents_folder</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_group_user</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_element</tablesrc>
-        <tabledest>ploopi_user</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3553,93 +3808,13 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_subscription</tablesrc>
-        <tabledest>ploopi_user</tabledest>
+        <tablesrc>ploopi_param_workspace</tablesrc>
+        <tabledest>ploopi_module</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_tag</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_dest</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_status</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_watch</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_user_action_log</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_workspace_user</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_workspace_user_role</tablesrc>
-        <tabledest>ploopi_user</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_annotation</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_connecteduser</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_documents_file</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_documents_folder</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_group</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_element</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_mb_action</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_module</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_module_workspace</tablesrc>
-        <tabledest>ploopi_workspace</tabledest>
+        <tablesrc>ploopi_param_workspace</tablesrc>
+        <tabledest>ploopi_module_type</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3649,7 +3824,67 @@
     </row>
     <row>
         <tablesrc>ploopi_role</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_role</tablesrc>
         <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_role_action</tablesrc>
+        <tabledest>ploopi_module_type</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_role_action</tablesrc>
+        <tabledest>ploopi_role</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_share</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_share</tablesrc>
+        <tabledest>ploopi_module_type</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_subscription</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_subscription</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_subscription_action</tablesrc>
+        <tabledest>ploopi_subscription</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_tag</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket</tablesrc>
+        <tabledest>ploopi_module_type</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket</tablesrc>
+        <tabledest>ploopi_user</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3658,8 +3893,68 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablesrc>ploopi_ticket</tablesrc>
+        <tabledest>ploopi_ticket</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_dest</tablesrc>
+        <tabledest>ploopi_ticket</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_dest</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_status</tablesrc>
+        <tabledest>ploopi_ticket</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_status</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_watch</tablesrc>
+        <tabledest>ploopi_ticket</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_watch</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_user_action_log</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_user_action_log</tablesrc>
+        <tabledest>ploopi_module_type</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_user_action_log</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablesrc>ploopi_user_action_log</tablesrc>
         <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_validation</tablesrc>
+        <tabledest>ploopi_module</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_validation</tablesrc>
+        <tabledest>ploopi_module_type</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3669,7 +3964,22 @@
     </row>
     <row>
         <tablesrc>ploopi_workspace_group</tablesrc>
+        <tabledest>ploopi_group</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_workspace_group</tablesrc>
         <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_workspace_group_role</tablesrc>
+        <tabledest>ploopi_group</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_workspace_group_role</tablesrc>
+        <tabledest>ploopi_role</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3679,7 +3989,22 @@
     </row>
     <row>
         <tablesrc>ploopi_workspace_user</tablesrc>
+        <tabledest>ploopi_user</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_workspace_user</tablesrc>
         <tabledest>ploopi_workspace</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_workspace_user_role</tablesrc>
+        <tabledest>ploopi_role</tabledest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_workspace_user_role</tablesrc>
+        <tabledest>ploopi_user</tabledest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
@@ -3691,6 +4016,20 @@
   <ploopi_mb_relation>
     <row>
         <tablesrc>ploopi_annotation</tablesrc>
+        <fieldsrc>id_module</fieldsrc>
+        <tabledest>ploopi_module</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_annotation</tablesrc>
+        <fieldsrc>id_module_type</fieldsrc>
+        <tabledest>ploopi_module_type</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_annotation</tablesrc>
         <fieldsrc>id_user</fieldsrc>
         <tabledest>ploopi_user</tabledest>
         <fielddest>id</fielddest>
@@ -3700,20 +4039,6 @@
         <tablesrc>ploopi_annotation</tablesrc>
         <fieldsrc>id_workspace</fieldsrc>
         <tabledest>ploopi_workspace</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_annotation</tablesrc>
-        <fieldsrc>id_module</fieldsrc>
-        <tabledest>ploopi_module</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_annotation</tablesrc>
-        <fieldsrc>id_module_type</fieldsrc>
-        <tabledest>module_type</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -3732,6 +4057,34 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablesrc>ploopi_api_key</tablesrc>
+        <fieldsrc>id_user</fieldsrc>
+        <tabledest>ploopi_user</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_api_key</tablesrc>
+        <fieldsrc>id_workspace</fieldsrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_api_request</tablesrc>
+        <fieldsrc>id_key</fieldsrc>
+        <tabledest>ploopi_api_key</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_connecteduser</tablesrc>
+        <fieldsrc>module_id</fieldsrc>
+        <tabledest>ploopi_module</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablesrc>ploopi_connecteduser</tablesrc>
         <fieldsrc>user_id</fieldsrc>
         <tabledest>ploopi_user</tabledest>
@@ -3746,16 +4099,16 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_connecteduser</tablesrc>
-        <fieldsrc>module_id</fieldsrc>
-        <tabledest>ploopi_module</tabledest>
+        <tablesrc>ploopi_documents_file</tablesrc>
+        <fieldsrc>id_folder</fieldsrc>
+        <tabledest>ploopi_documents_folder</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
         <tablesrc>ploopi_documents_file</tablesrc>
-        <fieldsrc>id_folder</fieldsrc>
-        <tabledest>ploopi_documents_folder</tabledest>
+        <fieldsrc>id_module</fieldsrc>
+        <tabledest>ploopi_module</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -3774,16 +4127,16 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_documents_file</tablesrc>
-        <fieldsrc>id_module</fieldsrc>
-        <tabledest>ploopi_module</tabledest>
+        <tablesrc>ploopi_documents_folder</tablesrc>
+        <fieldsrc>id_folder</fieldsrc>
+        <tabledest>ploopi_documents_folder</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
         <tablesrc>ploopi_documents_folder</tablesrc>
-        <fieldsrc>id_folder</fieldsrc>
-        <tabledest>ploopi_documents_folder</tabledest>
+        <fieldsrc>id_module</fieldsrc>
+        <tabledest>ploopi_module</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -3798,13 +4151,6 @@
         <tablesrc>ploopi_documents_folder</tablesrc>
         <fieldsrc>id_workspace</fieldsrc>
         <tabledest>ploopi_workspace</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_documents_folder</tablesrc>
-        <fieldsrc>id_module</fieldsrc>
-        <tabledest>ploopi_module</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -3824,15 +4170,22 @@
     </row>
     <row>
         <tablesrc>ploopi_group_user</tablesrc>
+        <fieldsrc>id_group</fieldsrc>
+        <tabledest>ploopi_group</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_group_user</tablesrc>
         <fieldsrc>id_user</fieldsrc>
         <tabledest>ploopi_user</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_group_user</tablesrc>
-        <fieldsrc>id_group</fieldsrc>
-        <tabledest>ploopi_group</tabledest>
+        <tablesrc>ploopi_index_element</tablesrc>
+        <fieldsrc>id_module</fieldsrc>
+        <tabledest>ploopi_module</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -3847,27 +4200,6 @@
         <tablesrc>ploopi_index_element</tablesrc>
         <fieldsrc>id_workspace</fieldsrc>
         <tabledest>ploopi_workspace</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_element</tablesrc>
-        <fieldsrc>id_module</fieldsrc>
-        <tabledest>ploopi_module</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_keyword</tablesrc>
-        <fieldsrc>id_stem</fieldsrc>
-        <tabledest>ploopi_index_stem</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_keyword_element</tablesrc>
-        <fieldsrc>id_keyword</fieldsrc>
-        <tabledest>ploopi_index_keyword</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -3875,13 +4207,6 @@
         <tablesrc>ploopi_index_keyword_element</tablesrc>
         <fieldsrc>id_element</fieldsrc>
         <tabledest>ploopi_index_element</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_index_stem_element</tablesrc>
-        <fieldsrc>id_stem</fieldsrc>
-        <tabledest>ploopi_index_stem</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4013,15 +4338,15 @@
     </row>
     <row>
         <tablesrc>ploopi_param_user</tablesrc>
-        <fieldsrc>id_user</fieldsrc>
-        <tabledest>ploopi_user</tabledest>
+        <fieldsrc>id_module_type</fieldsrc>
+        <tabledest>ploopi_module_type</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
         <tablesrc>ploopi_param_user</tablesrc>
-        <fieldsrc>id_module_type</fieldsrc>
-        <tabledest>module_type</tabledest>
+        <fieldsrc>id_user</fieldsrc>
+        <tabledest>ploopi_user</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4029,13 +4354,6 @@
         <tablesrc>ploopi_param_workspace</tablesrc>
         <fieldsrc>id_module</fieldsrc>
         <tabledest>ploopi_module</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_param_workspace</tablesrc>
-        <fieldsrc>id_workspace</fieldsrc>
-        <tabledest>ploopi_workspace</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4047,6 +4365,13 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
+        <tablesrc>ploopi_param_workspace</tablesrc>
+        <fieldsrc>id_workspace</fieldsrc>
+        <tabledest>ploopi_workspace</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
         <tablesrc>ploopi_role</tablesrc>
         <fieldsrc>id_module</fieldsrc>
         <tabledest>ploopi_module</tabledest>
@@ -4057,6 +4382,13 @@
         <tablesrc>ploopi_role</tablesrc>
         <fieldsrc>id_workspace</fieldsrc>
         <tabledest>ploopi_workspace</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_role_action</tablesrc>
+        <fieldsrc>id_module_type</fieldsrc>
+        <tabledest>ploopi_module_type</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4064,20 +4396,6 @@
         <tablesrc>ploopi_role_action</tablesrc>
         <fieldsrc>id_role</fieldsrc>
         <tabledest>ploopi_role</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_role_action</tablesrc>
-        <fieldsrc>id_module_type</fieldsrc>
-        <tabledest>ploopi_module_type</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_serializedvar</tablesrc>
-        <fieldsrc>id_session</fieldsrc>
-        <tabledest>ploopi_session</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4132,6 +4450,13 @@
     </row>
     <row>
         <tablesrc>ploopi_ticket</tablesrc>
+        <fieldsrc>id_module_type</fieldsrc>
+        <tabledest>ploopi_module_type</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket</tablesrc>
         <fieldsrc>id_user</fieldsrc>
         <tabledest>ploopi_user</tabledest>
         <fielddest>id</fielddest>
@@ -4159,51 +4484,58 @@
         <id_module_type>1</id_module_type>
     </row>
     <row>
-        <tablesrc>ploopi_ticket</tablesrc>
+        <tablesrc>ploopi_ticket_dest</tablesrc>
+        <fieldsrc>id_ticket</fieldsrc>
+        <tabledest>ploopi_ticket</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_dest</tablesrc>
+        <fieldsrc>id_user</fieldsrc>
+        <tabledest>ploopi_user</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_status</tablesrc>
+        <fieldsrc>id_ticket</fieldsrc>
+        <tabledest>ploopi_ticket</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_status</tablesrc>
+        <fieldsrc>id_user</fieldsrc>
+        <tabledest>ploopi_user</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_watch</tablesrc>
+        <fieldsrc>id_ticket</fieldsrc>
+        <tabledest>ploopi_ticket</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_ticket_watch</tablesrc>
+        <fieldsrc>id_user</fieldsrc>
+        <tabledest>ploopi_user</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_user_action_log</tablesrc>
+        <fieldsrc>id_module</fieldsrc>
+        <tabledest>ploopi_module</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_user_action_log</tablesrc>
         <fieldsrc>id_module_type</fieldsrc>
-        <tabledest>module_type</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_dest</tablesrc>
-        <fieldsrc>id_user</fieldsrc>
-        <tabledest>ploopi_user</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_dest</tablesrc>
-        <fieldsrc>id_ticket</fieldsrc>
-        <tabledest>ploopi_ticket</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_status</tablesrc>
-        <fieldsrc>id_ticket</fieldsrc>
-        <tabledest>ploopi_ticket</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_status</tablesrc>
-        <fieldsrc>id_user</fieldsrc>
-        <tabledest>ploopi_user</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_watch</tablesrc>
-        <fieldsrc>id_ticket</fieldsrc>
-        <tabledest>ploopi_ticket</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_ticket_watch</tablesrc>
-        <fieldsrc>id_user</fieldsrc>
-        <tabledest>ploopi_user</tabledest>
+        <tabledest>ploopi_module_type</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4218,20 +4550,6 @@
         <tablesrc>ploopi_user_action_log</tablesrc>
         <fieldsrc>id_workspace</fieldsrc>
         <tabledest>ploopi_workspace</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_user_action_log</tablesrc>
-        <fieldsrc>id_module_type</fieldsrc>
-        <tabledest>module_type</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_user_action_log</tablesrc>
-        <fieldsrc>id_module</fieldsrc>
-        <tabledest>ploopi_module</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4279,15 +4597,15 @@
     </row>
     <row>
         <tablesrc>ploopi_workspace_group_role</tablesrc>
-        <fieldsrc>id_workspace</fieldsrc>
-        <tabledest>ploopi_workspace</tabledest>
+        <fieldsrc>id_role</fieldsrc>
+        <tabledest>ploopi_role</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
     <row>
         <tablesrc>ploopi_workspace_group_role</tablesrc>
-        <fieldsrc>id_role</fieldsrc>
-        <tabledest>ploopi_role</tabledest>
+        <fieldsrc>id_workspace</fieldsrc>
+        <tabledest>ploopi_workspace</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>
@@ -4307,6 +4625,13 @@
     </row>
     <row>
         <tablesrc>ploopi_workspace_user_role</tablesrc>
+        <fieldsrc>id_role</fieldsrc>
+        <tabledest>ploopi_role</tabledest>
+        <fielddest>id</fielddest>
+        <id_module_type>1</id_module_type>
+    </row>
+    <row>
+        <tablesrc>ploopi_workspace_user_role</tablesrc>
         <fieldsrc>id_user</fieldsrc>
         <tabledest>ploopi_user</tabledest>
         <fielddest>id</fielddest>
@@ -4316,13 +4641,6 @@
         <tablesrc>ploopi_workspace_user_role</tablesrc>
         <fieldsrc>id_workspace</fieldsrc>
         <tabledest>ploopi_workspace</tabledest>
-        <fielddest>id</fielddest>
-        <id_module_type>1</id_module_type>
-    </row>
-    <row>
-        <tablesrc>ploopi_workspace_user_role</tablesrc>
-        <fieldsrc>id_role</fieldsrc>
-        <tabledest>ploopi_role</tabledest>
         <fielddest>id</fielddest>
         <id_module_type>1</id_module_type>
     </row>

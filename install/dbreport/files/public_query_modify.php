@@ -254,6 +254,9 @@ if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) 
 
     <?php echo ploopi\skin::get()->open_simplebloc('Champs / Propriétés'); ?>
         <a name="dbreport_fields"></a>
+        <?php if (!empty($_GET['dbreport_function_refused'])) { ?>
+            <p class="error" style="padding:4px;">Fonction appliquée refusée : seuls le marqueur %, des valeurs, des opérateurs et les fonctions proposées sont admis (aucune autre colonne, sous-requête ni commentaire). L'ancienne valeur est conservée.</p>
+        <?php } ?>
         <?php
         $arrColumns = array();
         $arrValues = array();

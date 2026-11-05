@@ -108,12 +108,13 @@ switch($op)
         $passwordok = true;
         if (isset($_POST['usernewpass']) && isset($_POST['usernewpass_confirm']))
         {
-            if ($_POST['usernewpass']!='' && $_POST['usernewpass'] == $_POST['usernewpass_confirm'])
+            // Règle de mot de passe appliquée côté serveur
+            if ($_POST['usernewpass']!='' && $_POST['usernewpass'] == $_POST['usernewpass_confirm'] && ploopi\security::passwordallowed($_POST['usernewpass']))
             {
                 $user->setpassword($_POST['usernewpass']);
                 if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_generate_htpasswd']) system_generate_htpasswd($user->fields['login'], $_POST['usernewpass']);
             }
-            elseif ($_POST['usernewpass'] != $_POST['usernewpass_confirm']) $passwordok = false;
+            elseif ($_POST['usernewpass'] != '') $passwordok = false;
         }
 
 
@@ -128,7 +129,7 @@ switch($op)
                 if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                 {
                     // Complexité ok
-                    if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
+                    if (ploopi\security::passwordallowed($_POST['usernewpass']))
                     {
                         // Affectation du mot de passe
                         $user->setpassword($_POST['usernewpass']);

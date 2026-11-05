@@ -3,4 +3,4 @@ CREATE TABLE `ploopi_mod_directory_speeddialing` (
 `label` VARCHAR( 255 ) NOT NULL ,
 `number` VARCHAR( 16 ) NOT NULL ,
 `heading` VARCHAR( 255 ) NOT NULL
-) ENGINE = MYISAM ;
+) ENGINE=InnoDB ;

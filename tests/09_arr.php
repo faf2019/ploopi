@@ -70,6 +70,12 @@ $arrLignes = array_values(array_filter(explode("\n", $strCsv), 'strlen'));
 T::eq('ligne d\'en-tête issue des clés', '"id","nom","note"', $arrLignes[0]);
 T::contient('les guillemets du contenu sont doublés', '"Dupont; ""X"""', $arrLignes[1]);
 T::eq('une ligne par enregistrement', 3, sizeof($arrLignes));
+// Une cellule ouverte par = + - @ serait une formule dans un tableur
+$strCsv = arr::tocsv(array(array('a' => '=1+1', 'b' => '-5', 'c' => '@SUM(A1)', 'd' => 'texte')));
+T::contient('formule neutralisée par une apostrophe', '"\'=1+1"', $strCsv);
+T::contient('arobase neutralisée', '"\'@SUM(A1)"', $strCsv);
+T::contient('témoin : nombre négatif inchangé', '"-5"', $strCsv);
+T::contient('témoin : texte inchangé', '"texte"', $strCsv);
 
 T::section('arr::tohtml');
 $strHtml = arr::tohtml($arrDonnees);

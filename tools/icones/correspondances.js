@@ -59,6 +59,8 @@ const ICONES = [
     { cible: 'system/icons/tab_systemupdate.png',          glyphe: 'refresh',                couleur: 'primaire' },
     { cible: 'system/icons/tab_tools.png',                 glyphe: 'tool',                   couleur: 'primaire' },
     { cible: 'system/icons/tab_logs.png',                  glyphe: 'history',                couleur: 'primaire' },
+    { cible: 'system/icons/tab_api.png',                   glyphe: 'code',                   couleur: 'primaire', taille: [24, 24] },
+    { cible: 'system/icons/tab_events.png',                glyphe: 'activity',               couleur: 'primaire', taille: [24, 24] },
     { cible: 'system/icons/tab_profile.png',               glyphe: 'id',                     couleur: 'primaire' },
 
     // Outils du système
@@ -223,4 +225,12 @@ const ICONES = [
     { cible: 'template/close_popup.png', glyphe: 'x', couleur: 'blanc', taille: [64, 64] }
 ];
 
-module.exports = { COULEURS, ICONES };
+// ploopi2 garde ses images : n'y sont produites que celles des écrans ajoutés depuis, en
+// glyphe blanc comme ses onglets (fond coloré), pour que la barre d'outils n'y montre pas
+// d'image manquante. Chemins relatifs à templates/backoffice/ploopi2/img/.
+const ICONES_PLOOPI2 = [
+    { cible: 'system/icons/tab_api.png',                   glyphe: 'code',                   couleur: 'blanc', taille: [24, 24] },
+    { cible: 'system/icons/tab_events.png',                glyphe: 'activity',               couleur: 'blanc', taille: [24, 24] },
+];
+
+module.exports = { COULEURS, ICONES, ICONES_PLOOPI2 };

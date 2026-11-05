@@ -46,7 +46,7 @@ abstract class security
      * @return boolean true si le mot de passe est suffisamment solide
      */
 
-    public static function checkpasswordvalidity($password, $min_length = 0, $max_length = 20)
+    public static function checkpasswordvalidity($password, $min_length = 0, $max_length = 128)
     {
         if (empty($min_length)) $min_length = _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE;
         $password = str::convertaccents($password);
@@ -59,6 +59,22 @@ abstract class security
             preg_match('/^.*[0-9].*/', $password) &&
             preg_match('/^.*[!@#\$%\^&\*\(\)_\-\+\}\{"":;\'?\/><\.,\]\[].*/', $password)
         );
+    }
+
+    /**
+     * Le mot de passe est-il acceptable ? Longueur minimale toujours exigée côté serveur,
+     * classes de caractères en plus si _PLOOPI_USE_COMPLEXE_PASSWORD.
+     *
+     * @param string $password mot de passe
+     * @return boolean
+     */
+
+    public static function passwordallowed($password)
+    {
+        $intMin = defined('_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE') ? (int) _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE : 12;
+        if (!is_string($password) || mb_strlen($password) < $intMin || mb_strlen($password) > 128) return false;
+
+        return !_PLOOPI_USE_COMPLEXE_PASSWORD || self::checkpasswordvalidity($password, $intMin);
     }
 
     /**

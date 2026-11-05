@@ -360,6 +360,54 @@ else
     T::eq('ce lien désabonne l\'adresse', 0, foweb_abonnements());
 }
 
+T::section('Redirection de l\'abonnement : paramètres validés');
+/**
+ * webedit_subscribe redirige vers index.php en ne gardant qu'une chaîne sûre pour
+ * webedit_mode et des entiers pour headingid et articleid.
+ */
+$strPiège = '"><script>alert(1)</script>';
+
+/**
+ * Location en clair : crypt::urlencode() chiffre la requête dans ploopi_url quand
+ * le chiffrement des URL est actif ; on la déchiffre pour juger des paramètres.
+ */
+function foweb_location_claire($strLocation)
+{
+    $strLocation = html_entity_decode($strLocation);
+    parse_str((string)parse_url($strLocation, PHP_URL_QUERY), $arrQuery);
+    if (!isset($arrQuery['ploopi_url'])) return $strLocation;
+    $strClair = ploopi\cipher::singleton()->decrypt($arrQuery['ploopi_url']);
+    return $strClair === false ? $strLocation : 'index.php?'.preg_replace('/^[^?]*\?/', '', $strClair);
+}
+
+H::reset();
+$arrRep = H::req('/index.php?ploopi_op=webedit_subscribe'
+    .'&webedit_mode='.urlencode($strPiège)
+    .'&headingid='.urlencode($strPiège)
+    .'&articleid='.urlencode($strPiège),
+    'subscription_headingid=0&subscription_email='.urlencode(FOWEB_COURRIEL));
+T::contientpas('le paramètre forgé n’atteint pas l’en-tête Location', $strPiège, $arrRep['headers']);
+T::contientpas('ni son échappement HTML', '&lt;script&gt;', $arrRep['headers']);
+if (preg_match('/Location: ([^\r\n]+)/i', $arrRep['headers'], $arrM))
+{
+    T::vrai('la redirection ne porte que des valeurs sûres',
+        preg_match('/^.*index\.php\?headingid=\d*&subscription_return=-?\d+$/i', foweb_location_claire($arrM[1])) === 1,
+        foweb_location_claire($arrM[1]));
+}
+else T::vrai('la redirection ne porte que des valeurs sûres', false, 'pas d’en-tête Location');
+
+// Témoin : les valeurs propres passent telles quelles
+H::reset();
+$arrRep = H::req('/index.php?ploopi_op=webedit_subscribe&webedit_mode=edit&headingid='.$intRubPublique.'&articleid=12',
+    'subscription_headingid=0&subscription_email='.urlencode(FOWEB_COURRIEL));
+if (preg_match('/Location: ([^\r\n]+)/i', $arrRep['headers'], $arrM))
+{
+    T::vrai('témoin : les valeurs propres sont conservées',
+        strpos(foweb_location_claire($arrM[1]), 'webedit_mode=edit&headingid='.$intRubPublique.'&articleid=12&') !== false,
+        foweb_location_claire($arrM[1]));
+}
+else T::vrai('témoin : les valeurs propres sont conservées', false, 'pas d’en-tête Location');
+
 T::section('Liens signés : échéance, instance, anciens liens');
 /**
  * Les jetons sont fabriqués ici par les fonctions du module, avec la clé de

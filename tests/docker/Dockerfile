@@ -32,7 +32,7 @@ RUN apt-get update \
         libfreetype-dev libjpeg62-turbo-dev libpng-dev libzip-dev \
         mariadb-client curl unzip git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" mysqli gd zip \
+    && docker-php-ext-install -j"$(nproc)" mysqli gd zip sockets \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer

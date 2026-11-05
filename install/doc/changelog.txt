@@ -1,3 +1,11 @@
+== Module DOC - version 4.10.25 ======================================================
+
+2026-10-21  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : doc_filedownload, doc_fileview et le téléchargement d'un brouillon
+  exigent doc_isfolderallowed() sur le dossier porteur ; doc_filedraftdelete exige
+  doc_file_isreadonly().
+
 == Module DOC - version 4.10.24 ======================================================
 
 2026-10-11  Ovensia <stephane@ovensia.fr>

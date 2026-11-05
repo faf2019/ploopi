@@ -232,10 +232,15 @@ abstract class csp
 
         $strExtrait = self::inlinescript($strHtml);
 
-        if ($strExtrait === '') header('Content-Security-Policy: '.self::policy('strict'), true);
-        else
+        /**
+         * La politique stricte s'applique même si le HTML porte du script en ligne ;
+         * l'écart est journalisé.
+         */
+        header('Content-Security-Policy: '.self::policy('strict'), true);
+
+        if ($strExtrait !== '')
         {
-            $strMessage = 'CSP stricte non appliquée (script en ligne) sur '.(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '?').' : '.$strExtrait;
+            $strMessage = 'CSP stricte appliquée malgré un script en ligne sur '.(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '?').' : '.$strExtrait;
             if (class_exists('ploopi\error', false)) error::syslog(LOG_INFO, $strMessage);
             if (defined('_PLOOPI_LOG_ERRORS') && _PLOOPI_LOG_ERRORS && defined('_PLOOPI_LOG_ERRORS_FILE') && _PLOOPI_LOG_ERRORS_FILE != '')
             {

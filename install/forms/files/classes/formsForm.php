@@ -1295,7 +1295,7 @@ class formsForm extends ploopi\data_object
             $arrSqlIndexes[] = "ALTER TABLE `{$this->_strTablename}` ADD INDEX ( `{$objField->fields['fieldname']}` )";
         }
 
-        $db->query("CREATE TABLE `{$this->_strTablename}` (".implode(', ', $arrSqlFields).") ENGINE=MyISAM;");
+        $db->query("CREATE TABLE `{$this->_strTablename}` (".implode(', ', $arrSqlFields).") ENGINE=InnoDB;");
 
         /**
          * Création des indexes

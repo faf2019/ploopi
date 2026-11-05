@@ -34,8 +34,11 @@
 // semaine dernière
 $strTsDelete = ploopi\date::timestamp_add(ploopi\date::createtimestamp(), 0, 0, 0, 0, -7, 0);
 
-// suppression des données périmées
+// suppression des données périmées (index sur ts) ; pas d'OPTIMIZE : sous InnoDB,
+// il reconstruirait toute la table à chaque passage et l'espace libéré est réutilisé
 ploopi\db::get()->query("DELETE FROM `ploopi_log` WHERE ts < {$strTsDelete}");
 
-// optimisation des tables
-ploopi\db::get()->query("OPTIMIZE TABLE `ploopi_log`");
+// journal des appels de l'API : 30 jours (les compteurs restent sur la clé)
+// (table absente tant que la base n'est pas passée en 2.1.0)
+$arrSystemVersion = ploopi\db::get()->fetchrow(ploopi\db::get()->query('SELECT version FROM ploopi_module_type WHERE id = 1'));
+if ($arrSystemVersion && version_compare($arrSystemVersion['version'], '2.1.0', '>=')) ploopi\db::get()->query('DELETE FROM `ploopi_api_request` WHERE created_at < '.(time() - 30 * 86400));

@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query` (
   `id_workspace` int(10) unsigned DEFAULT '0',
   `id_module` int(10) unsigned DEFAULT '0',
   `timestp_update` bigint(14) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_queryfield`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryfield` (
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryfield` (
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   `series` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `id_query` int(10) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_queryrelation`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryrelation` (
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_queryrelation` (
   `fieldname_dest` varchar(100) NOT NULL,
   `type_join` varchar(16) NOT NULL DEFAULT 'inner',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_querytable`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_querytable` (
@@ -111,13 +111,13 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_querytable` (
   `alias` varchar(100) NOT NULL,
   `id_module_type` int(10) unsigned NOT NULL DEFAULT '0',
   `id_query` int(10) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_dbreport_query_module_type`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_dbreport_query_module_type` (
   `id_query` int(10) unsigned NOT NULL DEFAULT '0',
   `id_module_type` int(10) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 ALTER TABLE `ploopi_mod_dbreport_query`

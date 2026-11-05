@@ -191,5 +191,10 @@ class query_update extends query_sud
      */
     public function remove_innerjoin() { $this->arrInnerJoin = array(); }
 
+    /**
+     * Supprime toutes les jointures LEFT JOIN.
+     */
+    public function remove_leftjoin() { $this->arrLeftJoin = array(); }
+
 
 }

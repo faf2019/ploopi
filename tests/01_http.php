@@ -47,6 +47,12 @@ T::chk('Referrer-Policy renseignée',                stripos($arrRep['headers'],
 $arrRep = H::req('/admin.php');
 T::chk('connexion établie',                         stripos($arrRep['headers'], 'Ploopi-Connected: 1') !== false);
 
+// HSTS : posé par le socle quand la requête est chiffrée, absent en clair
+$arrRep = H::req('/', null, array('X-Forwarded-Proto: https'));
+T::chk('HSTS sur requête chiffrée',                 stripos($arrRep['headers'], 'Strict-Transport-Security: max-age=31536000; includeSubDomains') !== false, 'en-tête HSTS absent');
+$arrRep = H::req('/');
+T::chk('pas de HSTS en clair',                      stripos($arrRep['headers'], 'Strict-Transport-Security') === false, 'HSTS présent en HTTP');
+
 H::reset();
 H::req('/admin.php');
 $strSidAvant = H::sid();
@@ -221,5 +227,75 @@ else
 }
 $arrRep = H::req('/vendor/components/jquery/jquery.min.js');
 T::chk('témoin : bibliothèque elle-même servie', $arrRep['code'] === 200, "HTTP {$arrRep['code']}");
+
+
+amorcer_socle();
+T::section('Explorateur de fichiers : échappement des gestionnaires onclick');
+/**
+ * include/op/filexplorer.php : filexplorer_id, le champ destinataire et le nom du
+ * fichier sont écrits dans les gestionnaires onclick comme des littéraux JavaScript
+ * échappés pour l'attribut.
+ *
+ * L'explorateur s'ouvre par admin-light.php (fichiers de langue chargés), avec un jeton : on l'initialise en
+ * session comme le fait public_file_form.php (basepath _PLOOPI_PATHSHARED), on
+ * y dépose un fichier au nom piégé, puis on appelle l'opération avec un
+ * filexplorer_id forgé.
+ */
+// Les sections précédentes ont vidé le bocal à cookies : nouvelle session d'administration
+H::reset();
+H::req('/admin.php');
+H::connexion();
+$strEnv = H::env();
+
+$strBase = _PLOOPI_PATHDATA._PLOOPI_SEP.'shared';
+if (!is_dir($strBase)) mkdir($strBase, 0777, true);
+$strNomPiege = "fichier');alert(1);x.txt";
+$strFichierPiege = $strBase._PLOOPI_SEP.$strNomPiege;
+if (!file_exists($strFichierPiege)) file_put_contents($strFichierPiege, 'contenu piege');
+register_shutdown_function(function() use ($strFichierPiege) { @unlink($strFichierPiege); });
+
+// Initialisation de l'explorateur dans la session du serveur, comme
+// public_file_form.php (fs::filexplorer_init) : la session de ce processus n'est
+// pas celle du serveur. session_decode()/session_encode() exigent une session
+// active : un sous-processus PHP réécrit le fichier (cf. suite 28).
+$strFichierSessionFx = chemin_session(H::sid());
+$strCodeFx = <<<'PHP'
+session_save_path(sys_get_temp_dir());
+session_start();
+session_decode((string)file_get_contents($argv[1]));
+$_SESSION['filexplorer']['audit_fx'] = array('basepath' => $argv[2], 'destfield' => 'champ_destinataire');
+file_put_contents($argv[1], session_encode());
+echo 'ok';
+session_destroy();
+PHP;
+$strExplorateur = $strFichierSessionFx === false ? '' : (string)shell_exec(escapeshellarg(PHP_BINARY).' -r '.escapeshellarg($strCodeFx).' '.escapeshellarg($strFichierSessionFx).' '.escapeshellarg($strBase).' 2>/dev/null');
+T::chk('explorateur initialisé en session', $strExplorateur === 'ok', $strFichierSessionFx === false ? 'dossier de sessions introuvable, voir session_path' : '');
+
+// filexplorer_id forgé : l'URL en porte un, la session en porte un autre
+$strIdForg = "x');alert(1);//";
+$arrRep = H::req("/admin-light.php?ploopi_op=filexplorer_browser&filexplorer_id=".urlencode($strIdForg).'&filexplorer_folder=&ploopi_env='.urlencode($strEnv));
+// L'identifiant forgé n'existe pas en session : l'opération est refusée avant tout rendu
+T::chk('identifiant forgé : aucune ligne rendue', strpos($arrRep['body'], 'ploopi_filexplorer_browser') === false, substr($arrRep['body'], 0, 200));
+
+// Identifiant valide, nom de fichier piégé : le gestionnaire onclick est échappé
+$arrRep = H::req("/admin-light.php?ploopi_op=filexplorer_browser&filexplorer_id=audit_fx&filexplorer_folder=&ploopi_env=".urlencode($strEnv));
+T::chk('le fichier piégé est listé', strpos($arrRep['body'], 'fichier') !== false, substr($arrRep['body'], 0, 300));
+// Le navigateur décode les entités de l'attribut avant d'exécuter le script : le
+// contrôle porte donc sur la page décodée, telle que le moteur JavaScript la lit.
+preg_match_all('/onclick="([^"]*)"/', $arrRep['body'], $arrOnclick);
+$strDecode = html_entity_decode(implode("\n", $arrOnclick[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+T::chk('le nom piégé n’injecte pas de code dans le onclick', strpos($strDecode, "fichier');alert(1)") === false, 'apostrophe non neutralisée une fois les entités décodées');
+T::chk('le nom piégé est rendu en littéral JavaScript', strpos($strDecode, '"/fichier\\u0027);alert(1);x.txt"') !== false, 'forme \\u0027 absente');
+T::chk('l’identifiant de l’explorateur est présent dans les gestionnaires', strpos($strDecode, 'browser("audit_fx"') !== false, 'identifiant absent des gestionnaires');
+
+// Témoin : un nom de fichier ordinaire produit un gestionnaire fonctionnel
+$strNomSain = 'fichier-ordinaire.txt';
+$strFichierSain = $strBase._PLOOPI_SEP.$strNomSain;
+if (!file_exists($strFichierSain)) file_put_contents($strFichierSain, 'contenu sain');
+register_shutdown_function(function() use ($strFichierSain) { @unlink($strFichierSain); });
+$arrRep = H::req("/admin-light.php?ploopi_op=filexplorer_browser&filexplorer_id=audit_fx&filexplorer_folder=&ploopi_env=".urlencode($strEnv));
+T::chk('témoin : le gestionnaire d’un fichier sain est intact',
+    strpos(html_entity_decode($arrRep['body'], ENT_QUOTES | ENT_HTML5, 'UTF-8'), 'value="/'.$strNomSain.'"') !== false,
+    'gestionnaire attendu absent');
 
 exit(T::bilan());

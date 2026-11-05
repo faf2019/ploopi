@@ -70,16 +70,19 @@ switch($op)
         // Tri par version
         uksort($arrUpdates, 'version_compare');
 
-        foreach($arrUpdates as $strSqlFile)
+        foreach($arrUpdates as $strVersion => $strSqlFile)
         {
             if (file_exists("{$strSysInstallPath}{$strSqlFile}") && is_readable("{$strSysInstallPath}{$strSqlFile}"))
             {
                 ?>
                 <div style="padding:4px;">Import du fichier <b><?php echo ploopi\str::htmlentities($strSqlFile); ?></b></div>
                 <?php
-                foreach(ploopi\db::split_sql(file_get_contents("{$strSysInstallPath}{$strSqlFile}")) as $query) {
-                    $query = trim($query);
-                    if (!empty($query)) ploopi\db::get()->query($query);
+                try { ploopi\schema::upgrade("{$strSysInstallPath}{$strSqlFile}", $strVersion); }
+                catch (\Throwable $objError)
+                {
+                    echo '<p>'.ploopi\str::htmlentities($objError->getMessage()).'</p>';
+                    echo ploopi\skin::get()->close_simplebloc();
+                    return;
                 }
             }
             else
@@ -87,6 +90,8 @@ switch($op)
                 ?>
                 <div style="padding:4px;color:#a60000;">Impossible de lire le fichier <b><?php echo ploopi\str::htmlentities("{$strSysInstallPath}{$strSqlFile}") ?></b>, vérifiez les droits en lecture</div>
                 <?php
+                echo ploopi\skin::get()->close_simplebloc();
+                return;
             }
         }
         ?>

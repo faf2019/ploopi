@@ -1,3 +1,10 @@
+1.4.14 - 21/10/2026
+Événements métier transactionnels (création, modification, suppression), relayés vers RabbitMQ.
+
+1.4.13 - 21/10/2026
+API en lecture seule : ressources déclarées pour le socle.
+Création des tables en InnoDB.
+
 == Module Wiki - version 1.4.12 ======================================================
 
 2026-10-17  Ovensia <stephane@ovensia.fr>

@@ -30,7 +30,9 @@
  * @author Ovensia
  */
 
-if (empty($_REQUEST['module'])) ploopi\system::kill();
+// Le nom de module sert à construire un nom de classe et un chemin de fichier :
+// on n'accepte que des caractères d'identifiant (pas de traversal, pas de séparateur).
+if (empty($_REQUEST['module']) || !is_string($_REQUEST['module']) || !preg_match('/^[a-z0-9_]+$/', $_REQUEST['module'])) ploopi\system::kill();
 
 $strControllerFile = "ploopi\\{$_REQUEST['module']}\\controller";
 if (ploopi\loader::classExists($strControllerFile)) {

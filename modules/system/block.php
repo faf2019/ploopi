@@ -71,6 +71,8 @@ if (ploopi\skin::get()->version() >= 4)
         $arrSysItems['install'] = array(_SYSTEM_MENU_INSTALLMODULES, 'package');
         $arrSysItems['params'] = array(_SYSTEM_MENU_PARAMS, 'adjustments-horizontal');
         $arrSysItems['directory'] = array(_SYSTEM_MENU_DIRECTORY, 'address-book');
+        $arrSysItems['api'] = array(_SYSTEM_MENU_API, 'code');
+        $arrSysItems['events'] = array(_SYSTEM_MENU_EVENTS, 'activity');
         $arrSysItems['tools'] = array(_SYSTEM_MENU_TOOLS, 'tool');
 
         // Sans choix mémorisé, admin_system.php affiche le premier écran

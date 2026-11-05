@@ -76,3 +76,58 @@ function dbreport_query_ismodifiable($arrQuery)
         && ploopi\acl::isactionallowed(dbreport::_ACTION_MANAGE)
         && (empty($arrQuery['locked']) || ploopi\acl::isactionallowed(dbreport::_ACTION_LOCK));
 }
+
+/**
+ * Une table peut-elle entrer dans la requête ?
+ *
+ * Même règle que la liste proposée (op_querytable_add.php) : table déclarée et visible
+ * dans la métabase, pour l'un des types de modules choisis pour la requête.
+ *
+ * @param int $intQueryId requête
+ * @param string $strTable nom de la table
+ * @return boolean true si la table est autorisée
+ */
+
+function dbreport_table_isallowed($intQueryId, $strTable)
+{
+    if (!is_string($strTable) || !preg_match('/^[A-Za-z0-9_]+$/D', $strTable)) return false;
+
+    $objQuery = new ploopi\query_select();
+    $objQuery->add_select('mbt.name');
+    $objQuery->add_from('ploopi_mb_table mbt');
+    $objQuery->add_innerjoin('ploopi_mod_dbreport_query_module_type dqm ON dqm.id_module_type = mbt.id_module_type');
+    $objQuery->add_where('dqm.id_query = %d', $intQueryId);
+    $objQuery->add_where('mbt.name = %s', $strTable);
+    $objQuery->add_where('mbt.visible = 1');
+
+    return $objQuery->execute()->numrows() > 0;
+}
+
+/**
+ * Un champ peut-il entrer dans la requête ?
+ *
+ * Même règle que la liste proposée (op_queryfield_add.php) : champ visible de la
+ * métabase, d'une table autorisée et déjà présente dans la requête. Un champ masqué
+ * (identifiant, ou champ sensible) ne s'ajoute plus par un formulaire forgé.
+ *
+ * @param int $intQueryId requête
+ * @param string $strTable nom de la table
+ * @param string $strField nom du champ
+ * @return boolean true si le champ est autorisé
+ */
+
+function dbreport_field_isallowed($intQueryId, $strTable, $strField)
+{
+    if (!is_string($strField) || !preg_match('/^[A-Za-z0-9_]+$/D', $strField) || !dbreport_table_isallowed($intQueryId, $strTable)) return false;
+
+    $objQuery = new ploopi\query_select();
+    $objQuery->add_select('mbf.name');
+    $objQuery->add_from('ploopi_mb_field mbf');
+    $objQuery->add_innerjoin('ploopi_mod_dbreport_querytable drt ON drt.tablename = mbf.tablename');
+    $objQuery->add_where('drt.id_query = %d', $intQueryId);
+    $objQuery->add_where('mbf.tablename = %s', $strTable);
+    $objQuery->add_where('mbf.name = %s', $strField);
+    $objQuery->add_where('mbf.visible = 1');
+
+    return $objQuery->execute()->numrows() > 0;
+}

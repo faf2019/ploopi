@@ -45,10 +45,13 @@ $strRacine = dirname(__DIR__);
 $strUri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $strFichier = $strRacine.$strUri;
 
-// Dossiers interdits par .htaccess_modele (RewriteRule ^(config|bin|data|doc|include|install|lang|tools)/.*$ - [F]) :
+// Dossiers et fichiers interdits par .htaccess_modele (RewriteRule … - [F]) :
 // le serveur intégré servirait data/ tel quel — c'est le risque visé par le lot 10
 // (_PLOOPI_PATHDATA sous la racine web) : le routeur reproduit l'interdiction.
-if (preg_match('@^/(config|bin|data|doc|include|install|lang|tools)/@', $strUri))
+if (preg_match('@^/(config|bin|data|doc|docker|include|install|lang|screenshots|tests|tools)/@', $strUri)
+    // Chemins cachés et fichiers du dépôt (.htaccess_modele)
+    || preg_match('@(^|/)\.(?!well-known/)@', $strUri) || preg_match('@\.(md|lock|ya?ml|model|dist)$@', $strUri)
+    || preg_match('@(^|/)(composer\.json|installed\.json|package\.json)$@', $strUri))
 {
     http_response_code(403);
     exit;

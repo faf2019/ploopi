@@ -209,6 +209,67 @@ abstract class dbreport {
         return isset(self::$_arrTypes[$strKey]) ? self::$_arrTypes[$strKey] : '';
     }
 
+    // Fonctions MySQL admises dans « Fonction appliquée », en plus de celles proposées
+    private static $_arrFunctionsExtra = array(
+        'ADDDATE', 'AVG', 'CAST', 'CEILING', 'COALESCE', 'COUNT', 'CURDATE', 'CURTIME', 'DATE_ADD', 'DATE_FORMAT',
+        'DATE_SUB', 'FORMAT', 'GREATEST', 'GROUP_CONCAT', 'IF', 'IFNULL', 'LCASE', 'LEAST', 'MAX', 'MID', 'MIN',
+        'NOW', 'NULLIF', 'POWER', 'SEC_TO_TIME', 'STR_TO_DATE', 'SUBDATE', 'SUBSTR', 'SUM', 'TIMESTAMPDIFF', 'UCASE'
+    );
+
+    // Mots-clés admis hors appel de fonction (CAST(% AS CHAR), INTERVAL 1 DAY, CASE…)
+    private static $_arrFunctionKeywords = array(
+        'AND', 'AS', 'BETWEEN', 'BINARY', 'CASE', 'CHAR', 'DATE', 'DATETIME', 'DAY', 'DECIMAL', 'DISTINCT', 'DIV',
+        'ELSE', 'END', 'FALSE', 'HOUR', 'IN', 'INTERVAL', 'IS', 'LIKE', 'MICROSECOND', 'MINUTE', 'MOD', 'MONTH',
+        'NOT', 'NULL', 'OR', 'QUARTER', 'SECOND', 'SEPARATOR', 'SIGNED', 'THEN', 'TIME', 'TRUE', 'UNSIGNED', 'WEEK',
+        'WHEN', 'YEAR'
+    );
+
+    /**
+     * Expression de « Fonction appliquée » acceptable ?
+     *
+     * Elle entre telle quelle dans la clause SELECT et doit rester dans la limite des
+     * champs de la métabase. Seuls sont admis le marqueur %, des littéraux (nombres, chaînes
+     * entre apostrophes), des opérateurs, des parenthèses et virgules, des appels de
+     * fonctions connues et quelques mots-clés : aucun nom de colonne ou de table, aucun
+     * point, backtick, guillemet, commentaire ni point-virgule.
+     *
+     * @param string $strFunction expression saisie
+     * @return boolean true si l'expression est admise (vide comprise)
+     */
+
+    public static function isFunctionAllowed($strFunction)
+    {
+        if (!is_string($strFunction) || strlen($strFunction) > 1000) return false;
+
+        $arrFunctions = self::$_arrFunctionsExtra;
+        foreach(self::$_arrFunctions as $arrList) foreach($arrList as $strModel) $arrFunctions[] = strtoupper(trim(strtok($strModel, '(')));
+
+        $intPos = 0;
+        $intLen = strlen($strFunction);
+        $strPrevOp = '';
+        while ($intPos < $intLen)
+        {
+            // Espaces, %, chaîne entre apostrophes, nombre, identifiant, opérateurs et ponctuation
+            if (!preg_match('/\G(?:(\s+)|(%)|(\'(?:[^\'\\\\]|\\\\.)*\')|(\d+(?:\.\d+)?)|([A-Za-z_][A-Za-z0-9_]*)|([-+*\/(),<>=!]))/', $strFunction, $arrMatch, 0, $intPos)) return false;
+
+            if (isset($arrMatch[5]) && $arrMatch[5] !== '')
+            {
+                $strWord = strtoupper($arrMatch[5]);
+                $booCall = (bool) preg_match('/\G\s*\(/', $strFunction, $arrNext, 0, $intPos + strlen($arrMatch[0]));
+                if (!($booCall && in_array($strWord, $arrFunctions, true)) && !in_array($strWord, self::$_arrFunctionKeywords, true)) return false;
+            }
+
+            // Deux opérateurs accolés formant un commentaire (--, /*, */)
+            $strOp = isset($arrMatch[6]) ? $arrMatch[6] : '';
+            if ($strOp !== '' && in_array($strPrevOp.$strOp, array('--', '/*', '*/'), true)) return false;
+            $strPrevOp = $strOp;
+
+            $intPos += strlen($arrMatch[0]);
+        }
+
+        return true;
+    }
+
     public static function getFunctions($strKey) {
         return self::$_arrFunctions[$strKey];
     }
@@ -232,144 +293,140 @@ abstract class dbreport {
     {
         global $objCache;
 
+        // ws_id et code arrivent de $_REQUEST : un « ws_id[]=x » donnerait un tableau,
+        // qui ferait échouer add_where puis str::htmlentities (TypeError, 500)
+        if (!is_string($strWsId) || empty($strWsId)) ploopi\system::kill("Requête non fournie");
+        if (!is_string($strDbreportCode)) ploopi\system::kill("Code invalide");
+
+        include_once './modules/dbreport/classes/class_dbreport_query.php';
+
+        $objDOC = new ploopi\data_object_collection('dbreport_query');
+        $objDOC->add_where('ws_id = %s', $strWsId);
+        $objDOC->add_where('ws_activated = 1');
+        $arrQueries = $objDOC->get_objects();
+
+        if (sizeof($arrQueries) != 1) ploopi\system::kill('Identifiant &laquo; '.ploopi\str::htmlentities($strWsId).' &raquo; incorrect');
+
+        $objDbrQuery = $arrQueries[0];
+        $row = $objDbrQuery->fields;
+
+        /**
+         * Code et adresse IP contrôlés avant la lecture du cache : un résultat mis en cache
+         * pour un client autorisé était servi à tout client envoyant les mêmes paramètres.
+         * hash_equals : en comparaison souple, « 1e3 » == « 1000 ».
+         */
+        if ($row['ws_code'] != '' && !hash_equals((string)$row['ws_code'], (string)$strDbreportCode)) ploopi\system::kill("Code invalide");
+
+        // Lecture de l'IP du client (c'est un tableau il peut en avoir plusieurs à cause notamment des proxies)
+        $arrRemoteIp = $_SESSION['ploopi']['remote_ip'];
+
+        if ($row['ws_ip'] != '' && !in_array($row['ws_ip'], $arrRemoteIp)) ploopi\system::kill("Adresse IP invalide");
+
         // Récupération du paramètre de durée de cache
         $intCacheLifetime = ploopi\param::get('dbreport_cache_lifetime', ploopi\module::getid('dbreport')); // Attention, ici on prend le premier module trouvé, ne fonctionne pas en multi-instance !
 
-        // Instanciation du cache
-        $objCache = new ploopi\cache($strWsId.','.implode(',', $arrParams), $intCacheLifetime);
+        // Instanciation du cache (clés comprises : « a=1&b=2 » et « a=2&b=1 » ne partagent plus leur résultat)
+        $objCache = new ploopi\cache($strWsId.','.md5(serialize($arrParams)), $intCacheLifetime);
 
         // Lecture du cache, présent ?
         if (!$mixedVar = $objCache->get_var())
         {
-            if (empty($strWsId)) $strError = "Requête non fournie";
-            else
+            set_time_limit(300);
+
+            $mixedVar = null;
+
+            // Génération de la requête SQL
+            if (!$objDbrQuery->generate($arrParams)) ploopi\system::kill();
+
+            // Exécution de la requête et stockage du résultat
+            if ($strFormat != 'sql') $objDbrQuery->exec($intCacheLifetime);
+
+            switch($strFormat)
             {
-                include_once './modules/dbreport/classes/class_dbreport_query.php';
+                case 'sql':
+                    $mixedVar = $objDbrQuery->getquery();
+                break;
 
-                set_time_limit(300);
+                case 'html':
+                    $mixedVar = '
+                        <html><style>
+                        body {font: 11px Verdana,Tahoma,Arial,sans-serif;}
+                        table {padding:0px;margin:2px;border:1px solid #c0c0c0;border-collapse:collapse;}
+                        td, th {padding:2px 4px;border:1px solid #888;}
+                        th {background-color:#ddd;}
+                        </style><body>
+                    '.ploopi\arr::tohtml($objDbrQuery->getresult()).'</body></html>';
+                break;
 
-                $mixedVar = null;
+                case 'xls':
+                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
+                break;
 
-                $objDOC = new ploopi\data_object_collection('dbreport_query');
-                $objDOC->add_where('ws_id = %s', $strWsId);
-                $objDOC->add_where('ws_activated = 1');
-                $arrQueries = $objDOC->get_objects();
+                case 'xlsx':
+                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
+                break;
 
-                if(sizeof($arrQueries) == 1) //  Id de requête unique trouvé
-                {
-                    $row = $arrQueries[0]->fields;
+                case 'sxc':
+                case 'ods':
+                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.ods', 'query', null, array('writer' => 'ods'));
+                break;
 
-                    if ($row['ws_code'] == '' || $row['ws_code'] == $strDbreportCode)
+                case 'pdf':
+                    // Génération du fichier XLSX
+                    $strXlsContent = ploopi\arr::toexcel($objDbrQuery->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
+
+                    // Instanciation du convertisseur ODF
+                    $objOdfConverter = new ploopi\uno_converter(ploopi\param::get('system_webservice_jodconverter', ploopi\module::getid('system')));
+
+                    switch($strFormat)
                     {
-                        // Lecture de l'IP du client (c'est un tableau il peut en avoir plusieurs à cause notamment des proxies)
-                        $arrRemoteIp = $_SESSION['ploopi']['remote_ip'];
+                        case 'pdf':
+                            $strOuputMime = 'application/pdf';
+                        break;
 
-                        if ($row['ws_ip'] == '' || in_array($row['ws_ip'], $arrRemoteIp))
-                        {
-                            $objDbrQuery = $arrQueries[0];
+                        case 'sxc':
+                            $strOuputMime = 'application/vnd.sun.xml.calc';
+                        break;
 
-                            // Génération de la requête SQL
-                            if (!$objDbrQuery->generate($arrParams)) ploopi\system::kill();
-
-                            // Exécution de la requête et stockage du résultat
-                            if ($strFormat != 'sql') $objDbrQuery->exec($intCacheLifetime);
-
-                            switch($strFormat)
-                            {
-                                case 'sql':
-                                    $mixedVar = $objDbrQuery->getquery();
-                                break;
-
-                                case 'html':
-                                    $mixedVar = '
-                                        <html><style>
-                                        body {font: 11px Verdana,Tahoma,Arial,sans-serif;}
-                                        table {padding:0px;margin:2px;border:1px solid #c0c0c0;border-collapse:collapse;}
-                                        td, th {padding:2px 4px;border:1px solid #888;}
-                                        th {background-color:#ddd;}
-                                        </style><body>
-                                    '.ploopi\arr::tohtml($objDbrQuery->getresult()).'</body></html>';
-                                break;
-
-                                case 'xls':
-                                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xls', 'query', null, array('writer' => 'excel5'));
-                                break;
-
-                                case 'xlsx':
-                                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
-                                break;
-
-                                case 'sxc':
-                                case 'ods':
-                                    $mixedVar = ploopi\arr::toexcel($objDbrQuery->getresult(), true, 'dbreport.ods', 'query', null, array('writer' => 'ods'));
-                                break;
-
-                                case 'pdf':
-                                    // Génération du fichier XLSX
-                                    $strXlsContent = ploopi\arr::toexcel($objDbrQuery->getresult(), true,  'dbreport.xlsx', 'query', null, array('writer' => 'excel2007'));
-
-                                    // Instanciation du convertisseur ODF
-                                    $objOdfConverter = new ploopi\uno_converter(ploopi\param::get('system_webservice_jodconverter', ploopi\module::getid('system')));
-
-                                    switch($strFormat)
-                                    {
-                                        case 'pdf':
-                                            $strOuputMime = 'application/pdf';
-                                        break;
-
-                                        case 'sxc':
-                                            $strOuputMime = 'application/vnd.sun.xml.calc';
-                                        break;
-
-                                        case 'ods':
-                                            $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
-                                        break;
-                                    }
-
-                                    // Conversion du document dans le format sélectionné
-                                    $mixedVar = $objOdfConverter->convert($strXlsContent, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
-                                break;
-
-                                case 'csv':
-                                    $mixedVar = ploopi\arr::tocsv($objDbrQuery->getresult());
-                                break;
-
-                                case 'json':
-                                    $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult());
-                                break;
-
-                                case 'json_opt':
-                                    $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult_opt());
-                                break;
-
-                                case 'xml':
-                                    $mixedVar = ploopi\arr::toxml($objDbrQuery->getresult());
-                                break;
-
-                                case 'ser':
-                                    $mixedVar = serialize($objDbrQuery->getresult());
-                                break;
-
-                                case 'raw':
-                                    $mixedVar = $objDbrQuery->getresult();
-                                break;
-
-                                default:
-                                case 'txt':
-                                    $mixedVar = print_r($objDbrQuery->getresult(), true);
-                                break;
-
-                            }
-
-                        }
-                        else $strError = "Adresse IP invalide";
+                        case 'ods':
+                            $strOuputMime = 'application/vnd.oasis.opendocument.spreadsheet';
+                        break;
                     }
-                    else $strError = "Code invalide";
-                }
-                else $strError = "Identifiant &laquo; {$strWsId} &raquo; incorrect";
-            }
 
-            if (!empty($strError)) ploopi\system::kill($strError);
+                    // Conversion du document dans le format sélectionné
+                    $mixedVar = $objOdfConverter->convert($strXlsContent, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $strOuputMime);
+                break;
+
+                case 'csv':
+                    $mixedVar = ploopi\arr::tocsv($objDbrQuery->getresult());
+                break;
+
+                case 'json':
+                    $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult());
+                break;
+
+                case 'json_opt':
+                    $mixedVar = ploopi\arr::tojson($objDbrQuery->getresult_opt());
+                break;
+
+                case 'xml':
+                    $mixedVar = ploopi\arr::toxml($objDbrQuery->getresult());
+                break;
+
+                case 'ser':
+                    $mixedVar = serialize($objDbrQuery->getresult());
+                break;
+
+                case 'raw':
+                    $mixedVar = $objDbrQuery->getresult();
+                break;
+
+                default:
+                case 'txt':
+                    $mixedVar = print_r($objDbrQuery->getresult(), true);
+                break;
+
+            }
 
             // Sauvegarde de la variable en cache
             $objCache->save_var($mixedVar);

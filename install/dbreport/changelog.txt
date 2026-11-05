@@ -1,3 +1,31 @@
+== Module DBREPORT - version 2.1.11 ===================================================
+
+2026-10-21  Ovensia <stephane@ovensia.fr>
+
+* Tables et champs d'une requête limités à la métabase : une table ajoutée doit y être
+  visible et appartenir à un module de la requête, un champ y être visible et venir
+  d'une table de la requête.
+* La modification d'un champ ne change plus sa table, son nom ni sa requête.
+* « Fonction appliquée » (avant et après groupement) contrôlée : marqueur %, valeurs,
+  opérateurs et fonctions MySQL connues seulement ; une saisie refusée est signalée et
+  l'ancienne valeur conservée. Opérateur de critère, opération et tri limités aux
+  listes proposées. Type et activation d'une jointure contrôlés.
+* À l'exécution, les tables absentes ou masquées de la métabase, les champs qui n'y
+  figurent pas (mot de passe, données de session…), les fonctions et opérateurs de
+  critère refusés sont ignorés, y compris dans un rapport enregistré avant ce contrôle.
+  Une fonction qui citait une autre colonne cesse donc de s'appliquer.
+
+== Module DBREPORT - version 2.1.10 ===================================================
+
+2026-10-20  Ovensia <stephane@ovensia.fr>
+
+* Webservice : code et adresse IP contrôlés avant la lecture du cache ; code comparé
+  par hash_equals ; la clé de cache tient compte du nom des paramètres.
+* Intitulé d'un champ (alias) protégé en identifiant SQL. Le tri d'un champ sans intitulé mais
+  avec opération (somme, moyenne…) suit désormais l'alias réel, non « table_champ ».
+* Jointure RIGHT : query_select::add_rightjoin() n'existait pas, tout rapport portant
+  une relation RIGHT s'arrêtait sur une erreur fatale (corrigé dans le socle).
+
 == Module DBREPORT - version 2.1.9 ====================================================
 
 2026-10-12  Ovensia <stephane@ovensia.fr>

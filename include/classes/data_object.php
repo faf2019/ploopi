@@ -37,6 +37,10 @@ use ploopi;
 
 class data_object
 {
+    /** Préfixe métier et champs dont les changements justifient un événement ; activation explicite par classe. */
+    protected $strEventPrefix = '';
+    protected $arrEventFields = array();
+
     /**
      * Nom de la classe
      *
@@ -108,6 +112,24 @@ class data_object
      */
 
     private $sql;
+
+    /**
+     * Valeurs telles qu'en base au dernier open(), open_row() ou save() réussi :
+     * save() n'écrit que les champs qui en diffèrent. null : inconnues, tout est écrit.
+     *
+     * @var array|null
+     */
+
+    private $arrOriginal = null;
+
+    /**
+     * Valeurs initiales par table, calculées par init_description() (un DESCRIBE par
+     * table et par requête HTTP). Vidé par db à chaque ordre de structure (ALTER, CREATE…).
+     *
+     * @var array
+     */
+
+    private static $arrDescriptions = array();
 
     /**
      * Contenu d'un enregistrement de la table dans un tableau associatif : champ => valeur
@@ -206,6 +228,9 @@ class data_object
     {
         unset($this->db);
         $this->db = $db;
+
+        // La clé du cache (spl_object_hash) peut être réattribuée à une autre connexion.
+        self::reset_descriptions();
     }
 
 
@@ -222,6 +247,9 @@ class data_object
         $lprefix = strlen($prefix);
         foreach ($values as $key => $value)
         {
+            // Les clés deviennent des noms de colonnes : seule une clé qui peut en être un est reprise.
+            if (!preg_match('/^[A-Za-z0-9_]+\z/', $key)) continue;
+
             if ($lprefix == 0) $this->fields[$key] = $value;
             else
             {
@@ -256,17 +284,21 @@ class data_object
         {
             for ($i = 0; $i < $numargs; $i++) $id[$i] = $args[$i];
 
-            $this->sql = "SELECT * FROM {$this->tablename_quoted} WHERE `{$this->idfields[0]}` = '".$this->db->addslashes($id[0])."'";
+            $this->sql = "SELECT * FROM {$this->tablename_quoted} WHERE ".self::quotename($this->idfields[0])." = '".$this->db->addslashes($id[0])."'";
 
-            for ($i = 1; $i < $numargs; $i++) $this->sql .= " AND `{$this->idfields[$i]}` = '".$this->db->addslashes($id[$i])."'";
+            for ($i = 1; $i < $numargs; $i++) $this->sql .= " AND ".self::quotename($this->idfields[$i])." = '".$this->db->addslashes($id[$i])."'";
 
             $this->resultid = $this->db->query($this->sql);
             $this->numrows = $this->db->numrows($this->resultid);
             $this->fields = $this->db->fetchrow($this->resultid);
 
+            // Lu avant la réaffectation des clés : la copie garde les valeurs exactes de la base.
+            $this->arrOriginal = $this->numrows > 0 ? $this->fields : null;
+
             for ($i = 0; $i < $numargs; $i++) $this->id[$this->idfields[$i]] = $this->fields[$this->idfields[$i]] = $id[$i];
 
-            if ($this->numrows > 0) $this->new = false;
+            // Un objet réutilisé après une ouverture réussie redevient neuf si la clé est absente.
+            $this->new = !($this->numrows > 0);
 
             return $this->numrows > 0;
         }
@@ -282,7 +314,7 @@ class data_object
 
     public function open_row($row)
     {
-        $this->fields = $row;
+        $this->fields = $this->arrOriginal = $row;
 
         foreach($this->idfields as $field) $this->id[$field] = $row[$field];
 
@@ -292,10 +324,45 @@ class data_object
     /**
      * Insère ou met à jour l'enregistrement dans la base de données
      *
-     * @return mixed valeur de la clé primaire
+     * La mise à jour n'écrit que les champs modifiés depuis open(), open_row() ou le
+     * dernier save() ; sans modification, aucune requête n'est émise. Un objet dont les
+     * valeurs en base sont inconnues (new mis à false à la main) est écrit en entier.
+     *
+     * @return mixed valeur de la clé primaire ; false si l'insertion a échoué
+     * (l'objet reste alors neuf)
      */
 
     public function save()
+    {
+        if ($this->strEventPrefix === '' || !events::enabled()) return $this->save_record();
+        $booNew = $this->new;
+        $arrChanged = array();
+        foreach ($this->arrEventFields as $strField)
+        {
+            if (array_key_exists($strField, $this->fields) && ($booNew || !is_array($this->arrOriginal) || !array_key_exists($strField, $this->arrOriginal) || !self::samevalue($this->fields[$strField], $this->arrOriginal[$strField]))) $arrChanged[] = $strField;
+        }
+        if (!$booNew && !$arrChanged) return $this->save_record();
+        // Restaurer l'état ORM si l'outbox échoue : l'objet peut être réessayé.
+        $arrBefore = array($this->new, $this->fields, $this->id, $this->arrOriginal);
+        try
+        {
+            return $this->db->transaction(function () use ($booNew, $arrChanged)
+            {
+                $mixId = $this->save_record();
+                if ($mixId === false) return false;
+                events::record($this->strEventPrefix.($booNew ? '.created.v1' : '.updated.v1'), array('id' => count($this->id) === 1 ? reset($this->id) : $this->id, 'changed_fields' => $arrChanged), $this->event_context());
+                return $mixId;
+            });
+        }
+        catch (\Throwable $objError)
+        {
+            list($this->new, $this->fields, $this->id, $this->arrOriginal) = $arrBefore;
+            throw $objError;
+        }
+    }
+
+    /** Écriture SQL, partagée avec le chemin transactionnel d'événement. */
+    protected function save_record()
     {
 
         if ($this->new) // insert
@@ -312,7 +379,11 @@ class data_object
             $listvalues = (empty($arrValues)) ? '' : 'SET '.implode(', ', $arrValues);
 
             $this->sql = "INSERT INTO {$this->tablename_quoted} {$listvalues}"; // construction de la requète
-            $this->db->query($this->sql);
+
+            // db::query() rend null sur une erreur SQL, false sur un INSERT réussi (et aussi,
+            // hélas, sans connexion : ce cas-là n'est pas détecté). Marquer l'objet comme
+            // enregistré après une erreur ferait d'un second save() un UPDATE sur une clé vide.
+            if (is_null($this->db->query($this->sql))) return false;
 
             // get "static" key
             foreach($this->idfields as $fieldname) if (isset($this->fields[$fieldname])) $this->id[$fieldname] = $this->fields[$fieldname];
@@ -324,6 +395,7 @@ class data_object
             }
 
             $this->new = false;
+            $this->arrOriginal = $this->fields;
         }
         else // update
         {
@@ -331,16 +403,27 @@ class data_object
             $arrValues = array();
             foreach ($this->fields as $key => $value)
             {
+                if (is_array($this->arrOriginal) && array_key_exists($key, $this->arrOriginal)
+                    && self::samevalue($this->arrOriginal[$key], $value)) continue;
+
                 $arrValues[] = self::sqlvalue($this->tablename_quoted, $key, $value, $this->db);
             }
 
-            $listvalues = (empty($arrValues)) ? '' : implode(', ', $arrValues);
+            if (!empty($arrValues))
+            {
+                $listvalues = implode(', ', $arrValues);
 
-            // build request
-            $this->sql = "UPDATE {$this->tablename_quoted} SET {$listvalues} WHERE {$this->tablename_quoted}.`{$this->idfields[0]}` = '".$this->db->addslashes($this->id[$this->idfields[0]])."'";
-            for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND {$this->tablename_quoted}.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->id[$this->idfields[$i]])."'";
+                // build request
+                $this->sql = "UPDATE {$this->tablename_quoted} SET {$listvalues} WHERE ".$this->sqlkey();
 
-            $this->db->query($this->sql);
+                if (is_null($this->db->query($this->sql))) return false;
+                else
+                {
+                    $this->arrOriginal = $this->fields;
+                    // La clé a pu être modifiée par la mise à jour : les suivantes la visent.
+                    foreach($this->idfields as $fieldname) if (isset($this->fields[$fieldname])) $this->id[$fieldname] = $this->fields[$fieldname];
+                }
+            }
         }
 
         // return key (array if multiple key)
@@ -372,11 +455,53 @@ class data_object
 
     protected static function sqlvalue($strTable, $strChamp, $mixValeur, $objDb)
     {
-        if (is_null($mixValeur)) return "{$strTable}.`{$strChamp}` = null";
+        $strChamp = self::quotename($strChamp);
 
-        if (is_bool($mixValeur)) return "{$strTable}.`{$strChamp}` = ".($mixValeur ? '1' : '0');
+        if (is_null($mixValeur)) return "{$strTable}.{$strChamp} = null";
 
-        return "{$strTable}.`{$strChamp}` = '".$objDb->addslashes($mixValeur)."'";
+        if (is_bool($mixValeur)) return "{$strTable}.{$strChamp} = ".($mixValeur ? '1' : '0');
+
+        return "{$strTable}.{$strChamp} = '".$objDb->addslashes($mixValeur)."'";
+    }
+
+    /**
+     * Indique si deux valeurs s'enregistrent à l'identique
+     *
+     * Comparaison telle que la base la verra : 3 et '3', false et '0', true et '1' sont
+     * égaux ; null n'est égal qu'à null (null et '' diffèrent en base).
+     *
+     * @param mixed $mixA valeur lue en base
+     * @param mixed $mixB valeur à écrire
+     * @return boolean
+     */
+
+    private static function samevalue($mixA, $mixB)
+    {
+        if (is_null($mixA) || is_null($mixB)) return is_null($mixA) && is_null($mixB);
+
+        if (is_bool($mixA)) $mixA = (int) $mixA;
+        if (is_bool($mixB)) $mixB = (int) $mixB;
+
+        // Un tableau (saisie multiple) n'est jamais tenu pour inchangé : il est écrit comme avant.
+        if (!is_scalar($mixA) || !is_scalar($mixB)) return false;
+
+        return (string) $mixA === (string) $mixB;
+    }
+
+    /**
+     * Protège un nom de colonne pour l'intégrer à une requête
+     *
+     * Les noms de champs viennent souvent des clés d'un formulaire (setvalues($_POST)),
+     * que security::filtervar() ne nettoie pas. Sans échappement de l'accent grave, une
+     * clé telle que « titre`=(SELECT …),`contenu » injectait du SQL dans la requête.
+     *
+     * @param string $strChamp nom du champ
+     * @return string nom protégé, entre accents graves
+     */
+
+    protected static function quotename($strChamp)
+    {
+        return '`'.str_replace('`', '``', $strChamp).'`';
     }
 
     /**
@@ -385,13 +510,51 @@ class data_object
 
     public function delete()
     {
-        $numargs = func_num_args();
-        if ($numargs > 0) for ($i = 0; $i < $numargs; $i++) $this->fields[$this->idfields[$i]] = func_get_arg($i);
+        $arrArgs = func_get_args();
+        if ($this->strEventPrefix === '' || !events::enabled()) return $this->delete_record($arrArgs);
+        return $this->db->transaction(function () use ($arrArgs)
+        {
+            $booDeleted = $this->delete_record($arrArgs);
+            if ($booDeleted) events::record($this->strEventPrefix.'.deleted.v1', array('id' => count($this->id) === 1 ? reset($this->id) : $this->id), $this->event_context());
+            return $booDeleted;
+        });
+    }
 
-        $this->sql = "DELETE FROM {$this->tablename_quoted} WHERE {$this->tablename_quoted}.`{$this->idfields[0]}` = '".$this->db->addslashes($this->fields[$this->idfields[0]])."'";
-        for ($i = 1; $i < sizeof($this->idfields); $i++) $this->sql .= " AND {$this->tablename_quoted}.`{$this->idfields[$i]}` = '".$this->db->addslashes($this->fields[$this->idfields[$i]])."'";
+    private function event_context()
+    {
+        return array('module' => (int) ($this->fields['id_module'] ?? ($_SESSION['ploopi']['moduleid'] ?? 0)),
+            'workspace' => (int) ($this->fields['id_workspace'] ?? ($_SESSION['ploopi']['workspaceid'] ?? 0)),
+            'user' => (int) ($_SESSION['ploopi']['userid'] ?? 0));
+    }
 
-        $this->db->query($this->sql);
+    private function delete_record($arrArgs)
+    {
+        foreach ($arrArgs as $intIndex => $mixId) $this->id[$this->idfields[$intIndex]] = $this->fields[$this->idfields[$intIndex]] = $mixId;
+        $this->sql = "DELETE FROM {$this->tablename_quoted} WHERE ".$this->sqlkey();
+        if (is_null($this->db->query($this->sql))) return false;
+        return $this->db->affectedrows() > 0;
+    }
+
+    /**
+     * Rend la clause WHERE qui désigne l'enregistrement
+     *
+     * La clé lue par open() / open_row() prime : un champ de clé modifié dans fields
+     * (setvalues() d'un formulaire, par exemple) ne détourne ni l'UPDATE ni le DELETE
+     * vers un autre enregistrement. À défaut (objet rempli à la main), fields fait foi.
+     *
+     * @return string condition SQL
+     */
+
+    private function sqlkey()
+    {
+        $arrWhere = array();
+        foreach($this->idfields as $fieldname)
+        {
+            $mixValue = isset($this->id[$fieldname]) ? $this->id[$fieldname] : (isset($this->fields[$fieldname]) ? $this->fields[$fieldname] : '');
+            $arrWhere[] = "{$this->tablename_quoted}.".self::quotename($fieldname)." = '".$this->db->addslashes($mixValue)."'";
+        }
+
+        return implode(' AND ', $arrWhere);
     }
 
     /**
@@ -411,11 +574,37 @@ class data_object
 
     public function init_description()
     {
-        $this->sql = "DESCRIBE {$this->tablename_quoted}";
-        $rs = $this->db->query($this->sql);
-        while ($fields = $this->db->fetchrow($rs)) {
-            $this->fields[$fields['Field']] = self::defaultvalue($fields);
+        $strCle = spl_object_hash($this->db).$this->tablename_quoted;
+
+        if (!isset(self::$arrDescriptions[$strCle]))
+        {
+            $arrDefauts = array();
+            $this->sql = "DESCRIBE {$this->tablename_quoted}";
+            $rs = $this->db->query($this->sql);
+            while ($fields = $this->db->fetchrow($rs)) {
+                $arrDefauts[$fields['Field']] = self::defaultvalue($fields);
+            }
+
+            // Une table absente ne se met pas en cache : elle peut être créée plus loin.
+            if (empty($arrDefauts)) return;
+
+            self::$arrDescriptions[$strCle] = $arrDefauts;
         }
+
+        foreach(self::$arrDescriptions[$strCle] as $strChamp => $mixValeur) $this->fields[$strChamp] = $mixValeur;
+    }
+
+    /**
+     * Oublie les descriptions de tables mises en cache par init_description()
+     *
+     * Appelée par db après tout ordre qui peut changer une structure (ALTER, CREATE,
+     * DROP, RENAME) : une installation ou une mise à jour insère souvent dans la table
+     * qu'elle vient de modifier, au cours de la même requête.
+     */
+
+    public static function reset_descriptions()
+    {
+        self::$arrDescriptions = array();
     }
 
     /**
@@ -472,7 +661,7 @@ class data_object
             if ($key != '' && !is_null($value))
             {
                 if ($listvalues != '') $listvalues .= ', ';
-                $listvalues .= "{$this->tablename_quoted}.`{$key}` = '".$this->db->addslashes($value)."'";
+                $listvalues .= "{$this->tablename_quoted}.".self::quotename($key)." = '".$this->db->addslashes($value)."'";
             }
         }
 
@@ -510,11 +699,12 @@ class data_object
             if ($key != '')
             {
                 if ($fields != '') $fields .= ",\n";
-                $fields .= "`{$key}` varchar(255) NOT NULL default ''";
+                $fields .= self::quotename($key)." varchar(255) NOT NULL default ''";
             }
         }
 
-        $sql .= $fields.") TYPE=MyISAM;";
+        // TYPE= n'est plus accepté depuis MySQL 5.5.
+        $sql .= $fields.") ENGINE=InnoDB;";
 
         return($sql);
     }

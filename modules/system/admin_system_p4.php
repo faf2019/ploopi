@@ -83,6 +83,14 @@ switch($_SESSION['system']['sysToolbarItem'])
         include './modules/system/admin_system_directory.php';
     break;
 
+    case 'events':
+        include './modules/system/admin_system_events.php';
+    break;
+
+    case 'api':
+        include './modules/system/admin_system_api.php';
+    break;
+
     case 'tools':
         include './modules/system/admin_system_tools_p4.php';
     break;

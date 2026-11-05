@@ -324,6 +324,35 @@ T::eq('IPv6 lien local (fe80::/10) écartée en WAN', array(), $ip_obtenue('fe80
 T::eq('IPv6 privée conservée hors WAN',             array('fd12:3456::1'), $ip_obtenue('fd12:3456::1', false));
 T::eq('adresse invalide rejetée',                   array(), $ip_obtenue('2001:zz::1', false));
 
+T::section('ip::get : en-têtes du client');
+/**
+ * Client-IP et X-Forwarded-For sont écrits par le client : sans frontal déclaré, seule
+ * l'adresse de la connexion compte. Apache (mod_php) et PHP-FPM exposent ces en-têtes à
+ * getenv(), que putenv() simule ici (le serveur intégré ne les expose pas).
+ */
+putenv('REMOTE_ADDR=192.0.2.10'); putenv('HTTP_X_FORWARDED_FOR=10.9.9.9'); putenv('HTTP_CLIENT_IP=10.9.9.8');
+T::eq('X-Forwarded-For et Client-IP ignorés sans frontal déclaré', array('192.0.2.10'), ploopi\ip::get());
+T::eq('règle d\'IP : pas contournée par l\'en-tête', false, ploopi\ip::isvalid(ploopi\ip::getrules('10.9.9.*')));
+putenv('HTTP_X_FORWARDED_FOR'); putenv('HTTP_CLIENT_IP'); putenv('REMOTE_ADDR');
+// Frontal déclaré : constante propre à un processus séparé
+$strCode = 'define("_PLOOPI_TRUSTED_PROXIES", "192.0.2.1, 192.0.2.2"); include "include/classes/ip.php"; echo implode(",", ploopi\\ip::get());';
+$funcFrontal = function($strDistante, $strXff) use ($strCode) {
+    return trim((string) shell_exec('cd '.escapeshellarg(PLOOPI_ROOT).' && REMOTE_ADDR='.escapeshellarg($strDistante).' HTTP_X_FORWARDED_FOR='.escapeshellarg($strXff).' HTTP_CLIENT_IP=10.9.9.8 '.escapeshellarg(PHP_BINARY).' -r '.escapeshellarg($strCode).' 2>/dev/null'));
+};
+T::eq('frontal déclaré : adresse la plus à droite qui n\'est pas un frontal', '203.0.113.7', $funcFrontal('192.0.2.1', '10.9.9.9, 203.0.113.7, 192.0.2.2'));
+T::eq('connexion directe : X-Forwarded-For ignoré', '198.51.100.4', $funcFrontal('198.51.100.4', '10.9.9.9'));
+
+T::section('bcrypt : coût');
+T::eq('empreinte au coût 12', 12, password_get_info(user::generate_hash('S3cret!Long2026', 'jean'))['options']['cost'] ?? null);
+T::chk('empreinte au coût 10 : à recalculer', user::password_needs_rehash('S3cret!', 'jean', password_hash(user::bcrypt_input('S3cret!', 'jean'), PASSWORD_BCRYPT, array('cost' => 10))) === true);
+T::chk('empreinte factice : jamais vérifiée', user::password_verify('ploopi/factice', 'x', user::DUMMY_HASH) === false);
+
+T::section('Mot de passe : longueur minimale toujours exigée');
+T::chk('« a » refusé, même sans règle de complexité', ploopi\security::passwordallowed('a') === false);
+T::chk('plus de 128 caractères refusés', ploopi\security::passwordallowed(str_repeat('a', 129)) === false);
+T::chk('témoin : longueur suffisante acceptée', ploopi\security::passwordallowed(str_repeat('a', max(12, (int) _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE))) === !_PLOOPI_USE_COMPLEXE_PASSWORD);
+T::chk('témoin : mot de passe long et complexe accepté', ploopi\security::passwordallowed('Une-Phrase-De-Passe-2026!') === true);
+
 T::section('forms : nom des fichiers joints');
 // Nom fourni par le visiteur, gardé tel quel jusqu'ici sous _PLOOPI_PATHDATA
 // La source inclut './modules/forms/classes/…' : si le module est déployé, prendre la copie

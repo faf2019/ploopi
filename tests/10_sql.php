@@ -119,6 +119,26 @@ T::eq(
     sqlformat::replace(array('rawsql' => 'x = %r', 'values' => array('DROP TABLE t')))
 );
 
+T::eq(
+    '%% produit un % littéral sans consommer de paramètre',
+    "label LIKE 'a%super%' AND id = 5",
+    sqlformat::replace(array('rawsql' => "label LIKE 'a%%super%%' AND id = %d", 'values' => array(5)))
+);
+/**
+ * La virgule figurait dans la classe de caractères de la regex ([s,d,f,…]) : « %, »
+ * était lu comme un marqueur et remplacé par une valeur brute.
+ */
+T::eq(
+    '%, n\'est pas un marqueur',
+    "FIND_IN_SET('a', '1%,2')",
+    sqlformat::replace(array('rawsql' => "FIND_IN_SET(%s, '1%%,2')", 'values' => array('a')))
+);
+T::eq(
+    '%, laissé tel quel',
+    "x = 'a' AND y LIKE '1%,2'",
+    sqlformat::replace(array('rawsql' => "x = %s AND y LIKE '1%,2'", 'values' => array('a')))
+);
+
 T::section('query_select');
 $objQuery = new query_select();
 $objQuery->add_select('e.*');
@@ -138,6 +158,13 @@ T::contient('HAVING échappé', 'HAVING COUNT(*) > 1', $strSql);
 T::contient('ORDER BY', 'ORDER BY e.id DESC', $strSql);
 
 T::eq('sans clause FROM, aucune requête n\'est produite', '', (new query_select())->get_sql());
+
+// dbreport propose une jointure RIGHT : add_rightjoin() n'existait pas (erreur fatale)
+$objQuery = new query_select();
+$objQuery->add_from('a');
+$objQuery->add_leftjoin('b ON b.id = a.id_b');
+$objQuery->add_rightjoin('c ON c.id = a.id_c AND c.x = %d', 3);
+T::eq('RIGHT JOIN après LEFT JOIN', 'SELECT * FROM a LEFT JOIN b ON b.id = a.id_b RIGHT JOIN c ON c.id = a.id_c AND c.x = 3', $objQuery->get_sql());
 
 T::section('query_select::add_limit');
 $objQuery = new query_select();
@@ -189,7 +216,7 @@ T::contient('DELETE', 'FROM t WHERE id = 1', $objDelete->get_sql());
 T::section('exécution réelle');
 $strTable = PLOOPI_TESTS_PREFIXE.'sql';
 $objDb->query("DROP TABLE IF EXISTS `{$strTable}`");
-$objDb->query("CREATE TABLE `{$strTable}` (`id` int(10) unsigned NOT NULL auto_increment, `label` varchar(255) default '', PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+$objDb->query("CREATE TABLE `{$strTable}` (`id` int(10) unsigned NOT NULL auto_increment, `label` varchar(255) default '', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 
 $objInsert = new query_insert();
 $objInsert->set_table($strTable);
@@ -246,6 +273,118 @@ $objQuery->add_from($strTable);
 $arrCompte = $objQuery->execute()->fetchrow();
 T::eq('suppression effectuée', '1', $arrCompte['nb']);
 
+T::section('nouveaux filtres : exécution réelle');
+$objDb->query("DROP TABLE IF EXISTS `{$strTable}`");
+$objDb->query("CREATE TABLE `{$strTable}` (id int PRIMARY KEY, label varchar(255), actif int) DEFAULT CHARSET=utf8mb4");
+$objDb->query("INSERT INTO `{$strTable}` VALUES (1, 'commun', 1), (2, 'commun', 1), (3, NULL, 0)");
+$objQuery = new query_select();
+$objQuery->add_from($strTable);
+$objQuery->add_where('actif = %d', 1);
+$objQuery->add_where_group(array(
+    array('rawsql' => 'id = %d', 'values' => 1),
+    array('rawsql' => 'id = %d', 'values' => 3),
+));
+T::eq('OR reste limité par le WHERE précédent', 1, $objQuery->execute()->numrows());
+$objQuery->remove_where();
+$objQuery->add_where_in('label', array("x') OR 1=1 --", 'commun'), 's');
+T::eq('IN échappe une charge SQL', 2, $objQuery->execute()->numrows());
+$objQuery->remove_where();
+$objQuery->add_where_null('label');
+T::eq('IS NULL sélectionne la ligne nulle', 1, $objQuery->execute()->numrows());
+$objQuery->remove_where();
+$objQuery->add_where_null('label', true);
+$objQuery->add_select('label');
+$objQuery->set_distinct();
+T::eq('DISTINCT supprime les doublons', 1, $objQuery->execute()->numrows());
+$objQuery->set_distinct(false);
+T::eq('désactiver DISTINCT restitue les doublons', 2, $objQuery->execute()->numrows());
+foreach (array('update', 'delete') as $strType)
+{
+    $strClass = 'ploopi\\query_'.$strType;
+    $objMutation = new $strClass();
+    $objMutation->add_from($strTable);
+    if ($strType === 'update') $objMutation->add_set('actif = 9');
+    $objMutation->add_where_in('id', array());
+    $objMutation->execute();
+    T::eq($strType.' IN vide ne touche aucune ligne', 0, $objMutation->affectedrows());
+}
+$objQuery = new query_select();
+$objQuery->add_from($strTable);
+$objQuery->add_where_in('id', array(), 'd', true);
+T::eq('NOT IN vide conserve toutes les lignes', 3, $objQuery->execute()->numrows());
+
+T::section('EXISTS corrélé, pagination et réutilisation : exécution réelle');
+$strRelation = $strTable.'_relation';
+$objDb->query("DROP TABLE IF EXISTS `{$strRelation}`");
+$objDb->query("CREATE TABLE `{$strRelation}` (id int, label varchar(255)) DEFAULT CHARSET=utf8mb4");
+$objRelation = new query_insert();
+$objRelation->set_table($strRelation);
+$objRelation->add_set('id = %d', 1);
+$objRelation->add_set('label = %s', "O'Brien %d");
+$objRelation->execute();
+$objRelation->remove_set();
+$objRelation->add_set('id = %d', 3);
+$objRelation->add_set('label = %s', 'autre');
+$objRelation->execute();
+$objSubquery = new query_select();
+$objSubquery->add_select('1');
+$objSubquery->add_from($strRelation.' r');
+$objSubquery->add_where('r.id = t.id');
+$objSubquery->add_where('r.label = %s', "O'Brien %d");
+$objQuery = new query_select();
+$objQuery->add_select('t.id');
+$objQuery->add_from($strTable.' t');
+$objQuery->add_where_exists($objSubquery);
+$objRs = $objQuery->execute();
+T::eq('EXISTS corrélé trouve une ligne', 1, $objRs->numrows());
+T::eq('EXISTS échappe les paramètres sans relire les pourcents', '1', $objRs->fetchrow()['id']);
+$objQuery->remove_where();
+$objQuery->add_where_not_exists($objSubquery);
+T::eq('NOT EXISTS trouve le complément', 2, $objQuery->execute()->numrows());
+$objSubquery->remove_where();
+$objSubquery->add_where('r.id = t.id');
+$objSubquery->add_where('r.label = %s', "x') OR 1=1 --");
+$objQuery->remove_where();
+$objQuery->add_where_exists($objSubquery);
+T::eq('charge SQL dans EXISTS sans effet', 0, $objQuery->execute()->numrows());
+$objSubquery->remove_where();
+$objSubquery->add_where('r.id = t.id');
+$objSubquery->add_where('r.id = %d', 1);
+$objUpdate = new query_update();
+$objUpdate->add_from($strTable.' t');
+$objUpdate->add_set('actif = 7');
+$objUpdate->add_where_exists($objSubquery);
+$objUpdate->execute();
+T::eq('UPDATE EXISTS ne touche que la ligne liée', 1, $objUpdate->affectedrows());
+$objQuery->remove_where();
+$objQuery->add_where('actif = %d', 7);
+T::eq('valeur réellement modifiée par UPDATE EXISTS', '1', $objQuery->execute()->fetchrow()['id']);
+$objDelete = new query_delete();
+$objDelete->add_from($strTable.' t');
+$objDelete->add_delete('t');
+$objDelete->add_where_not_exists($objSubquery);
+$objDelete->execute();
+T::eq('DELETE NOT EXISTS retire les lignes sans relation', 2, $objDelete->affectedrows());
+$objDelete->remove_where();
+$objDelete->remove_delete();
+$objDelete->remove_from();
+$objDelete->add_from($strTable);
+$objDelete->add_where('id = %d', 99);
+$objDelete->execute();
+T::eq('DELETE réutilisé après retrait des cibles et tables', 0, $objDelete->affectedrows());
+$objDb->query("INSERT INTO `{$strTable}` VALUES (2, 'commun', 1), (3, NULL, 0)");
+$objQuery->remove_where();
+$objQuery->add_orderby('t.id');
+$objQuery->add_pagination(2, 2);
+$objRs = $objQuery->execute();
+T::eq('dernière page partielle', 1, $objRs->numrows());
+T::eq('offset de la deuxième page appliqué', '3', $objRs->fetchrow()['id']);
+$objQuery->add_pagination(3, 2);
+T::eq('page au-delà des résultats vide', 0, $objQuery->execute()->numrows());
+$objQuery->remove_limit();
+T::eq('remove_limit restitue toutes les lignes', 3, $objQuery->execute()->numrows());
+$objDb->query("DROP TABLE IF EXISTS `{$strRelation}`");
+
 T::section('recordset::getcsv');
 /**
  * Régression surveillée : getcsv() construisait ses fonctions d'échappement avec
@@ -253,7 +392,7 @@ T::section('recordset::getcsv');
  * « Call to undefined function create_function() ».
  */
 $objDb->query("DROP TABLE IF EXISTS `{$strTable}`");
-$objDb->query("CREATE TABLE `{$strTable}` (`id` int(10) unsigned NOT NULL auto_increment, `label` varchar(255) default '', PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+$objDb->query("CREATE TABLE `{$strTable}` (`id` int(10) unsigned NOT NULL auto_increment, `label` varchar(255) default '', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 $objInsert = new query_insert();
 $objInsert->set_table($strTable);
 $objInsert->add_set('label = %s', 'Dupont');
@@ -287,6 +426,12 @@ T::eq('première requête isolée', 'SELECT 1;', $arrRequetes[0]);
 T::eq('un point-virgule entre apostrophes ne coupe pas la requête', "SELECT 'a;b';", $arrRequetes[1]);
 // Le reliquat après le dernier point-virgule est conservé tel quel (ici, un saut de ligne).
 T::eq('le reliquat de fin est conservé', 3, sizeof($arrRequetes));
+$arrRequetes = db::split_sql("SELECT 1 /* a ; it's */ ;\n-- b ; c\nSELECT 4/2 - 1 # d ; e\n;\nSELECT \"f;g\", 'h\\';i';");
+T::eq('commentaires, tirets, barres obliques et échappements', array("SELECT 1 /* a ; it's */ ;", "-- b ; c\nSELECT 4/2 - 1 # d ; e\n;", "SELECT \"f;g\", 'h\\';i';"), array_slice($arrRequetes, 0, 3));
+// Longue requête (métabase du socle) : sans groupe possessif, la pile JIT de PCRE s'épuisait et le découpage rendait un tableau vide.
+$strLongue = 'INSERT INTO t VALUES '.implode(', ', array_fill(0, 20000, "('ploopi_user', 'champ', 'int(10) unsigned', 1)")).';';
+T::eq('une très longue requête est découpée', array($strLongue), array_slice(db::split_sql($strLongue."\nSELECT 1;"), 0, 1));
+T::eq('sans erreur PCRE', PREG_NO_ERROR, preg_last_error());
 
 $objDb->query("DROP TABLE IF EXISTS `{$strTable}`");
 

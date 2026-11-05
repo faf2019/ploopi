@@ -16,12 +16,12 @@ CREATE TABLE `ploopi_annotation` (
   `id_element` char(32) NOT NULL DEFAULT '0',
   `id_module` int(10) UNSIGNED DEFAULT '0',
   `id_module_type` int(10) DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_annotation_tag` (
   `id_annotation` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_tag` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_captcha` (
   `id` varchar(255) NOT NULL,
@@ -29,13 +29,13 @@ CREATE TABLE `ploopi_captcha` (
   `codesound` varchar(20) NOT NULL,
   `code` varchar(20) NOT NULL,
   `time` int(20) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_confirmation_code` (
   `action` varchar(255) NOT NULL,
   `timestp` bigint(14) UNSIGNED NOT NULL DEFAULT '0',
   `code` varchar(32) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_connecteduser` (
   `sid` char(32) NOT NULL DEFAULT '0',
@@ -45,12 +45,12 @@ CREATE TABLE `ploopi_connecteduser` (
   `workspace_id` int(10) DEFAULT NULL,
   `module_id` int(10) UNSIGNED DEFAULT '0',
   `timestp` bigint(14) DEFAULT '0'
-) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_documents_ext` (
   `ext` varchar(10) NOT NULL DEFAULT '',
   `filetype` varchar(16) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_documents_ext` (`ext`, `filetype`) VALUES
 ('odt', 'document'),
@@ -101,7 +101,7 @@ CREATE TABLE `ploopi_documents_file` (
   `id_module` int(10) UNSIGNED DEFAULT '0',
   `id_record` varchar(255) NOT NULL,
   `id_object` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_documents_folder` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE `ploopi_documents_folder` (
   `id_module` int(10) UNSIGNED DEFAULT '0',
   `id_record` varchar(255) NOT NULL,
   `id_object` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_group` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE `ploopi_group` (
   `depth` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `shared` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_group` (`id`, `id_group`, `label`, `system`, `protected`, `parents`, `depth`, `id_workspace`, `shared`) VALUES
 (1, 0, 'system', 1, 1, '0', 1, 0, 0),
@@ -141,7 +141,7 @@ INSERT INTO `ploopi_group` (`id`, `id_group`, `label`, `system`, `protected`, `p
 CREATE TABLE `ploopi_group_user` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_group` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_group_user` (`id_user`, `id_group`) VALUES
 (2, 3);
@@ -157,7 +157,7 @@ CREATE TABLE `ploopi_index_element` (
   `id_user` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `id_module` smallint(5) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_index_keyword_element` (
   `id_element` int(10) UNSIGNED NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE `ploopi_index_keyword_element` (
   `weight` mediumint(10) UNSIGNED NOT NULL DEFAULT '0',
   `ratio` float UNSIGNED NOT NULL DEFAULT '0',
   `relevance` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE `ploopi_index_phonetic_element` (
   `id_element` int(10) UNSIGNED NOT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE `ploopi_index_phonetic_element` (
   `weight` mediumint(10) UNSIGNED NOT NULL DEFAULT '0',
   `ratio` float UNSIGNED NOT NULL DEFAULT '0',
   `relevance` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE `ploopi_index_stem_element` (
   `id_element` int(10) UNSIGNED NOT NULL,
@@ -181,7 +181,7 @@ CREATE TABLE `ploopi_index_stem_element` (
   `weight` mediumint(10) UNSIGNED NOT NULL DEFAULT '0',
   `ratio` float UNSIGNED NOT NULL DEFAULT '0',
   `relevance` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE `ploopi_log` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -205,7 +205,7 @@ CREATE TABLE `ploopi_log` (
   `php_percent_time` int(10) UNSIGNED DEFAULT '0',
   `numqueries` int(10) UNSIGNED DEFAULT '0',
   `page_size` int(10) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_mb_action` (
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -215,7 +215,7 @@ CREATE TABLE `ploopi_mb_action` (
   `id_workspace` int(10) DEFAULT NULL,
   `id_object` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `role_enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_action` (`id_module_type`, `id_action`, `label`, `description`, `id_workspace`, `id_object`, `role_enabled`) VALUES
 (1, 1, 'Installer un Module', NULL, 0, 0, 1),
@@ -260,87 +260,420 @@ CREATE TABLE `ploopi_mb_field` (
   `type` varchar(50) DEFAULT NULL,
   `visible` tinyint(1) UNSIGNED DEFAULT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_field` (`tablename`, `name`, `label`, `type`, `visible`, `id_module_type`) VALUES
-('ploopi_group', 'shared', 'shared', 'tinyint(1) unsigned', 1, 1),
-('ploopi_group', 'depth', 'depth', 'int(10) unsigned', 1, 1),
-('ploopi_group', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_annotation', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_annotation', 'title', 'title', 'varchar(255)', 1, 1),
+('ploopi_annotation', 'content', 'content', 'longtext', 1, 1),
+('ploopi_annotation', 'object_label', 'object_label', 'varchar(255)', 1, 1),
+('ploopi_annotation', 'type_annotation', 'type_annotation', 'varchar(16)', 1, 1),
+('ploopi_annotation', 'date_annotation', 'date_annotation', 'varchar(14)', 1, 1),
+('ploopi_annotation', 'private', 'private', 'tinyint(1) unsigned', 1, 1),
+('ploopi_annotation', 'id_record', 'id_record', 'varchar(255)', 1, 1),
+('ploopi_annotation', 'id_object', 'id_object', 'int(10) unsigned', 1, 1),
+('ploopi_annotation', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_annotation', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_annotation', 'id_element', 'id_element', 'char(32)', 1, 1),
+('ploopi_annotation', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_annotation', 'id_module_type', 'id_module_type', 'int(10)', 1, 1),
+('ploopi_annotation_tag', 'id_annotation', 'id_annotation', 'int(10) unsigned', 1, 1),
+('ploopi_annotation_tag', 'id_tag', 'id_tag', 'int(10) unsigned', 1, 1),
+('ploopi_api_key', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_api_key', 'label', 'label', 'varchar(100)', 1, 1),
+('ploopi_api_key', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_api_key', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_api_key', 'prefix', 'prefix', 'varchar(16)', 1, 1),
+('ploopi_api_key', 'scopes', 'scopes', 'text', 1, 1),
+('ploopi_api_key', 'created_at', 'created_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_api_key', 'expires_at', 'expires_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_api_key', 'revoked_at', 'revoked_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_api_key', 'last_used_at', 'last_used_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_api_key', 'request_count', 'request_count', 'bigint(20) unsigned', 1, 1),
+('ploopi_api_key', 'failure_count', 'failure_count', 'bigint(20) unsigned', 1, 1),
+('ploopi_api_key', 'window_start', 'window_start', 'bigint(20) unsigned', 1, 1),
+('ploopi_api_key', 'window_count', 'window_count', 'int(10) unsigned', 1, 1),
+('ploopi_api_request', 'id', 'id', 'bigint(20) unsigned', 0, 1),
+('ploopi_api_request', 'id_key', 'id_key', 'int(10) unsigned', 0, 1),
+('ploopi_api_request', 'route', 'route', 'varchar(255)', 1, 1),
+('ploopi_api_request', 'status', 'status', 'smallint(5) unsigned', 1, 1),
+('ploopi_api_request', 'duration_ms', 'duration_ms', 'int(10) unsigned', 1, 1),
+('ploopi_api_request', 'created_at', 'created_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_captcha', 'id', 'id', 'varchar(255)', 1, 1),
+('ploopi_captcha', 'cptuse', 'cptuse', 'int(10) unsigned', 1, 1),
+('ploopi_captcha', 'time', 'time', 'int(20) unsigned', 1, 1),
+('ploopi_confirmation_code', 'action', 'action', 'varchar(255)', 1, 1),
+('ploopi_confirmation_code', 'timestp', 'timestp', 'bigint(14) unsigned', 1, 1),
+('ploopi_connecteduser', 'ip', 'ip', 'varchar(45)', 1, 1),
+('ploopi_connecteduser', 'domain', 'domain', 'varchar(255)', 1, 1),
+('ploopi_connecteduser', 'user_id', 'user_id', 'int(10) unsigned', 1, 1),
+('ploopi_connecteduser', 'workspace_id', 'workspace_id', 'int(10)', 1, 1),
+('ploopi_connecteduser', 'module_id', 'module_id', 'int(10) unsigned', 1, 1),
+('ploopi_connecteduser', 'timestp', 'timestp', 'bigint(14)', 1, 1),
+('ploopi_documents_ext', 'ext', 'ext', 'varchar(10)', 1, 1),
+('ploopi_documents_ext', 'filetype', 'filetype', 'varchar(16)', 1, 1),
+('ploopi_documents_file', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_documents_file', 'md5id', 'md5id', 'varchar(32)', 1, 1),
+('ploopi_documents_file', 'name', 'name', 'varchar(255)', 1, 1),
+('ploopi_documents_file', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_documents_file', 'description', 'description', 'varchar(255)', 1, 1),
+('ploopi_documents_file', 'ref', 'ref', 'varchar(255)', 1, 1),
+('ploopi_documents_file', 'timestp_file', 'timestp_file', 'bigint(14) unsigned', 1, 1),
+('ploopi_documents_file', 'timestp_create', 'timestp_create', 'bigint(14)', 1, 1),
+('ploopi_documents_file', 'timestp_modify', 'timestp_modify', 'bigint(14)', 1, 1),
+('ploopi_documents_file', 'size', 'size', 'int(10) unsigned', 1, 1),
+('ploopi_documents_file', 'extension', 'extension', 'varchar(20)', 1, 1),
+('ploopi_documents_file', 'parents', 'parents', 'varchar(255)', 1, 1),
+('ploopi_documents_file', 'content', 'content', 'longtext', 1, 1),
+('ploopi_documents_file', 'nbclick', 'nbclick', 'int(10) unsigned', 1, 1),
+('ploopi_documents_file', 'id_folder', 'id_folder', 'int(10) unsigned', 1, 1),
+('ploopi_documents_file', 'id_user_modify', 'id_user_modify', 'int(10) unsigned', 1, 1),
+('ploopi_documents_file', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_documents_file', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_documents_file', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_documents_file', 'id_record', 'id_record', 'varchar(255)', 1, 1),
+('ploopi_documents_file', 'id_object', 'id_object', 'int(10) unsigned', 1, 1),
+('ploopi_documents_file', 's3_bucket', 's3_bucket', 'text', 1, 1),
+('ploopi_documents_folder', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_documents_folder', 'md5id', 'md5id', 'varchar(32)', 1, 1),
+('ploopi_documents_folder', 'name', 'name', 'varchar(255)', 1, 1),
+('ploopi_documents_folder', 'description', 'description', 'varchar(255)', 1, 1),
+('ploopi_documents_folder', 'parents', 'parents', 'varchar(255)', 1, 1),
+('ploopi_documents_folder', 'timestp_create', 'timestp_create', 'bigint(14)', 1, 1),
+('ploopi_documents_folder', 'timestp_modify', 'timestp_modify', 'bigint(14)', 1, 1),
+('ploopi_documents_folder', 'nbelements', 'nbelements', 'int(10) unsigned', 1, 1),
+('ploopi_documents_folder', 'system', 'system', 'tinyint(1) unsigned', 1, 1),
+('ploopi_documents_folder', 'id_folder', 'id_folder', 'int(10) unsigned', 1, 1),
+('ploopi_documents_folder', 'id_user_modify', 'id_user_modify', 'int(10) unsigned', 1, 1),
+('ploopi_documents_folder', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_documents_folder', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_documents_folder', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_documents_folder', 'id_record', 'id_record', 'varchar(255)', 1, 1),
+('ploopi_documents_folder', 'id_object', 'id_object', 'int(10) unsigned', 1, 1),
+('ploopi_event_inbox', 'consumer', 'consumer', 'varchar(120)', 1, 1),
+('ploopi_event_inbox', 'event_id', 'event_id', 'varchar(128)', 1, 1),
+('ploopi_event_inbox', 'source_hash', 'source_hash', 'char(64)', 1, 1),
+('ploopi_event_inbox', 'type', 'type', 'varchar(190)', 1, 1),
+('ploopi_event_inbox', 'processed_at', 'processed_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_event_outbox', 'id', 'id', 'char(32)', 0, 1),
+('ploopi_event_outbox', 'type', 'type', 'varchar(190)', 1, 1),
+('ploopi_event_outbox', 'payload', 'payload', 'mediumtext', 1, 1),
+('ploopi_event_outbox', 'status', 'status', 'varchar(16)', 1, 1),
+('ploopi_event_outbox', 'attempts', 'attempts', 'int(10) unsigned', 1, 1),
+('ploopi_event_outbox', 'created_at', 'created_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_event_outbox', 'next_attempt_at', 'next_attempt_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_event_outbox', 'locked_by', 'locked_by', 'char(32)', 1, 1),
+('ploopi_event_outbox', 'locked_until', 'locked_until', 'bigint(20) unsigned', 1, 1),
+('ploopi_event_outbox', 'published_at', 'published_at', 'bigint(20) unsigned', 1, 1),
+('ploopi_event_outbox', 'last_error', 'last_error', 'varchar(255)', 1, 1),
+('ploopi_group', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_group', 'id_group', 'id_group', 'int(10) unsigned', 1, 1),
+('ploopi_group', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_group', 'system', 'system', 'tinyint(1) unsigned', 1, 1),
 ('ploopi_group', 'protected', 'protected', 'tinyint(1) unsigned', 1, 1),
 ('ploopi_group', 'parents', 'parents', 'varchar(100)', 1, 1),
-('ploopi_group', 'system', 'system', 'tinyint(1) unsigned', 1, 1),
-('ploopi_group', 'label', 'label', 'varchar(255)', 1, 1),
-('ploopi_group', 'id_group', 'id_group', 'int(10) unsigned', 0, 1),
-('ploopi_group', 'id', 'id', 'int(10) unsigned', 0, 1),
-('ploopi_workspace', 'frontoffice_domainlist', 'frontoffice_domainlist', 'longtext', 1, 1),
-('ploopi_workspace', 'meta_robots', 'meta_robots', 'varchar(255)', 1, 1),
-('ploopi_workspace', 'meta_copyright', 'meta_copyright', 'varchar(255)', 1, 1),
-('ploopi_workspace', 'meta_author', 'meta_author', 'varchar(255)', 1, 1),
-('ploopi_workspace', 'meta_keywords', 'meta_keywords', 'longtext', 1, 1),
+('ploopi_group', 'depth', 'depth', 'int(10) unsigned', 1, 1),
+('ploopi_group', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_group', 'shared', 'shared', 'tinyint(1) unsigned', 1, 1),
+('ploopi_group_user', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_group_user', 'id_group', 'id_group', 'int(10) unsigned', 0, 1),
+('ploopi_index_element', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_index_element', 'id_record', 'id_record', 'char(64)', 1, 1),
+('ploopi_index_element', 'id_object', 'id_object', 'smallint(5) unsigned', 1, 1),
+('ploopi_index_element', 'label', 'label', 'char(128)', 1, 1),
+('ploopi_index_element', 'timestp_create', 'timestp_create', 'bigint(14) unsigned', 1, 1),
+('ploopi_index_element', 'timestp_modify', 'timestp_modify', 'bigint(14) unsigned', 1, 1),
+('ploopi_index_element', 'timestp_lastindex', 'timestp_lastindex', 'bigint(14) unsigned', 1, 1),
+('ploopi_index_element', 'id_user', 'id_user', 'smallint(5) unsigned', 0, 1),
+('ploopi_index_element', 'id_workspace', 'id_workspace', 'smallint(5) unsigned', 0, 1),
+('ploopi_index_element', 'id_module', 'id_module', 'smallint(5) unsigned', 0, 1),
+('ploopi_index_keyword_element', 'id_element', 'id_element', 'int(10) unsigned', 1, 1),
+('ploopi_index_keyword_element', 'keyword', 'keyword', 'char(20)', 1, 1),
+('ploopi_index_keyword_element', 'weight', 'weight', 'mediumint(10) unsigned', 1, 1),
+('ploopi_index_keyword_element', 'ratio', 'ratio', 'float unsigned', 1, 1),
+('ploopi_index_keyword_element', 'relevance', 'relevance', 'tinyint(3) unsigned', 1, 1),
+('ploopi_index_phonetic_element', 'id_element', 'id_element', 'int(10) unsigned', 0, 1),
+('ploopi_index_phonetic_element', 'phonetic', 'phonetic', 'char(20)', 1, 1),
+('ploopi_index_phonetic_element', 'weight', 'weight', 'mediumint(10) unsigned', 1, 1),
+('ploopi_index_phonetic_element', 'ratio', 'ratio', 'float unsigned', 1, 1),
+('ploopi_index_phonetic_element', 'relevance', 'relevance', 'tinyint(3) unsigned', 1, 1),
+('ploopi_index_stem_element', 'id_element', 'id_element', 'int(10) unsigned', 1, 1),
+('ploopi_index_stem_element', 'stem', 'stem', 'char(20)', 1, 1),
+('ploopi_index_stem_element', 'weight', 'weight', 'mediumint(10) unsigned', 1, 1),
+('ploopi_index_stem_element', 'ratio', 'ratio', 'float unsigned', 1, 1),
+('ploopi_index_stem_element', 'relevance', 'relevance', 'tinyint(3) unsigned', 1, 1),
+('ploopi_log', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_log', 'request_method', 'request_method', 'varchar(255)', 1, 1),
+('ploopi_log', 'query_string', 'query_string', 'varchar(255)', 1, 1),
+('ploopi_log', 'remote_addr', 'remote_addr', 'varchar(64)', 1, 1),
+('ploopi_log', 'remote_port', 'remote_port', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'script_filename', 'script_filename', 'varchar(255)', 1, 1),
+('ploopi_log', 'path_translated', 'path_translated', 'varchar(255)', 1, 1),
+('ploopi_log', 'script_name', 'script_name', 'varchar(255)', 1, 1),
+('ploopi_log', 'request_uri', 'request_uri', 'varchar(255)', 1, 1),
+('ploopi_log', 'ploopi_userid', 'ploopi_userid', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'ploopi_workspaceid', 'ploopi_workspaceid', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'ploopi_moduleid', 'ploopi_moduleid', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'browser', 'browser', 'varchar(64)', 1, 1),
+('ploopi_log', 'system', 'system', 'varchar(64)', 1, 1),
+('ploopi_log', 'ts', 'ts', 'bigint(14) unsigned', 1, 1),
+('ploopi_log', 'total_exec_time', 'total_exec_time', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'sql_exec_time', 'sql_exec_time', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'sql_percent_time', 'sql_percent_time', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'php_percent_time', 'php_percent_time', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'numqueries', 'numqueries', 'int(10) unsigned', 1, 1),
+('ploopi_log', 'page_size', 'page_size', 'int(10) unsigned', 1, 1),
+('ploopi_mb_action', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_mb_action', 'id_action', 'id_action', 'int(10) unsigned', 1, 1),
+('ploopi_mb_action', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_mb_action', 'description', 'description', 'varchar(255)', 1, 1),
+('ploopi_mb_action', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_mb_action', 'id_object', 'id_object', 'int(10) unsigned', 1, 1),
+('ploopi_mb_action', 'role_enabled', 'role_enabled', 'tinyint(1) unsigned', 1, 1),
+('ploopi_mb_field', 'tablename', 'tablename', 'varchar(100)', 1, 1),
+('ploopi_mb_field', 'name', 'name', 'varchar(100)', 1, 1),
+('ploopi_mb_field', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_mb_field', 'type', 'type', 'varchar(50)', 1, 1),
+('ploopi_mb_field', 'visible', 'visible', 'tinyint(1) unsigned', 1, 1),
+('ploopi_mb_field', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_mb_object', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_mb_object', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_mb_object', 'script', 'script', 'varchar(255)', 1, 1),
+('ploopi_mb_object', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_mb_relation', 'tablesrc', 'tablesrc', 'varchar(100)', 1, 1),
+('ploopi_mb_relation', 'fieldsrc', 'fieldsrc', 'varchar(100)', 1, 1),
+('ploopi_mb_relation', 'tabledest', 'tabledest', 'varchar(100)', 1, 1),
+('ploopi_mb_relation', 'fielddest', 'fielddest', 'varchar(100)', 1, 1),
+('ploopi_mb_relation', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_mb_schema', 'tablesrc', 'tablesrc', 'varchar(100)', 1, 1),
+('ploopi_mb_schema', 'tabledest', 'tabledest', 'varchar(100)', 1, 1),
+('ploopi_mb_schema', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_mb_table', 'name', 'name', 'varchar(100)', 1, 1),
+('ploopi_mb_table', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_mb_table', 'visible', 'visible', 'tinyint(1) unsigned', 1, 1),
+('ploopi_mb_table', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_mb_wce_object', 'id', 'id', 'int(11) unsigned', 0, 1),
+('ploopi_mb_wce_object', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_mb_wce_object', 'id_module_type', 'id_module_type', 'int(10)', 1, 1),
+('ploopi_mb_wce_object', 'script', 'script', 'varchar(255)', 1, 1),
+('ploopi_mb_wce_object', 'select_id', 'select_id', 'varchar(64)', 1, 1),
+('ploopi_mb_wce_object', 'select_label', 'select_label', 'varchar(64)', 1, 1),
+('ploopi_mb_wce_object', 'select_table', 'select_table', 'varchar(64)', 1, 1),
+('ploopi_mimetype', 'ext', 'extension', 'varchar(10)', 1, 1),
+('ploopi_mimetype', 'mimetype', 'mimetype', 'varchar(255)', 1, 1),
+('ploopi_mimetype', 'filetype', 'filetype', 'varchar(50)', 1, 1),
+('ploopi_mimetype', 'group', 'group', 'varchar(30)', 1, 1),
+('ploopi_module', 'id', 'id', 'int(10)', 0, 1),
+('ploopi_module', 'label', 'label', 'varchar(100)', 1, 1),
+('ploopi_module', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_module', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_module', 'active', 'active', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module', 'visible', 'visible', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module', 'public', 'public', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module', 'shared', 'shared', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module', 'herited', 'herited', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module', 'adminrestricted', 'adminrestricted', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module', 'viewmode', 'viewmode', 'int(10) unsigned', 1, 1),
+('ploopi_module', 'transverseview', 'transverseview', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module', 'autoconnect', 'autoconnect', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module_type', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_module_type', 'label', 'label', 'varchar(100)', 1, 1),
+('ploopi_module_type', 'system', 'system', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module_type', 'publicparam', 'publicparam', 'tinyint(1) unsigned', 1, 1),
+('ploopi_module_type', 'description', 'description', 'longtext', 1, 1),
+('ploopi_module_type', 'version', 'version', 'varchar(32)', 1, 1),
+('ploopi_module_type', 'author', 'author', 'varchar(255)', 1, 1),
+('ploopi_module_type', 'date', 'date', 'varchar(14)', 1, 1),
+('ploopi_module_workspace', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_module_workspace', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_module_workspace', 'position', 'position', 'tinyint(2)', 1, 1),
+('ploopi_module_workspace', 'blockposition', 'blockposition', 'char(10)', 1, 1),
+('ploopi_param_choice', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_param_choice', 'name', 'name', 'varchar(64)', 1, 1),
+('ploopi_param_choice', 'value', 'value', 'varchar(255)', 1, 1),
+('ploopi_param_choice', 'displayed_value', 'displayed_value', 'varchar(100)', 1, 1),
+('ploopi_param_default', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_param_default', 'name', 'name', 'varchar(64)', 1, 1),
+('ploopi_param_default', 'value', 'value', 'text', 1, 1),
+('ploopi_param_default', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_param_type', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_param_type', 'name', 'name', 'varchar(64)', 1, 1),
+('ploopi_param_type', 'default_value', 'default_value', 'text', 1, 1),
+('ploopi_param_type', 'public', 'public', 'tinyint(1) unsigned', 1, 1),
+('ploopi_param_type', 'description', 'description', 'longtext', 1, 1),
+('ploopi_param_type', 'label', 'label', 'varchar(100)', 1, 1),
+('ploopi_param_user', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_param_user', 'name', 'name', 'varchar(64)', 1, 1),
+('ploopi_param_user', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_param_user', 'value', 'value', 'text', 1, 1),
+('ploopi_param_user', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_param_workspace', 'id_module', 'id_module', 'int(10)', 0, 1),
+('ploopi_param_workspace', 'name', 'name', 'varchar(64)', 1, 1),
+('ploopi_param_workspace', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_param_workspace', 'value', 'value', 'text', 1, 1),
+('ploopi_param_workspace', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_role', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_role', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_role', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_role', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_role', 'description', 'description', 'varchar(255)', 1, 1),
+('ploopi_role', 'def', 'def', 'tinyint(1) unsigned', 1, 1),
+('ploopi_role', 'shared', 'shared', 'tinyint(1) unsigned', 1, 1),
+('ploopi_role_action', 'id_role', 'id_role', 'int(10) unsigned', 1, 1),
+('ploopi_role_action', 'id_action', 'id_action', 'int(10) unsigned', 1, 1),
+('ploopi_role_action', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_serializedvar', 'id', 'id', 'char(32)', 0, 1),
+('ploopi_session', 'access', 'access', 'int(10) unsigned', 1, 1),
+('ploopi_share', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_share', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_share', 'id_record', 'id_record', 'int(10) unsigned', 1, 1),
+('ploopi_share', 'id_object', 'id_object', 'int(10) unsigned', 1, 1),
+('ploopi_share', 'type_share', 'type_share', 'varchar(16)', 1, 1),
+('ploopi_share', 'id_share', 'id_share', 'int(10) unsigned', 1, 1),
+('ploopi_share', 'id_module_type', 'id_module_type', 'int(10)', 1, 1),
+('ploopi_subscription', 'id', 'id', 'char(32)', 0, 1),
+('ploopi_subscription', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_subscription', 'id_object', 'id_object', 'int(10)', 1, 1),
+('ploopi_subscription', 'id_record', 'id_record', 'varchar(255)', 1, 1),
+('ploopi_subscription', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_subscription', 'allactions', 'allactions', 'tinyint(1) unsigned', 1, 1),
+('ploopi_subscription_action', 'id_subscription', 'id_subscription', 'char(32)', 1, 1),
+('ploopi_subscription_action', 'id_action', 'id_action', 'int(10) unsigned', 1, 1),
+('ploopi_tag', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_tag', 'tag', 'tag', 'char(32)', 1, 1),
+('ploopi_tag', 'tag_clean', 'tag_clean', 'char(32)', 1, 1),
+('ploopi_tag', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_ticket', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_ticket', 'title', 'title', 'varchar(255)', 1, 1),
+('ploopi_ticket', 'message', 'message', 'longtext', 1, 1),
+('ploopi_ticket', 'needed_validation', 'needed_validation', 'tinyint(1) unsigned', 1, 1),
+('ploopi_ticket', 'delivery_notification', 'delivery_notification', 'tinyint(1) unsigned', 1, 1),
+('ploopi_ticket', 'status', 'status', 'int(10) unsigned', 1, 1),
+('ploopi_ticket', 'object_label', 'object_label', 'varchar(255)', 1, 1),
+('ploopi_ticket', 'timestp', 'timestp', 'bigint(14) unsigned', 1, 1),
+('ploopi_ticket', 'lastreply_timestp', 'lastreply_timestp', 'bigint(14) unsigned', 1, 1),
+('ploopi_ticket', 'lastedit_timestp', 'lastedit_timestp', 'bigint(14) unsigned', 1, 1),
+('ploopi_ticket', 'count_read', 'count_read', 'int(10) unsigned', 1, 1),
+('ploopi_ticket', 'count_replies', 'count_replies', 'int(10) unsigned', 1, 1),
+('ploopi_ticket', 'id_object', 'id_object', 'int(10)', 1, 1),
+('ploopi_ticket', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_ticket', 'id_record', 'id_record', 'varchar(255)', 1, 1),
+('ploopi_ticket', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_ticket', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_ticket', 'parent_id', 'parent_id', 'int(10) unsigned', 1, 1),
+('ploopi_ticket', 'root_id', 'root_id', 'int(10) unsigned', 1, 1),
+('ploopi_ticket', 'deleted', 'deleted', 'tinyint(1) unsigned', 1, 1),
+('ploopi_ticket', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_ticket_dest', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_ticket_dest', 'id_ticket', 'id_ticket', 'int(10) unsigned', 1, 1),
+('ploopi_ticket_dest', 'deleted', 'deleted', 'tinyint(1)', 1, 1),
+('ploopi_ticket_status', 'id_ticket', 'id_ticket', 'int(10) unsigned', 1, 1),
+('ploopi_ticket_status', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_ticket_status', 'status', 'status', 'tinyint(1) unsigned', 1, 1),
+('ploopi_ticket_status', 'timestp', 'timestp', 'bigint(14)', 1, 1),
+('ploopi_ticket_watch', 'id_ticket', 'id_ticket', 'int(10) unsigned', 1, 1),
+('ploopi_ticket_watch', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_ticket_watch', 'notify', 'notify', 'tinyint(1) unsigned', 1, 1),
+('ploopi_user', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_user', 'lastname', 'lastname', 'varchar(100)', 1, 1),
+('ploopi_user', 'firstname', 'firstname', 'varchar(100)', 1, 1),
+('ploopi_user', 'login', 'login', 'varchar(32)', 1, 1),
+('ploopi_user', 'date_creation', 'date_creation', 'bigint(14)', 1, 1),
+('ploopi_user', 'date_expire', 'date_expire', 'bigint(14)', 1, 1),
+('ploopi_user', 'email', 'email', 'varchar(255)', 1, 1),
+('ploopi_user', 'phone', 'phone', 'varchar(32)', 1, 1),
+('ploopi_user', 'fax', 'fax', 'varchar(32)', 1, 1),
+('ploopi_user', 'comments', 'comments', 'text', 1, 1),
+('ploopi_user', 'address', 'address', 'text', 1, 1),
+('ploopi_user', 'mobile', 'mobile', 'varchar(32)', 1, 1),
+('ploopi_user', 'entity', 'entity', 'varchar(255)', 1, 1),
+('ploopi_user', 'service', 'service', 'varchar(255)', 1, 1),
+('ploopi_user', 'service2', 'service2', 'varchar(255)', 1, 1),
+('ploopi_user', 'function', 'function', 'varchar(255)', 1, 1),
+('ploopi_user', 'number', 'number', 'varchar(255)', 1, 1),
+('ploopi_user', 'postalcode', 'postalcode', 'varchar(16)', 1, 1),
+('ploopi_user', 'city', 'city', 'varchar(255)', 1, 1),
+('ploopi_user', 'country', 'country', 'varchar(255)', 1, 1),
+('ploopi_user', 'ticketsbyemail', 'ticketsbyemail', 'tinyint(1) unsigned', 1, 1),
+('ploopi_user', 'servertimezone', 'servertimezone', 'tinyint(1) unsigned', 1, 1),
+('ploopi_user', 'color', 'color', 'varchar(16)', 1, 1),
+('ploopi_user', 'timezone', 'timezone', 'varchar(64)', 1, 1),
+('ploopi_user', 'building', 'building', 'varchar(255)', 1, 1),
+('ploopi_user', 'floor', 'floor', 'varchar(255)', 1, 1),
+('ploopi_user', 'office', 'office', 'varchar(255)', 1, 1),
+('ploopi_user', 'civility', 'civility', 'varchar(16)', 1, 1),
+('ploopi_user', 'rank', 'rank', 'varchar(255)', 1, 1),
+('ploopi_user', 'password_force_update', 'password_force_update', 'tinyint(1) unsigned', 1, 1),
+('ploopi_user', 'password_validity', 'password_validity', 'int(10) unsigned', 1, 1),
+('ploopi_user', 'password_last_update', 'password_last_update', 'bigint(14) unsigned', 1, 1),
+('ploopi_user', 'disabled', 'disabled', 'tinyint(1) unsigned', 1, 1),
+('ploopi_user', 'failed_attemps', 'failed_attemps', 'int(10) unsigned', 1, 1),
+('ploopi_user', 'jailed_since', 'jailed_since', 'bigint(14) unsigned', 1, 1),
+('ploopi_user', 'last_connection', 'last_connection', 'bigint(14) unsigned', 1, 1),
+('ploopi_user_action_log', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_user_action_log', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_user_action_log', 'id_action', 'id_action', 'int(10) unsigned', 1, 1),
+('ploopi_user_action_log', 'id_module_type', 'id_module_type', 'int(10) unsigned', 1, 1),
+('ploopi_user_action_log', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_user_action_log', 'id_record', 'id_record', 'char(255)', 1, 1),
+('ploopi_user_action_log', 'ip', 'ip', 'varchar(45)', 1, 1),
+('ploopi_user_action_log', 'timestp', 'timestp', 'bigint(14)', 1, 1),
+('ploopi_user_action_log', 'user', 'user', 'char(100)', 1, 1),
+('ploopi_user_action_log', 'workspace', 'workspace', 'char(100)', 1, 1),
+('ploopi_user_action_log', 'action', 'action', 'char(100)', 1, 1),
+('ploopi_user_action_log', 'module_type', 'module_type', 'char(100)', 1, 1),
+('ploopi_user_action_log', 'module', 'module', 'char(100)', 1, 1),
+('ploopi_validation', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_validation', 'id_module', 'id_module', 'int(10) unsigned', 0, 1),
+('ploopi_validation', 'id_record', 'id_record', 'varchar(255)', 1, 1),
+('ploopi_validation', 'id_object', 'id_object', 'int(10) unsigned', 1, 1),
+('ploopi_validation', 'type_validation', 'type_validation', 'varchar(16)', 1, 1),
+('ploopi_validation', 'id_validation', 'id_validation', 'int(10) unsigned', 1, 1),
+('ploopi_validation', 'id_module_type', 'id_module_type', 'int(10)', 1, 1),
+('ploopi_workspace', 'id', 'id', 'int(10) unsigned', 0, 1),
+('ploopi_workspace', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_workspace', 'label', 'label', 'varchar(255)', 1, 1),
+('ploopi_workspace', 'code', 'code', 'varchar(255)', 1, 1),
+('ploopi_workspace', 'system', 'system', 'tinyint(1) unsigned', 1, 1),
+('ploopi_workspace', 'protected', 'protected', 'tinyint(1) unsigned', 1, 1),
+('ploopi_workspace', 'parents', 'parents', 'varchar(255)', 1, 1),
+('ploopi_workspace', 'iprules', 'iprules', 'text', 1, 1),
+('ploopi_workspace', 'macrules', 'macrules', 'text', 1, 1),
+('ploopi_workspace', 'template', 'template', 'varchar(255)', 1, 1),
+('ploopi_workspace', 'depth', 'depth', 'int(10)', 1, 1),
+('ploopi_workspace', 'mustdefinerule', 'mustdefinerule', 'tinyint(1) unsigned', 1, 1),
+('ploopi_workspace', 'backoffice', 'backoffice', 'tinyint(1) unsigned', 1, 1),
 ('ploopi_workspace', 'frontoffice', 'frontoffice', 'tinyint(1) unsigned', 1, 1),
 ('ploopi_workspace', 'backoffice_domainlist', 'backoffice_domainlist', 'longtext', 1, 1),
 ('ploopi_workspace', 'title', 'title', 'varchar(255)', 1, 1),
 ('ploopi_workspace', 'meta_description', 'meta_description', 'longtext', 1, 1),
-('ploopi_workspace', 'backoffice', 'backoffice', 'tinyint(1) unsigned', 1, 1),
-('ploopi_workspace', 'mustdefinerule', 'mustdefinerule', 'tinyint(1) unsigned', 1, 1),
-('ploopi_workspace', 'depth', 'depth', 'int(10)', 1, 1),
-('ploopi_workspace', 'template', 'template', 'varchar(255)', 1, 1),
-('ploopi_workspace', 'macrules', 'macrules', 'text', 1, 1),
-('ploopi_workspace', 'iprules', 'iprules', 'text', 1, 1),
-('ploopi_workspace', 'code', 'code', 'text', 1, 1),
-('ploopi_workspace', 'system', 'system', 'tinyint(1) unsigned', 1, 1),
-('ploopi_workspace', 'protected', 'protected', 'tinyint(1) unsigned', 1, 1),
-('ploopi_workspace', 'parents', 'parents', 'varchar(255)', 1, 1),
-('ploopi_workspace', 'label', 'label', 'varchar(255)', 1, 1),
-('ploopi_workspace', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
-('ploopi_workspace', 'id', 'id', 'int(10) unsigned', 0, 1),
-('ploopi_user', 'rank', 'rank', 'varchar(255)', 1, 1),
-('ploopi_user', 'civility', 'civility', 'varchar(16)', 1, 1),
-('ploopi_user', 'office', 'office', 'varchar(255)', 1, 1),
-('ploopi_user', 'floor', 'floor', 'varchar(255)', 1, 1),
-('ploopi_user', 'building', 'building', 'varchar(255)', 1, 1),
-('ploopi_user', 'timezone', 'timezone', 'varchar(64)', 1, 1),
-('ploopi_user', 'color', 'color', 'varchar(16)', 1, 1),
-('ploopi_user', 'servertimezone', 'servertimezone', 'tinyint(1) unsigned', 1, 1),
-('ploopi_user', 'ticketsbyemail', 'ticketsbyemail', 'tinyint(1) unsigned', 1, 1),
-('ploopi_user', 'country', 'country', 'varchar(255)', 1, 1),
-('ploopi_user', 'city', 'city', 'varchar(255)', 1, 1),
-('ploopi_user', 'service', 'service', 'varchar(255)', 1, 1),
-('ploopi_user', 'function', 'function', 'varchar(255)', 1, 1),
-('ploopi_user', 'number', 'number', 'varchar(255)', 1, 1),
-('ploopi_user', 'postalcode', 'postalcode', 'varchar(16)', 1, 1),
-('ploopi_user', 'mobile', 'mobile', 'varchar(32)', 1, 1),
-('ploopi_user', 'address', 'address', 'text', 1, 1),
-('ploopi_user', 'comments', 'comments', 'text', 1, 1),
-('ploopi_user', 'fax', 'fax', 'varchar(32)', 1, 1),
-('ploopi_user', 'phone', 'phone', 'varchar(32)', 1, 1),
-('ploopi_user', 'email', 'email', 'varchar(255)', 1, 1),
-('ploopi_user', 'date_expire', 'date_expire', 'bigint(14)', 1, 1),
-('ploopi_user', 'login', 'login', 'varchar(32)', 1, 1),
-('ploopi_user', 'date_creation', 'date_creation', 'bigint(14)', 1, 1),
-('ploopi_user', 'firstname', 'firstname', 'varchar(100)', 1, 1),
-('ploopi_user', 'lastname', 'lastname', 'varchar(100)', 1, 1),
-('ploopi_user', 'id', 'id', 'int(10) unsigned', 0, 1),
-('ploopi_module', 'autoconnect', 'autoconnect', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'transverseview', 'transverseview', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'viewmode', 'viewmode', 'int(10) unsigned', 1, 1),
-('ploopi_module', 'adminrestricted', 'adminrestricted', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'herited', 'herited', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'public', 'public', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'shared', 'shared', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'visible', 'visible', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'active', 'active', 'tinyint(1) unsigned', 1, 1),
-('ploopi_module', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
-('ploopi_module', 'id_module_type', 'id_module_type', 'int(10) unsigned', 0, 1),
-('ploopi_module', 'label', 'label', 'varchar(100)', 1, 1),
-('ploopi_module', 'id', 'id', 'int(10)', 0, 1);
+('ploopi_workspace', 'meta_keywords', 'meta_keywords', 'longtext', 1, 1),
+('ploopi_workspace', 'meta_author', 'meta_author', 'varchar(255)', 1, 1),
+('ploopi_workspace', 'meta_copyright', 'meta_copyright', 'varchar(255)', 1, 1),
+('ploopi_workspace', 'meta_robots', 'meta_robots', 'varchar(255)', 1, 1),
+('ploopi_workspace', 'frontoffice_domainlist', 'frontoffice_domainlist', 'longtext', 1, 1),
+('ploopi_workspace', 'priority', 'priority', 'int(10) unsigned', 1, 1),
+('ploopi_workspace', 'mail_model', 'mail_model', 'text', 1, 1),
+('ploopi_workspace_group', 'id_group', 'id_group', 'int(10)', 1, 1),
+('ploopi_workspace_group', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_workspace_group', 'adminlevel', 'adminlevel', 'tinyint(3) unsigned', 1, 1),
+('ploopi_workspace_group_role', 'id_group', 'id_group', 'int(10)', 1, 1),
+('ploopi_workspace_group_role', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_workspace_group_role', 'id_role', 'id_role', 'int(10) unsigned', 1, 1),
+('ploopi_workspace_user', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_workspace_user', 'id_workspace', 'id_workspace', 'int(10) unsigned', 0, 1),
+('ploopi_workspace_user', 'id_profile', 'id_profile', 'int(10) unsigned', 1, 1),
+('ploopi_workspace_user', 'adminlevel', 'adminlevel', 'tinyint(3) unsigned', 1, 1),
+('ploopi_workspace_user_role', 'id_user', 'id_user', 'int(10) unsigned', 0, 1),
+('ploopi_workspace_user_role', 'id_workspace', 'id_workspace', 'int(10)', 0, 1),
+('ploopi_workspace_user_role', 'id_role', 'id_role', 'int(10) unsigned', 1, 1);
 
 CREATE TABLE `ploopi_mb_object` (
   `id` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `label` varchar(255) DEFAULT NULL,
   `script` varchar(255) DEFAULT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_object` (`id`, `label`, `script`, `id_module_type`) VALUES
 (2, 'Groupe d\'Utilisateur', 'ploopi_workspaceid=<IDWORKSPACE>&ploopi_moduleid=1&ploopi_action=admin&system_level=org&groupid=<IDRECORD>', 1),
@@ -352,38 +685,260 @@ CREATE TABLE `ploopi_mb_relation` (
   `tabledest` varchar(100) DEFAULT NULL,
   `fielddest` varchar(100) DEFAULT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_relation` (`tablesrc`, `fieldsrc`, `tabledest`, `fielddest`, `id_module_type`) VALUES
-('ploopi_group', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_annotation', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_annotation', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_annotation', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_annotation', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_annotation_tag', 'id_annotation', 'ploopi_annotation', 'id', 1),
+('ploopi_annotation_tag', 'id_tag', 'ploopi_tag', 'id', 1),
+('ploopi_api_key', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_api_key', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_api_request', 'id_key', 'ploopi_api_key', 'id', 1),
+('ploopi_connecteduser', 'module_id', 'ploopi_module', 'id', 1),
+('ploopi_connecteduser', 'user_id', 'ploopi_user', 'id', 1),
+('ploopi_connecteduser', 'workspace_id', 'ploopi_workspace', 'id', 1),
+('ploopi_documents_file', 'id_folder', 'ploopi_documents_folder', 'id', 1),
+('ploopi_documents_file', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_documents_file', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_documents_file', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_documents_folder', 'id_folder', 'ploopi_documents_folder', 'id', 1),
+('ploopi_documents_folder', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_documents_folder', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_documents_folder', 'id_workspace', 'ploopi_workspace', 'id', 1),
 ('ploopi_group', 'id_group', 'ploopi_group', 'id', 1),
+('ploopi_group', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_group_user', 'id_group', 'ploopi_group', 'id', 1),
+('ploopi_group_user', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_index_element', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_index_element', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_index_element', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_index_keyword_element', 'id_element', 'ploopi_index_element', 'id', 1),
+('ploopi_index_stem_element', 'id_element', 'ploopi_index_element', 'id', 1),
+('ploopi_mb_action', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_mb_action', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_mb_field', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_mb_object', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_mb_relation', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_mb_schema', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_mb_table', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_mb_wce_object', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_module', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_module', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_module_workspace', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_module_workspace', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_param_choice', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_param_default', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_param_default', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_param_type', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_param_user', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_param_user', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_param_user', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_param_workspace', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_param_workspace', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_param_workspace', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_role', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_role', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_role_action', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_role_action', 'id_role', 'ploopi_role', 'id', 1),
+('ploopi_share', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_share', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_subscription', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_subscription', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_subscription_action', 'id_subscription', 'ploopi_subscription', 'id', 1),
+('ploopi_tag', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_ticket', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_ticket', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_ticket', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_ticket', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_ticket', 'parent_id', 'ploopi_ticket', 'id', 1),
+('ploopi_ticket', 'root_id', 'ploopi_ticket', 'id', 1),
+('ploopi_ticket_dest', 'id_ticket', 'ploopi_ticket', 'id', 1),
+('ploopi_ticket_dest', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_ticket_status', 'id_ticket', 'ploopi_ticket', 'id', 1),
+('ploopi_ticket_status', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_ticket_watch', 'id_ticket', 'ploopi_ticket', 'id', 1),
+('ploopi_ticket_watch', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_user_action_log', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_user_action_log', 'id_module_type', 'ploopi_module_type', 'id', 1),
+('ploopi_user_action_log', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_user_action_log', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_validation', 'id_module', 'ploopi_module', 'id', 1),
+('ploopi_validation', 'id_module_type', 'ploopi_module_type', 'id', 1),
 ('ploopi_workspace', 'id_workspace', 'ploopi_workspace', 'id', 1),
-('ploopi_module', 'id_workspace', 'ploopi_workspace', 'id', 1);
+('ploopi_workspace_group', 'id_group', 'ploopi_group', 'id', 1),
+('ploopi_workspace_group', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_workspace_group_role', 'id_group', 'ploopi_group', 'id', 1),
+('ploopi_workspace_group_role', 'id_role', 'ploopi_role', 'id', 1),
+('ploopi_workspace_group_role', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_workspace_user', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_workspace_user', 'id_workspace', 'ploopi_workspace', 'id', 1),
+('ploopi_workspace_user_role', 'id_role', 'ploopi_role', 'id', 1),
+('ploopi_workspace_user_role', 'id_user', 'ploopi_user', 'id', 1),
+('ploopi_workspace_user_role', 'id_workspace', 'ploopi_workspace', 'id', 1);
 
 CREATE TABLE `ploopi_mb_schema` (
   `tablesrc` varchar(100) NOT NULL DEFAULT '',
   `tabledest` varchar(100) NOT NULL DEFAULT '',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_schema` (`tablesrc`, `tabledest`, `id_module_type`) VALUES
-('ploopi_group', 'ploopi_workspace', 1),
-('ploopi_workspace', 'ploopi_workspace', 1),
+('ploopi_annotation', 'ploopi_module', 1),
+('ploopi_annotation', 'ploopi_module_type', 1),
+('ploopi_annotation', 'ploopi_user', 1),
+('ploopi_annotation', 'ploopi_workspace', 1),
+('ploopi_annotation_tag', 'ploopi_annotation', 1),
+('ploopi_annotation_tag', 'ploopi_tag', 1),
+('ploopi_api_key', 'ploopi_user', 1),
+('ploopi_api_key', 'ploopi_workspace', 1),
+('ploopi_api_request', 'ploopi_api_key', 1),
+('ploopi_connecteduser', 'ploopi_module', 1),
+('ploopi_connecteduser', 'ploopi_user', 1),
+('ploopi_connecteduser', 'ploopi_workspace', 1),
+('ploopi_documents_file', 'ploopi_documents_folder', 1),
+('ploopi_documents_file', 'ploopi_module', 1),
+('ploopi_documents_file', 'ploopi_user', 1),
+('ploopi_documents_file', 'ploopi_workspace', 1),
+('ploopi_documents_folder', 'ploopi_documents_folder', 1),
+('ploopi_documents_folder', 'ploopi_module', 1),
+('ploopi_documents_folder', 'ploopi_user', 1),
+('ploopi_documents_folder', 'ploopi_workspace', 1),
 ('ploopi_group', 'ploopi_group', 1),
-('ploopi_module', 'ploopi_workspace', 1);
+('ploopi_group', 'ploopi_workspace', 1),
+('ploopi_group_user', 'ploopi_group', 1),
+('ploopi_group_user', 'ploopi_user', 1),
+('ploopi_index_element', 'ploopi_module', 1),
+('ploopi_index_element', 'ploopi_user', 1),
+('ploopi_index_element', 'ploopi_workspace', 1),
+('ploopi_index_keyword_element', 'ploopi_index_element', 1),
+('ploopi_index_stem_element', 'ploopi_index_element', 1),
+('ploopi_mb_action', 'ploopi_module_type', 1),
+('ploopi_mb_action', 'ploopi_workspace', 1),
+('ploopi_mb_field', 'ploopi_module_type', 1),
+('ploopi_mb_object', 'ploopi_module_type', 1),
+('ploopi_mb_relation', 'ploopi_module_type', 1),
+('ploopi_mb_schema', 'ploopi_module_type', 1),
+('ploopi_mb_table', 'ploopi_module_type', 1),
+('ploopi_mb_wce_object', 'ploopi_module_type', 1),
+('ploopi_module', 'ploopi_module_type', 1),
+('ploopi_module', 'ploopi_workspace', 1),
+('ploopi_module_workspace', 'ploopi_module', 1),
+('ploopi_module_workspace', 'ploopi_workspace', 1),
+('ploopi_param_choice', 'ploopi_module_type', 1),
+('ploopi_param_default', 'ploopi_module', 1),
+('ploopi_param_default', 'ploopi_module_type', 1),
+('ploopi_param_type', 'ploopi_module_type', 1),
+('ploopi_param_user', 'ploopi_module', 1),
+('ploopi_param_user', 'ploopi_module_type', 1),
+('ploopi_param_user', 'ploopi_user', 1),
+('ploopi_param_workspace', 'ploopi_module', 1),
+('ploopi_param_workspace', 'ploopi_module_type', 1),
+('ploopi_param_workspace', 'ploopi_workspace', 1),
+('ploopi_role', 'ploopi_module', 1),
+('ploopi_role', 'ploopi_workspace', 1),
+('ploopi_role_action', 'ploopi_module_type', 1),
+('ploopi_role_action', 'ploopi_role', 1),
+('ploopi_share', 'ploopi_module', 1),
+('ploopi_share', 'ploopi_module_type', 1),
+('ploopi_subscription', 'ploopi_module', 1),
+('ploopi_subscription', 'ploopi_user', 1),
+('ploopi_subscription_action', 'ploopi_subscription', 1),
+('ploopi_tag', 'ploopi_user', 1),
+('ploopi_ticket', 'ploopi_module', 1),
+('ploopi_ticket', 'ploopi_module_type', 1),
+('ploopi_ticket', 'ploopi_user', 1),
+('ploopi_ticket', 'ploopi_workspace', 1),
+('ploopi_ticket', 'ploopi_ticket', 1),
+('ploopi_ticket_dest', 'ploopi_ticket', 1),
+('ploopi_ticket_dest', 'ploopi_user', 1),
+('ploopi_ticket_status', 'ploopi_ticket', 1),
+('ploopi_ticket_status', 'ploopi_user', 1),
+('ploopi_ticket_watch', 'ploopi_ticket', 1),
+('ploopi_ticket_watch', 'ploopi_user', 1),
+('ploopi_user_action_log', 'ploopi_module', 1),
+('ploopi_user_action_log', 'ploopi_module_type', 1),
+('ploopi_user_action_log', 'ploopi_user', 1),
+('ploopi_user_action_log', 'ploopi_workspace', 1),
+('ploopi_validation', 'ploopi_module', 1),
+('ploopi_validation', 'ploopi_module_type', 1),
+('ploopi_workspace', 'ploopi_workspace', 1),
+('ploopi_workspace_group', 'ploopi_group', 1),
+('ploopi_workspace_group', 'ploopi_workspace', 1),
+('ploopi_workspace_group_role', 'ploopi_group', 1),
+('ploopi_workspace_group_role', 'ploopi_role', 1),
+('ploopi_workspace_group_role', 'ploopi_workspace', 1),
+('ploopi_workspace_user', 'ploopi_user', 1),
+('ploopi_workspace_user', 'ploopi_workspace', 1),
+('ploopi_workspace_user_role', 'ploopi_role', 1),
+('ploopi_workspace_user_role', 'ploopi_user', 1),
+('ploopi_workspace_user_role', 'ploopi_workspace', 1);
 
 CREATE TABLE `ploopi_mb_table` (
   `name` varchar(100) NOT NULL DEFAULT '',
   `label` varchar(255) DEFAULT NULL,
   `visible` tinyint(1) UNSIGNED DEFAULT '1',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_table` (`name`, `label`, `visible`, `id_module_type`) VALUES
-('ploopi_group', 'group', 1, 1),
-('ploopi_workspace', 'workspace', 1, 1),
-('ploopi_user', 'user', 1, 1),
-('ploopi_module', 'module', 1, 1);
+('ploopi_annotation', 'ploopi_annotation', 1, 1),
+('ploopi_annotation_tag', 'ploopi_annotation_tag', 1, 1),
+('ploopi_api_key', 'ploopi_api_key', 0, 1),
+('ploopi_api_request', 'ploopi_api_request', 1, 1),
+('ploopi_captcha', 'ploopi_captcha', 0, 1),
+('ploopi_confirmation_code', 'ploopi_confirmation_code', 0, 1),
+('ploopi_connecteduser', 'ploopi_connecteduser', 1, 1),
+('ploopi_documents_ext', 'ploopi_documents_ext', 1, 1),
+('ploopi_documents_file', 'ploopi_documents_file', 1, 1),
+('ploopi_documents_folder', 'ploopi_documents_folder', 1, 1),
+('ploopi_event_inbox', 'ploopi_event_inbox', 1, 1),
+('ploopi_event_outbox', 'ploopi_event_outbox', 1, 1),
+('ploopi_group', 'ploopi_group', 1, 1),
+('ploopi_group_user', 'ploopi_group_user', 1, 1),
+('ploopi_index_element', 'ploopi_index_element', 1, 1),
+('ploopi_index_keyword_element', 'ploopi_index_keyword_element', 1, 1),
+('ploopi_index_phonetic_element', 'ploopi_index_phonetic_element', 1, 1),
+('ploopi_index_stem_element', 'ploopi_index_stem_element', 1, 1),
+('ploopi_log', 'ploopi_log', 1, 1),
+('ploopi_mb_action', 'ploopi_mb_action', 1, 1),
+('ploopi_mb_field', 'ploopi_mb_field', 1, 1),
+('ploopi_mb_object', 'ploopi_mb_object', 1, 1),
+('ploopi_mb_relation', 'ploopi_mb_relation', 1, 1),
+('ploopi_mb_schema', 'ploopi_mb_schema', 1, 1),
+('ploopi_mb_table', 'ploopi_mb_table', 1, 1),
+('ploopi_mb_wce_object', 'ploopi_mb_wce_object', 1, 1),
+('ploopi_mimetype', 'ploopi_mimetype', 1, 1),
+('ploopi_module', 'ploopi_module', 1, 1),
+('ploopi_module_type', 'ploopi_module_type', 1, 1),
+('ploopi_module_workspace', 'ploopi_module_workspace', 1, 1),
+('ploopi_param_choice', 'ploopi_param_choice', 1, 1),
+('ploopi_param_default', 'ploopi_param_default', 1, 1),
+('ploopi_param_type', 'ploopi_param_type', 1, 1),
+('ploopi_param_user', 'ploopi_param_user', 1, 1),
+('ploopi_param_workspace', 'ploopi_param_workspace', 1, 1),
+('ploopi_role', 'ploopi_role', 1, 1),
+('ploopi_role_action', 'ploopi_role_action', 1, 1),
+('ploopi_serializedvar', 'ploopi_serializedvar', 0, 1),
+('ploopi_session', 'ploopi_session', 0, 1),
+('ploopi_share', 'ploopi_share', 1, 1),
+('ploopi_subscription', 'ploopi_subscription', 1, 1),
+('ploopi_subscription_action', 'ploopi_subscription_action', 1, 1),
+('ploopi_tag', 'ploopi_tag', 1, 1),
+('ploopi_ticket', 'ploopi_ticket', 1, 1),
+('ploopi_ticket_dest', 'ploopi_ticket_dest', 1, 1),
+('ploopi_ticket_status', 'ploopi_ticket_status', 1, 1),
+('ploopi_ticket_watch', 'ploopi_ticket_watch', 1, 1),
+('ploopi_user', 'ploopi_user', 1, 1),
+('ploopi_user_action_log', 'ploopi_user_action_log', 1, 1),
+('ploopi_validation', 'ploopi_validation', 1, 1),
+('ploopi_workspace', 'ploopi_workspace', 1, 1),
+('ploopi_workspace_group', 'ploopi_workspace_group', 1, 1),
+('ploopi_workspace_group_role', 'ploopi_workspace_group_role', 1, 1),
+('ploopi_workspace_user', 'ploopi_workspace_user', 1, 1),
+('ploopi_workspace_user_role', 'ploopi_workspace_user_role', 1, 1);
 
 CREATE TABLE `ploopi_mb_wce_object` (
   `id` int(11) UNSIGNED NOT NULL,
@@ -393,7 +948,7 @@ CREATE TABLE `ploopi_mb_wce_object` (
   `select_id` varchar(64) DEFAULT NULL,
   `select_label` varchar(64) DEFAULT NULL,
   `select_table` varchar(64) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mb_wce_object` (`id`, `label`, `id_module_type`, `script`, `select_id`, `select_label`, `select_table`) VALUES
 (1, 'Affichage Trombinscope', 1, '?object=\'display\'', NULL, NULL, NULL);
@@ -403,7 +958,7 @@ CREATE TABLE `ploopi_mimetype` (
   `mimetype` varchar(255) NOT NULL,
   `filetype` varchar(50) NOT NULL,
   `group` varchar(30) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mimetype` (`ext`, `mimetype`, `filetype`, `group`) VALUES
 ('txt', 'text/plain', 'text', 'text'),
@@ -806,7 +1361,7 @@ CREATE TABLE `ploopi_module` (
   `viewmode` int(10) UNSIGNED DEFAULT '1',
   `transverseview` tinyint(1) UNSIGNED DEFAULT '0',
   `autoconnect` tinyint(1) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_module` (`id`, `label`, `id_module_type`, `id_workspace`, `active`, `visible`, `public`, `shared`, `herited`, `adminrestricted`, `viewmode`, `transverseview`, `autoconnect`) VALUES
 (1, 'Système', 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0),
@@ -821,7 +1376,7 @@ CREATE TABLE `ploopi_module_type` (
   `version` varchar(32) DEFAULT NULL,
   `author` varchar(255) DEFAULT NULL,
   `date` varchar(14) NOT NULL DEFAULT ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_module_type` (`id`, `label`, `system`, `publicparam`, `description`, `version`, `author`, `date`) VALUES
 (1, 'system', 1, 0, 'Noyau du système', '1.9.7.1', 'Ovensia', '20190430000000');
@@ -831,14 +1386,14 @@ CREATE TABLE `ploopi_module_workspace` (
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `position` tinyint(2) NOT NULL DEFAULT '0',
   `blockposition` char(10) NOT NULL DEFAULT 'left'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_param_choice` (
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `name` varchar(64) NOT NULL DEFAULT '',
   `value` varchar(255) NOT NULL DEFAULT '',
   `displayed_value` varchar(100) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_param_choice` (`id_module_type`, `name`, `value`, `displayed_value`) VALUES
 (1, 'system_generate_htpasswd', '0', 'non'),
@@ -869,7 +1424,7 @@ CREATE TABLE `ploopi_param_default` (
   `name` varchar(64) NOT NULL DEFAULT '',
   `value` text NOT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_param_default` (`id_module`, `name`, `value`, `id_module_type`) VALUES
 (1, 'system_generate_htpasswd', '0', 1),
@@ -897,7 +1452,7 @@ CREATE TABLE `ploopi_param_type` (
   `public` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `description` longtext,
   `label` varchar(100) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_param_type` (`id_module_type`, `name`, `default_value`, `public`, `description`, `label`) VALUES
 (1, 'system_generate_htpasswd', '1', 0, '', 'Générer un fichier htpasswd'),
@@ -924,7 +1479,7 @@ CREATE TABLE `ploopi_param_user` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `value` text NOT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_param_workspace` (
   `id_module` int(10) NOT NULL DEFAULT '0',
@@ -932,7 +1487,7 @@ CREATE TABLE `ploopi_param_workspace` (
   `id_workspace` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `value` text NOT NULL,
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_role` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -942,25 +1497,25 @@ CREATE TABLE `ploopi_role` (
   `description` varchar(255) DEFAULT NULL,
   `def` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `shared` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_role_action` (
   `id_role` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_action` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_serializedvar` (
   `id` char(32) NOT NULL,
   `id_session` char(32) NOT NULL,
   `data` longblob
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_session` (
   `id` char(32) NOT NULL,
   `access` int(10) UNSIGNED DEFAULT NULL,
   `data` longblob
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_share` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -970,7 +1525,7 @@ CREATE TABLE `ploopi_share` (
   `type_share` varchar(16) DEFAULT '0',
   `id_share` int(10) UNSIGNED DEFAULT '0',
   `id_module_type` int(10) DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_subscription` (
   `id` char(32) NOT NULL,
@@ -979,19 +1534,19 @@ CREATE TABLE `ploopi_subscription` (
   `id_record` varchar(255) NOT NULL,
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `allactions` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_subscription_action` (
   `id_subscription` char(32) NOT NULL,
   `id_action` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_tag` (
   `id` int(10) UNSIGNED NOT NULL,
   `tag` char(32) NOT NULL,
   `tag_clean` char(32) NOT NULL,
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1015,26 +1570,26 @@ CREATE TABLE `ploopi_ticket` (
   `root_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `id_module_type` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket_dest` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_ticket` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket_status` (
   `id_ticket` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `timestp` bigint(14) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_ticket_watch` (
   `id_ticket` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `notify` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_user` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1074,7 +1629,7 @@ CREATE TABLE `ploopi_user` (
   `failed_attemps` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `jailed_since` bigint(14) UNSIGNED NOT NULL DEFAULT '0',
   `last_connection` bigint(14) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_user` (`id`, `lastname`, `firstname`, `login`, `password`, `date_creation`, `date_expire`, `email`, `phone`, `fax`, `comments`, `address`, `mobile`, `entity`, `service`, `service2`, `function`, `number`, `postalcode`, `city`, `country`, `ticketsbyemail`, `servertimezone`, `color`, `timezone`, `building`, `floor`, `office`, `civility`, `rank`, `password_force_update`, `password_validity`, `password_last_update`, `disabled`, `failed_attemps`, `jailed_since`, `last_connection`) VALUES
 (2, 'Administrateur', '', 'admin', 'feee4f3ca6345d6562972e7c3a9dad9b', 20150608225254, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 0, 1, '', '0', '', '', '', '', '', 0, 0, 20150608225254, 0, 0, 0, 0);
@@ -1093,7 +1648,7 @@ CREATE TABLE `ploopi_user_action_log` (
   `action` char(100) NOT NULL,
   `module_type` char(100) NOT NULL,
   `module` char(100) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_validation` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1103,7 +1658,7 @@ CREATE TABLE `ploopi_validation` (
   `type_validation` varchar(16) DEFAULT '0',
   `id_validation` int(10) UNSIGNED DEFAULT '0',
   `id_module_type` int(10) DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_workspace` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -1129,7 +1684,7 @@ CREATE TABLE `ploopi_workspace` (
   `meta_robots` varchar(255) NOT NULL DEFAULT 'index, follow, all',
   `frontoffice_domainlist` longtext,
   `priority` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_workspace` (`id`, `id_workspace`, `label`, `code`, `system`, `protected`, `parents`, `iprules`, `macrules`, `template`, `depth`, `mustdefinerule`, `backoffice`, `frontoffice`, `backoffice_domainlist`, `title`, `meta_description`, `meta_keywords`, `meta_author`, `meta_copyright`, `meta_robots`, `frontoffice_domainlist`, `priority`) VALUES
 (2, 1, 'Espace Principal', '', 0, 0, '0;1', '', '', 'ploopi4', 2, 0, 1, 0, '*\r\n', '', '', '', '', '', '', '*', 1),
@@ -1139,20 +1694,20 @@ CREATE TABLE `ploopi_workspace_group` (
   `id_group` int(10) NOT NULL DEFAULT '0',
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `adminlevel` tinyint(3) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_workspace_group_role` (
   `id_group` int(10) NOT NULL DEFAULT '0',
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `id_role` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ploopi_workspace_user` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_profile` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `adminlevel` tinyint(3) UNSIGNED DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_workspace_user` (`id_user`, `id_workspace`, `id_profile`, `adminlevel`) VALUES
 (2, 2, 1, 99);
@@ -1161,7 +1716,7 @@ CREATE TABLE `ploopi_workspace_user_role` (
   `id_user` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `id_workspace` int(10) NOT NULL DEFAULT '0',
   `id_role` int(10) UNSIGNED NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `ploopi_annotation`
@@ -1249,7 +1804,8 @@ ALTER TABLE `ploopi_index_stem_element`
   ADD KEY `stem` (`stem`);
 
 ALTER TABLE `ploopi_log`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ts` (`ts`);
 
 ALTER TABLE `ploopi_mb_action`
   ADD PRIMARY KEY (`id_action`,`id_module_type`),
@@ -1933,3 +2489,62 @@ UPDATE `ploopi_module_type` SET `version` = '1.10.3.0', `author` = 'Ovensia', `d
 
 -- 2.0.0
 UPDATE `ploopi_module_type` SET `version` = '2.0.0', `author` = 'Ovensia', `date` = '20261011000000', `description` = 'Noyau du système' WHERE `ploopi_module_type`.`id` = 1;
+
+CREATE TABLE IF NOT EXISTS `ploopi_api_key` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(100) NOT NULL,
+  `id_user` int unsigned NOT NULL,
+  `id_workspace` int unsigned NOT NULL,
+  `token_hash` char(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `prefix` varchar(16) NOT NULL,
+  `scopes` text NOT NULL,
+  `created_at` bigint unsigned NOT NULL,
+  `expires_at` bigint unsigned NOT NULL,
+  `revoked_at` bigint unsigned NOT NULL DEFAULT 0,
+  `last_used_at` bigint unsigned NOT NULL DEFAULT 0,
+  `request_count` bigint unsigned NOT NULL DEFAULT 0,
+  `failure_count` bigint unsigned NOT NULL DEFAULT 0,
+  `window_start` bigint unsigned NOT NULL DEFAULT 0,
+  `window_count` int unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`), UNIQUE KEY `token_hash` (`token_hash`), KEY `id_user` (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `ploopi_api_request` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `id_key` int unsigned NOT NULL,
+  `route` varchar(255) NOT NULL,
+  `status` smallint unsigned NOT NULL,
+  `duration_ms` int unsigned NOT NULL,
+  `created_at` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`), KEY `created_at` (`created_at`), KEY `id_key` (`id_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+-- 2.1.0
+UPDATE `ploopi_module_type` SET `version` = '2.1.0', `date` = '20261021000000' WHERE `id` = 1;
+
+CREATE TABLE IF NOT EXISTS `ploopi_event_outbox` (
+  `id` char(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `type` varchar(190) NOT NULL,
+  `payload` mediumtext NOT NULL,
+  `status` varchar(16) NOT NULL DEFAULT 'pending',
+  `attempts` int unsigned NOT NULL DEFAULT 0,
+  `created_at` bigint unsigned NOT NULL,
+  `next_attempt_at` bigint unsigned NOT NULL DEFAULT 0,
+  `locked_by` char(32) NOT NULL DEFAULT '',
+  `locked_until` bigint unsigned NOT NULL DEFAULT 0,
+  `published_at` bigint unsigned NOT NULL DEFAULT 0,
+  `last_error` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`), KEY `dispatch` (`status`, `next_attempt_at`, `locked_until`), KEY `published_at` (`published_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `ploopi_event_inbox` (
+  `consumer` varchar(120) NOT NULL,
+  `event_id` varchar(128) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `source_hash` char(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `type` varchar(190) NOT NULL,
+  `processed_at` bigint unsigned NOT NULL,
+  PRIMARY KEY (`consumer`, `source_hash`, `event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+-- 2.2.0
+UPDATE `ploopi_module_type` SET `version` = '2.2.0', `date` = '20261021000000' WHERE `id` = 1;

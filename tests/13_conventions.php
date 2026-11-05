@@ -421,6 +421,115 @@ foreach(lister_php(array('include', 'lib', 'modules', 'install', 'config')) as $
 
 T::vrai('aucune commande shell n\'interpole de variable entre guillemets doubles', empty($arrTrouves), implode(', ', array_slice($arrTrouves, 0, 8)));
 
+T::section('fonctions disparues');
+/**
+ * Les fonctions historiques ploopi_*() ont cédé la place aux classes du namespace
+ * ploopi : un appel oublié est une erreur fatale à l'exécution, sur un écran que les
+ * tests ne parcourent pas forcément. Le filtre « dernière connexion » des listes
+ * d'utilisateurs appelait encore ploopi_local2timestamp(). Relevé par le lexer : appel
+ * à une fonction ploopi_* ou <module>_* définie nulle part dans l'arbre ni par PHP.
+ */
+$arrDefinies = array();
+$arrAppels = array();
+foreach(lister_php(array('include', 'lib', 'modules', 'install', 'config')) as $strFichier)
+{
+    $arrCode = array_values(array_filter((array)@token_get_all(file_get_contents($strFichier)), function($mixJeton) {
+        return !is_array($mixJeton) || !in_array($mixJeton[0], array(T_COMMENT, T_DOC_COMMENT, T_WHITESPACE), true);
+    }));
+
+    foreach($arrCode as $intPos => $mixJeton)
+    {
+        if (!is_array($mixJeton) || $mixJeton[0] !== T_STRING) continue;
+        $mixPrec = isset($arrCode[$intPos - 1]) ? $arrCode[$intPos - 1] : null;
+        if (is_array($mixPrec) && $mixPrec[0] === T_FUNCTION) { $arrDefinies[strtolower($mixJeton[1])] = true; continue; }
+        if (!isset($arrCode[$intPos + 1]) || $arrCode[$intPos + 1] !== '(') continue;
+        if (is_array($mixPrec) && in_array($mixPrec[0], array(T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_NEW), true)) continue;
+        if (preg_match('/^(ploopi|system|doc|webedit|forms|wiki|directory|booking|planning|dbreport|news2|nanogallery)_/i', $mixJeton[1]))
+            $arrAppels[strtolower($mixJeton[1])][] = "{$strFichier}:{$mixJeton[2]}";
+    }
+}
+
+$arrTrouves = array();
+foreach($arrAppels as $strFonction => $arrLieux)
+{
+    if (!isset($arrDefinies[$strFonction]) && !function_exists($strFonction)) $arrTrouves[] = "{$strFonction}() ".implode(', ', array_slice($arrLieux, 0, 3));
+}
+
+T::vrai('témoin : des appels de fonctions ploopi_* / <module>_* sont relevés', !empty($arrAppels), count($arrAppels).' fonctions');
+T::vrai('aucun appel à une fonction ploopi_* / <module>_* qui n\'existe pas', empty($arrTrouves), implode(' | ', array_slice($arrTrouves, 0, 6)));
+
+T::section('constructeur de requêtes');
+/**
+ * Une donnée ne se concatène jamais dans la clause d'un appel du constructeur de
+ * requêtes (ploopi\query_*, data_object_collection), même échappée : ploopi\sqlformat
+ * lit les %s qu'elle contient comme des marqueurs, qui consomment le paramètre suivant
+ * et referment la chaîne SQL (injection) ; add_orderby, add_from… ne l'échappent pas
+ * du tout. Elle passe en valeur (%s, %d).
+ *
+ * Relevé par le lexer : 1er argument d'un add_*() / set_table() du constructeur
+ * contenant une superglobale ou un appel d'échappement (addslashes, escape_string).
+ *
+ * @param string $strFichier chemin du fichier
+ * @return array lignes fautives
+ */
+function clauses_concatenees($strFichier)
+{
+    $arrMethodes = array('add_select', 'add_from', 'add_innerjoin', 'add_leftjoin', 'add_where', 'add_groupby',
+        'add_having', 'add_orderby', 'add_set', 'add_raw', 'add_delete', 'set_table');
+    $arrDonnees = array('$_GET', '$_POST', '$_REQUEST', '$_COOKIE', '$_SERVER', '$_FILES',
+        'addslashes', 'escape_string', 'real_escape_string', 'mysqli_real_escape_string');
+    $arrTrouves = array();
+
+    $arrJetons = @token_get_all(file_get_contents($strFichier));
+    if (empty($arrJetons)) return $arrTrouves;
+
+    $arrCode = array();
+    foreach($arrJetons as $mixJeton)
+    {
+        if (is_array($mixJeton) && in_array($mixJeton[0], array(T_COMMENT, T_DOC_COMMENT, T_WHITESPACE), true)) continue;
+        $arrCode[] = $mixJeton;
+    }
+
+    foreach($arrCode as $intPos => $mixJeton)
+    {
+        if (!is_array($mixJeton) || $mixJeton[0] !== T_STRING || !in_array(strtolower($mixJeton[1]), $arrMethodes, true)) continue;
+        if (!isset($arrCode[$intPos - 1]) || !is_array($arrCode[$intPos - 1]) || $arrCode[$intPos - 1][0] !== T_OBJECT_OPERATOR) continue;
+        if (!isset($arrCode[$intPos + 1]) || $arrCode[$intPos + 1] !== '(') continue;
+
+        // jetons du 1er argument : jusqu'à la virgule de premier niveau ou la parenthèse fermante
+        $intProfondeur = 0;
+        for ($i = $intPos + 1; isset($arrCode[$i]); $i++)
+        {
+            $mixCourant = is_array($arrCode[$i]) ? $arrCode[$i][1] : $arrCode[$i];
+            if (in_array($mixCourant, array('(', '[', '{'), true) || (is_array($arrCode[$i]) && in_array($arrCode[$i][0], array(T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES), true))) $intProfondeur++;
+            elseif (in_array($mixCourant, array(')', ']', '}'), true)) { if (--$intProfondeur === 0) break; }
+            elseif ($mixCourant === ',' && $intProfondeur === 1) break;
+            elseif (is_array($arrCode[$i]) && in_array($arrCode[$i][0], array(T_VARIABLE, T_STRING), true) && in_array($arrCode[$i][1], $arrDonnees, true))
+            {
+                $arrTrouves[] = $mixJeton[2];
+                break;
+            }
+        }
+    }
+
+    return array_unique($arrTrouves);
+}
+
+$strTemoin = PLOOPI_ROOT.'/tests/resultats/temoin_clauses.php';
+@mkdir(dirname($strTemoin), 0777, true);
+file_put_contents($strTemoin, '<?php $q->add_where("a LIKE \'%".$db->addslashes($v)."%\' AND b = %s", [$w]);'."\n"
+    .'$q->add_orderby($_GET[\'tri\']);'."\n".'$q->add_where(\'a = %s\', $db->addslashes($v));'."\n");
+T::eq('témoin : clauses concaténées détectées, valeur échappée en 2e argument ignorée', array(1, 2), clauses_concatenees($strTemoin));
+@unlink($strTemoin);
+
+$arrTrouves = array();
+foreach(lister_php(array('include', 'lib', 'modules', 'install', 'config')) as $strFichier)
+{
+    foreach(clauses_concatenees($strFichier) as $intLigne) $arrTrouves[] = "{$strFichier}:{$intLigne}";
+}
+
+T::vrai('aucune donnée concaténée dans une clause du constructeur de requêtes', empty($arrTrouves), implode(', ', array_slice($arrTrouves, 0, 8)));
+
 T::section('Prototype remplacé par jQuery');
 /**
  * Prototype et script.aculo.us (protoaculous) ont été retirés au profit de jQuery.

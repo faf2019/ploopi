@@ -120,6 +120,12 @@ switch($http_host)
         define ('_PLOOPI_SESSIONTIME','3600'); // time in second
 
         /**
+         * Durée de vie absolue d'une session connectée, en secondes (0 : pas de limite)
+         */
+
+        define ('_PLOOPI_SESSION_MAXLIFETIME', 43200);
+
+        /**
          * Choix du gestionnaire de session
          * php : gestionnaire natif de php, indispensable pour l'usage de la fonctionnalité d'upload_progress intégrée à php 5.4
          * db : gestionnaire propre à Ploopi qui stocke les sessions en base de données. Incompatible avec upload_progress.
@@ -219,7 +225,8 @@ switch($http_host)
          *
          * @see _PLOOPI_LOG_ERRORS
          */
-        define ('_PLOOPI_LOG_ERRORS_FILE', '/tmp/ploopi_error.log');
+        // Sous le dossier des données, hors du /tmp partagé
+        define ('_PLOOPI_LOG_ERRORS_FILE', _PLOOPI_PATHDATA.'/ploopi_error.log');
 
         /**
          * Adresse destinatrice des mails d'erreurs.
@@ -366,16 +373,16 @@ switch($http_host)
         define ('_PLOOPI_DEFAULT_TEMPLATE', 'ploopi4');
 
         /**
-         * Force l'utilisateur à utiliser un mot de passe complexe
+         * Exige en plus des majuscules, minuscules, chiffres et caractères spéciaux
          */
 
-         define ('_PLOOPI_USE_COMPLEXE_PASSWORD', false);
+         define ('_PLOOPI_USE_COMPLEXE_PASSWORD', true);
 
         /**
-         * Longueur minimale d'un mot de passe complexe (utile uniquement si le paramètre _PLOOPI_USE_COMPLEXE_PASSWORD est activé)
+         * Longueur minimale d'un mot de passe, toujours exigée (128 caractères au plus)
          */
 
-         define ('_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE', 8);
+         define ('_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE', 12);
 
         /**
          * Nombre de tentatives de connexion autorisées avant blocage
@@ -388,6 +395,21 @@ switch($http_host)
          */
 
          define ('_PLOOPI_JAILING_TIME', 600);
+
+        /**
+         * Connexions échouées admises depuis une même adresse, tous comptes confondus,
+         * pendant _PLOOPI_JAILING_TIME (0 : pas de limite)
+         */
+
+         define ('_PLOOPI_MAX_CONNECTION_ATTEMPS_IP', 30);
+
+        /**
+         * Frontaux (répartiteur, proxy inverse) dont l'en-tête X-Forwarded-For est cru :
+         * adresses exactes séparées par des virgules. Vide : l'adresse du client est celle
+         * de la connexion. Inutile derrière un Apache qui applique mod_remoteip (Docker).
+         */
+
+         define ('_PLOOPI_TRUSTED_PROXIES', '');
 
         /**
          * Permet d'activer la compression gzip du buffer de sortie

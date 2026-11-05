@@ -45,6 +45,21 @@ abstract class loader
     private static $initsession = false;
 
     /**
+     * Vrai quand les paramètres de la requête arrivent chiffrés (ploopi_url) : produits
+     * par le serveur, donc pas choisis par le visiteur.
+     *
+     * @var boolean
+     */
+    private static $booUrlChiffree = false;
+
+    /**
+     * Les paramètres de la requête arrivent-ils chiffrés (ploopi_url) ?
+     *
+     * @return boolean
+     */
+    public static function urlchiffree() { return self::$booUrlChiffree; }
+
+    /**
      * Script principal appelé
      * index/admin/light/quick/webservice/backend...
      *
@@ -226,7 +241,11 @@ abstract class loader
             system::kill();
         }
 
+        // Une sortie du fichier de configuration (espace ou ligne vide après la balise de fin PHP) partirait avant
+        // le buffer et empêcherait la session et les en-têtes : on l'écarte, puis on la signale.
+        ob_start();
         include_once self::configpath(); // load config (mysql, path, etc.)
+        $strSortieConfig = ob_get_clean();
 
         /**
          * Création du buffer principal.
@@ -237,6 +256,8 @@ abstract class loader
          * Initialisation du gestionnaire d'erreur
          */
         error::set_handler();
+
+        if ($strSortieConfig !== '') trigger_error(sprintf("Sortie parasite du fichier de configuration (%d octet(s)) ignorée : supprimer ce qui suit « ?> » ou précède « <?php »", strlen($strSortieConfig)), E_USER_WARNING);
 
         /**
          * Chargement des constantes, globales
@@ -279,6 +300,8 @@ abstract class loader
         ini_set('session.use_trans_sid', '0');
         ini_set('session.cookie_httponly', '1');
         ini_set('session.cookie_samesite', 'Lax');
+        // Identifiant de session inconnu du serveur refusé
+        ini_set('session.use_strict_mode', '1');
         if (self::_isssl()) ini_set('session.cookie_secure', '1');
 
         /**
@@ -301,7 +324,8 @@ abstract class loader
         /**
          * Séquence de logout
          */
-        if (isset($_REQUEST['ploopi_logout'])) system::logout(0, 0, false);
+        // Déconnexion d'une session connectée : jeton exigé
+        if (isset($_REQUEST['ploopi_logout']) && self::checktoken()) system::logout(0, 0, false);
 
         /**
          * Pas de session, ou host différent => init session
@@ -398,6 +422,7 @@ abstract class loader
                 $GLOBALS["_{$strGlobalVar}"]['ploopi_url'] = security::filtervar($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
 
                 $strPloopiUrl = cipher::singleton()->decrypt($GLOBALS["_{$strGlobalVar}"]['ploopi_url']);
+                if ($strPloopiUrl !== false) self::$booUrlChiffree = true;
 
                 foreach(explode('&',$strPloopiUrl) as $strParam)
                 {
@@ -509,6 +534,9 @@ abstract class loader
         // Limite la fuite d'URL internes (identifiants de session, jetons) vers les sites tiers
         header('Referrer-Policy: strict-origin-when-cross-origin');
 
+        // HSTS : impose le HTTPS au navigateur pendant un an (sous-domaines compris)
+        if (self::_isssl()) header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+
         /**
          * Content-Security-Policy (décision D6, § 3.32) : politique de base appliquée,
          * politique cible en Report-Only ; la politique stricte remplace la première en
@@ -520,13 +548,10 @@ abstract class loader
         csp::setheaders($booBackoffice);
 
         header('Expires: Sat, 1 Jan 2000 05:00:00 GMT');
-        header('Last-Modified: ' . gmdate("D, d M Y H:i:s"));
+        header('Last-Modified: ' . gmdate("D, d M Y H:i:s").' GMT');
 
-        // HTTP/1.1
-        header('Cache-Control: private_no_expire, must-revalidate');
-        //header('Cache-Control: no-store, no-cache, must-revalidate');
-        //header('Cache-Control: post-check=0, pre-check=0', false);
-        //header('Cache-Control: max-age=0', false);
+        // Pages dynamiques jamais conservées ; les téléchargements posent les leurs
+        header('Cache-Control: no-store, no-cache, must-revalidate');
 
         // HTTP/1.0
         header('Pragma: no-cache');
@@ -851,6 +876,28 @@ abstract class loader
 
         if ((!empty($_REQUEST['ploopi_login']) && !empty($_REQUEST['ploopi_password'])))
         {
+            /**
+             * Trop d'échecs depuis cette adresse, tous comptes confondus : refus sans
+             * vérification, avec le message d'un mot de passe faux.
+             */
+            $intMaxIp = defined('_PLOOPI_MAX_CONNECTION_ATTEMPS_IP') ? (int) _PLOOPI_MAX_CONNECTION_ATTEMPS_IP : 30;
+            if ($intMaxIp > 0)
+            {
+                $db->query("
+                    SELECT  COUNT(*) AS nb
+                    FROM    ploopi_user_action_log
+                    WHERE   id_action = "._SYSTEM_ACTION_LOGIN_ERR."
+                    AND     ip = '".$db->addslashes(implode(',', ip::get()))."'
+                    AND     timestp >= ".(int) date::timestamp_add(date::createtimestamp(), 0, 0, -_PLOOPI_JAILING_TIME)
+                );
+                $row = $db->fetchrow();
+                if ($row && $row['nb'] >= $intMaxIp)
+                {
+                    error::syslog(LOG_INFO, 'Trop de connexions échouées depuis '.implode(',', ip::get()));
+                    system::logout(_PLOOPI_ERROR_LOGINERROR);
+                }
+            }
+
             $db->query("
                 SELECT      *
                 FROM        ploopi_user
@@ -863,7 +910,40 @@ abstract class loader
                 $fields = $db->fetchrow();
 
                 // Trop de tentatives de connexion : mise en prison pendant _PLOOPI_JAILING_TIME
-                if ($fields['jailed_since'] > 0 && $fields['jailed_since'] + _PLOOPI_JAILING_TIME > date::createtimestamp()) {
+                $booJailed = $fields['jailed_since'] > 0 && $fields['jailed_since'] + _PLOOPI_JAILING_TIME > date::createtimestamp();
+
+                /**
+                 * Mot de passe vérifié AVANT les états du compte : suspendu ou désactivé,
+                 * un compte ne se signale qu'à qui connaît son mot de passe.
+                 */
+                // Mot de passe erronné
+                $booPasswordOk = true;
+                if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
+                    if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'], true)) {
+                        $booPasswordOk = false;
+
+                        if (!$booJailed)
+                        {
+                            $objUser = new user();
+                            $objUser->open($fields['id']);
+                            $objUser->fields['failed_attemps']++;
+                            // Nombre de tentatives echouées trop élevé ? => case prison
+                            if (_PLOOPI_MAX_CONNECTION_ATTEMPS && $objUser->fields['failed_attemps'] >= _PLOOPI_MAX_CONNECTION_ATTEMPS) {
+                                $objUser->fields['jailed_since'] = date::createtimestamp();
+                            }
+                            $objUser->save();
+                        }
+
+                        user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
+                        error::syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
+                        system::logout(_PLOOPI_ERROR_LOGINERROR);
+                    }
+                    // Connexion avec algo de chiffrement
+                    // Nécessité de changer de mot de passe
+                    else $fields['password_force_update'] = 1;
+                }
+
+                if ($booJailed) {
                     user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                     error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est suspendu pendant "._PLOOPI_JAILING_TIME."s suite à un trop grand nombre de tentatives de connexion");
                     system::logout(_PLOOPI_ERROR_ACCOUNTJAILED);
@@ -874,30 +954,6 @@ abstract class loader
                     user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'],_PLOOPI_MODULE_SYSTEM,_PLOOPI_MODULE_SYSTEM);
                     error::syslog(LOG_INFO, "Le compte {$_REQUEST['ploopi_login']} est désactivé");
                     system::logout(_PLOOPI_ERROR_ACCOUNTEXPIRE);
-                }
-
-                // Mot de passe erronné
-                $booPasswordOk = true;
-                if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
-                    if (!user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'], true)) {
-                        $booPasswordOk = false;
-
-                        $objUser = new user();
-                        $objUser->open($fields['id']);
-                        $objUser->fields['failed_attemps']++;
-                        // Nombre de tentatives echouées trop élevé ? => case prison
-                        if (_PLOOPI_MAX_CONNECTION_ATTEMPS && $objUser->fields['failed_attemps'] >= _PLOOPI_MAX_CONNECTION_ATTEMPS) {
-                            $objUser->fields['jailed_since'] = date::createtimestamp();
-                        }
-                        $objUser->save();
-
-                        user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
-                        error::syslog(LOG_INFO, "Mot de passe incorrect pour {$_REQUEST['ploopi_login']}");
-                        system::logout(_PLOOPI_ERROR_LOGINERROR);
-                    }
-                    // Connexion avec algo de chiffrement
-                    // Nécessité de changer de mot de passe
-                    else $fields['password_force_update'] = 1;
                 }
 
                 /**
@@ -942,7 +998,7 @@ abstract class loader
                         if ($_REQUEST['ploopi_password_new'] == $_REQUEST['ploopi_password_new_confirm']) {
 
                             // Mot de passe valide ?
-                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || security::checkpasswordvalidity($_REQUEST['ploopi_password_new'])) {
+                            if (security::passwordallowed($_REQUEST['ploopi_password_new'])) {
 
                                 // On peut mettre à jour la base de données
                                 $objUser = new user();
@@ -1021,6 +1077,8 @@ abstract class loader
             }
             else
             {
+                // Même coût qu'un compte existant : la durée ne révèle pas l'identifiant
+                user::password_verify($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], user::DUMMY_HASH);
                 user_action_log::record(_SYSTEM_ACTION_LOGIN_ERR, $_REQUEST['ploopi_login'], _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
                 error::syslog(LOG_INFO, "Utilisateur inconnu ({$_REQUEST['ploopi_login']})");
                 system::logout(_PLOOPI_ERROR_LOGINERROR);
@@ -1408,6 +1466,19 @@ abstract class loader
             $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'];
             $_SESSION['ploopi']['workspaceid'] = $_SESSION['ploopi']['backoffice']['workspaceid'];
 
+            /**
+             * Une instance de module n'est ouverte que dans un espace auquel elle est
+             * rattachée (system et la recherche exceptés).
+             */
+            if (!empty($_SESSION['ploopi']['backoffice']['connected']) && !in_array((int) $_SESSION['ploopi']['moduleid'], array(0, (int) _PLOOPI_MODULE_SYSTEM, (int) _PLOOPI_MODULE_SEARCH), true)
+                && !in_array((int) $_SESSION['ploopi']['moduleid'], array_map('intval', isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']) ? $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'] : array()), true))
+            {
+                error::syslog(LOG_INFO, "Instance {$_SESSION['ploopi']['moduleid']} hors de l'espace {$_SESSION['ploopi']['workspaceid']} refusée");
+                $_SESSION['ploopi']['moduleid'] = $_SESSION['ploopi']['backoffice']['moduleid'] = '';
+                $_SESSION['ploopi']['moduletype'] = $_SESSION['ploopi']['moduletypeid'] = $_SESSION['ploopi']['modulelabel'] = '';
+                $_SESSION['ploopi']['action'] = 'public';
+            }
+
 
             if (_PLOOPI_TOKEN) {
                 $_SESSION['ploopi']['env'] = sprintf(
@@ -1496,6 +1567,9 @@ abstract class loader
         ///////////////////////////////////////////////////////////////////////////
         // LOAD LANGUAGE FILE
         ///////////////////////////////////////////////////////////////////////////
+
+        // Nom de langue simple : le paramètre entre dans un chemin d'inclusion
+        if (!preg_match('/^[a-z_]+$/', (string) $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'])) $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'] = 'french';
 
         if ($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'] != 'french' && file_exists("./lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php"))
         {
@@ -1619,7 +1693,10 @@ abstract class loader
             break;
         }
 
-        if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid'])) $_SESSION['ploopi']['moduleid'] = $_REQUEST['ploopi_moduleid'];
+        // Seulement une instance rattachée à l'espace servi
+        if (isset($_REQUEST['ploopi_moduleid']) && is_numeric($_REQUEST['ploopi_moduleid'])
+            && isset($_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules'])
+            && in_array((int) $_REQUEST['ploopi_moduleid'], array_map('intval', $_SESSION['ploopi']['workspaces'][$_SESSION['ploopi']['workspaceid']]['modules']), true)) $_SESSION['ploopi']['moduleid'] = $_REQUEST['ploopi_moduleid'];
 
         self::_setheader();
         self::_setheader_connected();

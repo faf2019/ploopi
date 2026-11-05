@@ -60,6 +60,9 @@ function bk_nettoyer()
 
     $strUsers = "SELECT id FROM ploopi_user WHERE login = '".BK_LOGIN."'";
     $arrRequetes = array(
+        "DELETE FROM ploopi_workspace_user_role WHERE id_user IN ({$strUsers})",
+        "DELETE FROM ploopi_role_action WHERE id_role IN (SELECT id FROM ploopi_role WHERE label = 'bk_role_ask')",
+        "DELETE FROM ploopi_role WHERE label = 'bk_role_ask'",
         "DELETE FROM ploopi_workspace_user WHERE id_user IN ({$strUsers})",
         "DELETE FROM ploopi_user WHERE login = '".BK_LOGIN."'",
         "DROP TABLE IF EXISTS ploopi_mod_booking_event, ploopi_mod_booking_event_detail, ploopi_mod_booking_resource,
@@ -286,6 +289,78 @@ T::eq('temoin : la demande verrouillee reste verrouillee pour lui', 1, (int)(bk_
 bk_reinitialiser();
 bk_op(bk_session('admin'), 'booking_event_delete', '&booking_element_list='.BK_EVENT);
 T::vrai('temoin : l\'administrateur supprime une demande', bk_ligne('event', BK_EVENT) === null);
+
+T::section('booking_event_save : droit et ressource');
+/**
+ * booking_event_save exige l'action 30 (_BOOKING_ACTION_ASKFOREVENT) et la
+ * ressource postée doit appartenir à l'instance.
+ */
+$corps_demande = function ($intModule, $intResource) {
+    $strTs = date('d/m/Y');
+    return 'booking_event_id=0'
+        .'&booking_moduleid='.$intModule
+        .'&booking_event_id_resource='.$intResource
+        .'&booking_event_object=Demande audit'
+        .'&_booking_event_timestp_begin_d='.$strTs
+        .'&_booking_event_timestp_begin_h=10'
+        .'&_booking_event_timestp_begin_i=00'
+        .'&_booking_event_timestp_end_d='.$strTs
+        .'&_booking_event_timestp_end_h=11'
+        .'&_booking_event_timestp_end_i=00'
+        .'&booking_event_periodicity=none'
+        .'&booking_event_comment='
+        .'&_booking_event_message='
+        .'&_booking_event_emails=';
+};
+$intEvents = function () { return bk_nb('event'); };
+
+// Témoin : l'administrateur (niveau 99, passe tous les contrôles) crée une demande
+bk_reinitialiser();
+$intAvant = $intEvents();
+bk_op(bk_session('admin'), 'booking_event_save', '', $corps_demande($intModule, BK_RES));
+T::eq('témoin : l\'administrateur crée une demande', $intAvant + 1, $intEvents());
+
+// Utilisateur sans droit (niveau 10, aucun rôle) : refusé
+bk_reinitialiser();
+$intAvant = $intEvents();
+bk_op(bk_session('sans'), 'booking_event_save', '', $corps_demande($intModule, BK_RES));
+T::eq('utilisateur sans droit : aucune demande enregistrée', $intAvant, $intEvents());
+
+// Utilisateur avec le droit mais ressource d'une autre instance : refusé
+bk_reinitialiser();
+db()->query("INSERT INTO ploopi_role (id_module, id_workspace, label, description) VALUES ({$intModule}, 2, 'bk_role_ask', '')");
+$intRoleAsk = db()->insert_id;
+db()->query("INSERT INTO ploopi_role_action (id_role, id_action, id_module_type) VALUES ({$intRoleAsk}, 30, {$intType})");
+db()->query("INSERT INTO ploopi_workspace_user_role (id_user, id_workspace, id_role) VALUES ({$intSansDroit}, 2, {$intRoleAsk})");
+$strEnvAvec = bk_connecter(BK_LOGIN, BK_MDP);
+// Ressource 999999 : n'existe pas, donc n'appartient pas à l'instance
+$intAvant = $intEvents();
+bk_op($strEnvAvec, 'booking_event_save', '', $corps_demande($intModule, 999999));
+T::eq('ressource inconnue : aucune demande enregistrée', $intAvant, $intEvents());
+// Ressource valide d'une autre instance : refusée malgré le droit sur la première
+bk_reinitialiser();
+db()->query("INSERT INTO ploopi_module (label, id_module_type, id_workspace, active, visible)
+             VALUES ('booking_etranger', {$intType}, 2, 1, 1)");
+$intModuleEtranger = db()->insert_id;
+db()->query("INSERT INTO ploopi_module_workspace (id_module, id_workspace, position, blockposition)
+             VALUES ({$intModuleEtranger}, 2, 2, '')");
+db()->query("INSERT INTO ploopi_mod_booking_resourcetype (id, name, active, id_user, id_workspace, id_module)
+             VALUES (74010, 'TYPEETRANGER', 1, 2, 2, {$intModuleEtranger})");
+db()->query("INSERT INTO ploopi_mod_booking_resource (id, name, reference, color, active, id_resourcetype, id_user, id_workspace, id_module)
+             VALUES (74020, 'RESSOURCEETRANGERE', '', '#ccc', 1, 74010, 2, 2, {$intModuleEtranger})");
+$intAvant = $intEvents();
+bk_op($strEnvAvec, 'booking_event_save', '', $corps_demande($intModule, 74020));
+T::eq('ressource d\'une autre instance : aucune demande enregistrée', $intAvant, $intEvents());
+// Ressource valide de l'instance : la demande aboutit (témoin du droit)
+$intAvant = $intEvents();
+bk_op($strEnvAvec, 'booking_event_save', '', $corps_demande($intModule, BK_RES));
+T::eq('témoin : avec le droit, la demande aboutit', $intAvant + 1, $intEvents());
+
+// Nettoyage de l'instance étrangère
+db()->query('DELETE FROM ploopi_mod_booking_resource WHERE id = 74020');
+db()->query('DELETE FROM ploopi_mod_booking_resourcetype WHERE id = 74010');
+db()->query('DELETE FROM ploopi_module_workspace WHERE id_module = '.(int)$intModuleEtranger);
+db()->query('DELETE FROM ploopi_module WHERE id = '.(int)$intModuleEtranger);
 
 T::section('Taille du planning des réservations');
 /**

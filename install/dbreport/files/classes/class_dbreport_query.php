@@ -577,6 +577,20 @@ class dbreport_query extends ploopi\data_object
     }
 
     /**
+     * Protège un intitulé saisi (alias de colonne) en identifiant SQL : `a``b`
+     *
+     * @param string $strLabel intitulé
+     * @param boolean $booFormat true si la clause passe par ploopi\sqlformat (% doublé)
+     * @return string identifiant entre backticks
+     */
+    private static function _sqlLabel($strLabel, $booFormat = false)
+    {
+        $strLabel = '`'.str_replace('`', '``', $strLabel).'`';
+
+        return $booFormat ? str_replace('%', '%%', $strLabel) : $strLabel;
+    }
+
+    /**
      * Prépare la requête SQL
      *
      * @param array $arrParam tableau de paramètre
@@ -605,11 +619,15 @@ class dbreport_query extends ploopi\data_object
 
         $this->arrFields = array(); // tableau des champs de la requête
 
-        /* Boucle sur les champs de la requête (avec le type de champ) */
+        /* Boucle sur les champs de la requête (avec le type de champ) : champs de la métabase
+         * (les champs secrets n'y figurent pas), de tables visibles, y compris pour un rapport
+         * enregistré avant le contrôle à l'ajout (dbreport_field_isallowed). Un champ masqué
+         * (identifiant) reste utilisable : masqué veut dire « non proposé à l'ajout ». */
         $objQuery = new ploopi\query_select();
         $objQuery->add_select('drf.*, mbf.type');
         $objQuery->add_from('ploopi_mod_dbreport_queryfield drf');
         $objQuery->add_from('ploopi_mb_field mbf');
+        $objQuery->add_innerjoin('ploopi_mb_table mbt ON mbt.name = mbf.tablename AND mbt.visible = 1');
         $objQuery->add_where('mbf.tablename = drf.tablename');
         $objQuery->add_where('mbf.name = drf.fieldname');
         $objQuery->add_where('drf.id_query = %d', $this->fields['id']);
@@ -630,7 +648,11 @@ class dbreport_query extends ploopi\data_object
             // Nom du champ dans la requête (init)
             $strQueryField = "`{$row['tablename']}`.`{$row['fieldname']}`";
 
-            if ($row['function'] != '')  $strQueryField = str_replace('%', $strQueryField, $row['function']);
+            // Fonction contrôlée aussi à l'exécution (rapport enregistré avant le contrôle) : ignorée si refusée
+            if ($row['function'] != '' && dbreport::isFunctionAllowed($row['function']))  $strQueryField = str_replace('%', $strQueryField, $row['function']);
+            if ($row['function_group'] != '' && !dbreport::isFunctionAllowed($row['function_group'])) $row['function_group'] = '';
+            // Critères : opérateurs de la liste proposée seulement (la branche par défaut l'insère tel quel)
+            foreach (array('type_criteria', 'type_or') as $strCritKey) if ($row[$strCritKey] != '' && !array_key_exists($row[$strCritKey], dbreport::getCriterias())) $row[$strCritKey] = '';
 
             $strDefaultLabel = "{$row['tablename']}_{$row['fieldname']}";
 
@@ -651,7 +673,7 @@ class dbreport_query extends ploopi\data_object
                     case 'groupby':
                         $strSqlSelect = $strQueryField;
 
-                        $this->objQuery->add_groupby(($row['label']) ? "`{$row['label']}`" : "`{$strDefaultLabel}`");
+                        $this->objQuery->add_groupby(self::_sqlLabel(($row['label']) ? $row['label'] : $strDefaultLabel));
                     break;
 
                     case 'intervals':
@@ -748,7 +770,7 @@ class dbreport_query extends ploopi\data_object
                         $strSqlSelect .= str_repeat(')', $intParenthesis);
 
                         // Clause GROUP BY
-                        $this->objQuery->add_orderby(($row['label']) ? "`{$row['label']}`" : "`{$strDefaultLabel}`");
+                        $this->objQuery->add_orderby(self::_sqlLabel(($row['label']) ? $row['label'] : $strDefaultLabel));
                     break;
 
                     case 'count_distinct':
@@ -776,12 +798,12 @@ class dbreport_query extends ploopi\data_object
                 if ($row['function_group'] != '')  $strSqlSelect = str_replace('%', $strSqlSelect, $row['function_group']);
 
                 // On ajoute la clause SELECT
-                $this->objQuery->add_select("{$strSqlSelect} AS `{$strLabel}`", $arrSelectParams);
+                $this->objQuery->add_select("{$strSqlSelect} AS ".self::_sqlLabel($strLabel, true), $arrSelectParams);
 
                 /* Gestion du tri */
                 if ($row['sort'] != '')
                 {
-                    $strSqlOrderBy = ($row['label']) ? "`{$row['label']}`" : "`{$strDefaultLabel}`";
+                    $strSqlOrderBy = self::_sqlLabel($strLabel);
                     $this->objQuery->add_orderby($strSqlOrderBy.' '.strtoupper($row['sort']));
                 }
             }
@@ -941,7 +963,7 @@ class dbreport_query extends ploopi\data_object
                                 if ($strCrit == 'criteria' && $booOrIsValid) $strSqlHaving .= '(';
                                 if ($strCrit == 'or' && $booOrIsValid) $strSqlHaving .= ' OR ';
 
-                                $strSqlHaving .= ($row['label']) ? "`{$row['label']}` " : "`{$strDefaultLabel}` ";
+                                $strSqlHaving .= self::_sqlLabel(($row['label']) ? $row['label'] : $strDefaultLabel, true).' ';
                                 $strValue = '';
 
                                 if (strstr($row['type'],'double') || strstr($row['type'],'float') || in_array($row['operation'], array('count', 'sum', 'avg'))) // type double ou opération arithmétique
@@ -1048,11 +1070,14 @@ class dbreport_query extends ploopi\data_object
          * Construction de la clause FROM
          */
 
-        // Recherche des tables de la requête
+        // Recherche des tables de la requête : tables visibles de la métabase seulement (le nom
+        // entre dans la clause FROM)
         $objQuery = new ploopi\query_select();
-        $objQuery->add_from('ploopi_mod_dbreport_querytable');
-        $objQuery->add_where('id_query = %d', $this->fields['id']);
-        $objQuery->add_orderby('id');
+        $objQuery->add_select('drt.tablename');
+        $objQuery->add_from('ploopi_mod_dbreport_querytable drt');
+        $objQuery->add_innerjoin('ploopi_mb_table mbt ON mbt.name = drt.tablename AND mbt.visible = 1');
+        $objQuery->add_where('drt.id_query = %d', $this->fields['id']);
+        $objQuery->add_orderby('drt.id');
         $objRs = $objQuery->execute();
 
         $arrTables = array();

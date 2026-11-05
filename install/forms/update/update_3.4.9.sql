@@ -14,7 +14,7 @@ CREATE TABLE `ploopi_mod_forms_group` (
 `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `id_form` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0',
 `label` VARCHAR( 255 ) NOT NULL
-) ENGINE = MYISAM ;
+) ENGINE=InnoDB ;
 
 
 ALTER TABLE `ploopi_mod_forms_field` ADD `id_group` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `id_form`;

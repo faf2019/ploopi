@@ -239,7 +239,7 @@ class session
     {
         if (self::$booUseDb)
         {
-            self::$objDb->query("SELECT GET_LOCK('ploopi_lock_{$id}', 10)");
+            self::$objDb->query("SELECT GET_LOCK('ploopi_lock_".self::$objDb->addslashes($id)."', 10)");
             return (self::$objDb->query("SELECT `data` FROM `ploopi_session` WHERE `id` = '".self::$objDb->addslashes($id)."'") && $arrRecord = self::$objDb->fetchrow()) ? self::uncompress($arrRecord['data']) : '';
         }
         elseif (self::$booUseMc)
@@ -271,7 +271,7 @@ class session
         if (self::$booUseDb)
         {
             self::$objDb->query("REPLACE INTO `ploopi_session` VALUES ('".self::$objDb->addslashes($id)."', '".self::$objDb->addslashes(time())."', '".self::$objDb->addslashes(self::compress($data))."')");
-            self::$objDb->query("SELECT RELEASE_LOCK('ploopi_lock_{$id}')");
+            self::$objDb->query("SELECT RELEASE_LOCK('ploopi_lock_".self::$objDb->addslashes($id)."')");
         }
         elseif (self::$booUseMc)
         {
@@ -410,6 +410,7 @@ class session
                     'backoffice' => array()
                 ),
 
+            'starttime' => time(),
             'currentrequesttime' => time(),
             'lastrequesttime' => time(),
 
@@ -471,6 +472,10 @@ class session
         $diff = $_SESSION['ploopi']['currentrequesttime'] - $_SESSION['ploopi']['lastrequesttime'];
 
         // Si la durée de sessoin est expirée et que l'on est connecté, on vide la session et on retourne à la page de login
+        // Durée absolue : une session entretenue sans cesse finit aussi par expirer
+        $intMax = defined('_PLOOPI_SESSION_MAXLIFETIME') ? (int) _PLOOPI_SESSION_MAXLIFETIME : 43200;
+        if ($intMax > 0 && !empty($_SESSION['ploopi']['connected']) && !empty($_SESSION['ploopi']['starttime']) && $_SESSION['ploopi']['currentrequesttime'] - $_SESSION['ploopi']['starttime'] > $intMax) $diff = PHP_INT_MAX;
+
         if ($diff > _PLOOPI_SESSIONTIME && _PLOOPI_SESSIONTIME != '' && _PLOOPI_SESSIONTIME != 0 && !empty($_SESSION['ploopi']['connected']))
         {
             error::syslog(LOG_INFO, 'Session expirée');

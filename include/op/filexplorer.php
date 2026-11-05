@@ -40,6 +40,17 @@ switch($ploopi_op)
 
         $cipher = new ploopi\cipher();
 
+        /**
+         * Valeur insérée comme chaîne JavaScript dans un attribut onclick : le navigateur
+         * décode les entités HTML de l'attribut avant d'exécuter le script, un simple
+         * htmlentities() laissait donc une apostrophe refermer la chaîne. json_encode()
+         * produit un littéral JavaScript (apostrophes et guillemets en \uXXXX), échappé
+         * ensuite pour l'attribut.
+         */
+        $funcJs = function($strValeur) {
+            return ploopi\str::htmlentities(json_encode((string)$strValeur, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        };
+
         //ploopi\output::print_r($_GET);
 
         // Dossier actuel (chaine)
@@ -55,7 +66,7 @@ switch($ploopi_op)
         <div id="filexplorer">
             <div class="documents_browser">
                 <div class="documents_path">
-                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser('<?php echo ploopi\str::htmlentities($_GET['filexplorer_id']); ?>', '<?php $cipher->crypt(''); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
+                    <a title="Aller au Dossier Racine" href="javascript:void(0);" style="float:right;" onclick="javascript:ploopi_filexplorer_browser(<?php echo $funcJs($_GET['filexplorer_id']); ?>, '<?php $cipher->crypt(''); ?>');"><img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_home.png"></a>
                     <div>Emplacement :</div>
                     <?php
                     $strShortCutPath = '';
@@ -63,7 +74,7 @@ switch($ploopi_op)
                     {
                         if ($strFolderName != '') $strShortCutPath .= _PLOOPI_SEP.$strFolderName;
                         ?>
-                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser('<?php echo ploopi\str::htmlentities($_GET['filexplorer_id']); ?>', '<?php echo $cipher->crypt($strShortCutPath); ?>');">
+                        <a href="javascript:void(0);" onclick="javascript:ploopi_filexplorer_browser(<?php echo $funcJs($_GET['filexplorer_id']); ?>, '<?php echo $cipher->crypt($strShortCutPath); ?>');">
                             <p class="ploopi_va">
                                 <img src="<?php echo $_SESSION['ploopi']['template_path']; ?>/img/documents/ico_folder.png" />
                                 <span><?php echo ploopi\str::htmlentities($strFolderName ? $strFolderName : 'Racine'); ?></span>
@@ -183,8 +194,8 @@ switch($ploopi_op)
                                 'link' => 'javascript:void(0);',
                                 'option' =>
                                     $boolIsFolder
-                                    ? 'onclick="javascript:ploopi_filexplorer_browser(\''.$_GET['filexplorer_id'].'\', \''.$cipher->crypt($strCurrentFolder._PLOOPI_SEP.$strFileName).'\');"'
-                                    : 'onclick="javascript:$(\''.$_SESSION['filexplorer'][$_GET['filexplorer_id']]['destfield'].'\').value=\''.$strCurrentFolder._PLOOPI_SEP.$strFileName.'\';ploopi.popup.hide(\'ploopi_filexplorer_popup\');"',
+                                    ? 'onclick="javascript:ploopi_filexplorer_browser('.$funcJs($_GET['filexplorer_id']).', \''.$cipher->crypt($strCurrentFolder._PLOOPI_SEP.$strFileName).'\');"'
+                                    : 'onclick="javascript:$('.$funcJs($_SESSION['filexplorer'][$_GET['filexplorer_id']]['destfield']).').value='.$funcJs($strCurrentFolder._PLOOPI_SEP.$strFileName).';ploopi.popup.hide(\'ploopi_filexplorer_popup\');"',
                                 'style' => ''
                             );
                     }

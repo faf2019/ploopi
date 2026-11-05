@@ -96,6 +96,25 @@ if ($_SESSION['ploopi']['connected'])
             include_once './modules/booking/classes/class_booking_resource.php';
             include_once './modules/booking/classes/class_booking_subresource.php';
 
+            /**
+             * L'opération écrit une demande avec l'identité de la session : elle exige le
+             * droit de demander une réservation (_BOOKING_ACTION_ASKFOREVENT) sur l'instance
+             * visée. En backoffice, le droit s'évalue sur l'instance courante ; en frontoffice,
+             * sur l'instance passée par booking_moduleid (booking/op.php n'a posé l'espace
+             * que pour une instance accessible : ismoduleallowed vérifie l'espace courant).
+             * La ressource doit appartenir à cette instance.
+             */
+            if ($_SESSION['ploopi']['mode'] == 'frontoffice')
+            {
+                if (empty($_GET['booking_moduleid']) || !is_numeric($_GET['booking_moduleid'])
+                    || !ploopi\acl::isactionallowed(_BOOKING_ACTION_ASKFOREVENT, $_SESSION['ploopi']['workspaceid'], $_GET['booking_moduleid']))
+                    ploopi\system::kill();
+            }
+            elseif (!ploopi\acl::isactionallowed(_BOOKING_ACTION_ASKFOREVENT))
+            {
+                ploopi\system::kill();
+            }
+
             if (!empty($_POST['_booking_event_timestp_begin_d']) && !empty($_POST['booking_event_object']))
             {
                 $booking_no_collision = 0;
@@ -107,10 +126,24 @@ if ($_SESSION['ploopi']['connected'])
 
                 $objEvent->setuwm();
                 if ($_SESSION['ploopi']['mode'] == 'frontoffice') {
-                    $objEvent->fields['id_module'] = $_GET['booking_moduleid'];
+                    $objEvent->fields['id_module'] = (int)$_GET['booking_moduleid'];
                     $booking_no_collision = ploopi\param::get('booking_default_no_collision',$objEvent->fields['id_module']);
                 } else {
                     $booking_no_collision = ploopi\param::get('booking_default_no_collision');
+                }
+
+                /**
+                 * La ressource postée doit appartenir à l'instance visée : sinon un
+                 * utilisateur muni du droit sur une instance créait des demandes sur les
+                 * ressources d'une autre (le cloisonnement par instance ne tenait qu'à la
+                 * discipline du formulaire, qui présélectionne la ressource).
+                 */
+                $objResource = new booking_resource();
+                if (empty($objEvent->fields['id_resource']) || !is_numeric($objEvent->fields['id_resource'])
+                    || !$objResource->open($objEvent->fields['id_resource'])
+                    || (int)$objResource->fields['id_module'] !== (int)$objEvent->fields['id_module'])
+                {
+                    ploopi\output::redirect('admin.php');
                 }
 
                 $booError = !$objEvent->isvalid();
@@ -141,7 +174,6 @@ if ($_SESSION['ploopi']['connected'])
 
                 $arrUsers = array();
 
-                $objResource = new booking_resource();
                 if ($objResource->open($objEvent->fields['id_resource']))
                 {
                     // On récupère les utilisateurs gestionnaires de la ressource

@@ -432,7 +432,9 @@ abstract class str {
      * Nettoie le code html et le rend valide XHTML
      *
      * @param string $strContent code HTML à valider
-     * @param boolean $booTrusted true si le code fourni est "sûr", dans ce cas le filtrage est moins sévère (par défaut : false)
+     * @param boolean $booTrusted true si le code fourni est "sûr", dans ce cas le filtrage est moins sévère (par défaut : false).
+     *                          Attention : HTML.Trusted laisse passer <script> ; réservé aux rédacteurs de confiance,
+     *                          jamais à la saisie d'un utilisateur ordinaire
      * @return string code HTML validé
      *
      * @link http://htmlpurifier.org/

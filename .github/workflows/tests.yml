@@ -56,7 +56,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mysqli, gd, zip, curl, xml, mbstring, openssl
+          extensions: mysqli, gd, zip, curl, xml, mbstring, openssl, sockets
           coverage: none
 
       - name: Cache Composer
@@ -96,7 +96,7 @@ jobs:
           name: journaux-php${{ matrix.php }}
           path: |
             data/instance_tests.log
-            /tmp/ploopi_error.log
+            data/ploopi_error.log
           if-no-files-found: ignore
 
   # composer audit signale tout nouvel avis de sécurité sur les dépendances
@@ -128,7 +128,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          extensions: mysqli, gd, zip, curl, xml, mbstring, openssl
+          extensions: mysqli, gd, zip, curl, xml, mbstring, openssl, sockets
           coverage: none
       # Outil hors du dépôt (feuille de route §5) : le plugin dealerdirect configure
       # installed_paths à l'installation, aucune étape supplémentaire n'est requise
@@ -149,3 +149,51 @@ jobs:
             --extensions=php --report=summary include install modules lib config || true
           /tmp/compat/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.1-8.5 \
             --extensions=php --warning-severity=0 --report=summary include install modules lib config
+
+  events:
+    name: Événements RabbitMQ
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+      rabbitmq:
+        image: rabbitmq:4.4-management
+        env:
+          RABBITMQ_DEFAULT_USER: ploopi_test
+          RABBITMQ_DEFAULT_PASS: ploopi_test
+          RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "+S 2:2 +A 4"
+          RABBITMQ_CTL_ERL_ARGS: "+S 1:1 +A 1"
+        ports:
+          - 5672:5672
+        options: >-
+          --memory=512m --hostname=rabbitmq
+          --health-cmd="gosu rabbitmq rabbitmq-diagnostics -q check_port_connectivity"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mysqli, gd, zip, curl, xml, mbstring, openssl, sockets
+          coverage: none
+      - name: Dépendances verrouillées
+        run: composer install --no-interaction --no-progress --ignore-platform-req=ext-memcached
+      - name: Événements contre RabbitMQ réel
+        env:
+          PLOOPI_TEST_DB_ADMIN: root
+          PLOOPI_TEST_DB_ADMINPWD: root
+          PLOOPI_TEST_DB_HOST: 127.0.0.1
+          PLOOPI_TEST_DB_USER_HOSTS: localhost 127.0.0.1 %
+          PLOOPI_TEST_RABBITMQ_HOST: 127.0.0.1
+          PLOOPI_RABBITMQ_HOST: 127.0.0.1
+          PLOOPI_RABBITMQ_USER: ploopi_test
+          PLOOPI_RABBITMQ_PASSWORD: ploopi_test
+        run: tests/instance.sh test 46_events

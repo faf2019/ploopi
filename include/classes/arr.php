@@ -180,6 +180,9 @@ abstract class arr
         {
             if ($arrOptions['booClean']) $arrArray = self::map(array(__NAMESPACE__.'\\str', 'iso8859_clean'), $arrArray);
 
+            // Formule neutralisée : un tableur n'interprète pas une cellule ouverte par une apostrophe
+            $arrArray = self::map(function($value) { return is_string($value) && !is_numeric($value) && preg_match('/^[=+\-@\t\r]/', $value) ? "'".$value : $value; }, $arrArray);
+
             // Fonction d'échappement & formatage du contenu
             $funcLineEchap = null;
 

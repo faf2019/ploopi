@@ -37,6 +37,46 @@ use ploopi;
 class query_select extends query_sud
 {
     /**
+     * Élimination des doublons, désactivée par défaut.
+     *
+     * @var boolean
+     */
+    private $booDistinct = false;
+
+    /**
+     * Active ou désactive SELECT DISTINCT, sans modifier les colonnes choisies.
+     *
+     * @param boolean $booDistinct
+     */
+    public function set_distinct($booDistinct = true)
+    {
+        $this->booDistinct = (bool)$booDistinct;
+    }
+
+    /**
+     * Définit LIMIT à partir d'une page numérotée depuis 1 et de sa taille.
+     * Remplace la limite précédente ; remove_limit() reste utilisable.
+     *
+     * @param integer|string $intPage Entier positif ou sa représentation décimale
+     * @param integer|string $intSize Nombre de lignes par page, strictement positif
+     * @throws \InvalidArgumentException Si les bornes sont invalides ou débordent
+     */
+    public function add_pagination($intPage, $intSize)
+    {
+        foreach (array($intPage, $intSize) as $mixValue)
+        {
+            if ((!is_int($mixValue) && !is_string($mixValue)) || filter_var($mixValue, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) === false)
+                throw new \InvalidArgumentException('La page et sa taille doivent être des entiers strictement positifs');
+        }
+        $intPage = (int)$intPage;
+        $intSize = (int)$intSize;
+        if ($intPage - 1 > intdiv(PHP_INT_MAX, $intSize))
+            throw new \InvalidArgumentException('Le décalage de pagination dépasse la capacité des entiers');
+
+        $this->add_limit((($intPage - 1) * $intSize).', '.$intSize);
+    }
+
+    /**
      * Tableau de la clause SELECT
      *
      * @var array
@@ -56,6 +96,13 @@ class query_select extends query_sud
      * @var array
      */
     private $arrLeftJoin;
+
+    /**
+     * Tableau de la clause RIGHT JOIN
+     *
+     * @var array
+     */
+    private $arrRightJoin;
 
     /**
      * Tableau de la clause GROUP BY
@@ -81,6 +128,7 @@ class query_select extends query_sud
         $this->arrSelect = array();
         $this->arrInnerJoin = array();
         $this->arrLeftJoin = array();
+        $this->arrRightJoin = array();
         $this->arrGroupBy = array();
         $this->arrHaving = array();
 
@@ -108,6 +156,17 @@ class query_select extends query_sud
     {
         if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
         $this->arrLeftJoin[] = array('rawsql' => $strLeftJoin, 'values' => $mixValues);
+    }
+
+    /**
+     * Ajoute une clause RIGHT JOIN à la requête
+     *
+     * @param string $strRightJoin Clause RIGHT JOIN
+     */
+    public function add_rightjoin($strRightJoin, $mixValues = null)
+    {
+        if (!empty($mixValues) && !is_array($mixValues)) $mixValues = array($mixValues);
+        $this->arrRightJoin[] = array('rawsql' => $strRightJoin, 'values' => $mixValues);
     }
 
     /**
@@ -158,7 +217,7 @@ class query_select extends query_sud
         $arrSelect = array();
         foreach($this->arrSelect as $arrSelectDetail) $arrSelect[] = sqlformat::replace($arrSelectDetail, $this->objDb);
 
-        return 'SELECT '.(empty($arrSelect) ? '*' : implode(', ', $arrSelect));
+        return 'SELECT '.($this->booDistinct ? 'DISTINCT ' : '').(empty($arrSelect) ? '*' : implode(', ', $arrSelect));
     }
 
     /**
@@ -172,6 +231,19 @@ class query_select extends query_sud
         foreach($this->arrLeftJoin as $arrLeftJoinDetail) $arrLeftJoin[] = sqlformat::replace($arrLeftJoinDetail, $this->objDb);
 
         return empty($arrLeftJoin) ? '' : ' LEFT JOIN '.implode(' LEFT JOIN ', $arrLeftJoin);
+    }
+
+    /**
+     * Retourne la clause RIGHT JOIN
+     *
+     * @return string
+     */
+    protected function get_rightjoin()
+    {
+        $arrRightJoin = array();
+        foreach($this->arrRightJoin as $arrRightJoinDetail) $arrRightJoin[] = sqlformat::replace($arrRightJoinDetail, $this->objDb);
+
+        return empty($arrRightJoin) ? '' : ' RIGHT JOIN '.implode(' RIGHT JOIN ', $arrRightJoin);
     }
 
     /**
@@ -218,6 +290,11 @@ class query_select extends query_sud
     public function remove_leftjoin() { $this->arrLeftJoin = array(); }
 
     /**
+     * Supprime la clause RIGHT JOIN
+     */
+    public function remove_rightjoin() { $this->arrRightJoin = array(); }
+
+    /**
      * Supprime la clause INNER JOIN
      */
     public function remove_innerjoin() { $this->arrInnerJoin = array(); }
@@ -247,6 +324,7 @@ class query_select extends query_sud
                 $this->get_from().
                 $this->get_innerjoin().
                 $this->get_leftjoin().
+                $this->get_rightjoin().
                 $this->get_where().
                 $this->get_groupby().
                 $this->get_having().

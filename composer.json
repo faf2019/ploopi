@@ -28,6 +28,18 @@
                   "reference":"master"
                 }
             }
+        },
+        {
+            "type":"package",
+            "package": {
+              "name": "components/jqueryui",
+              "version":"1.14.1",
+              "dist": {
+                  "url": "https://registry.npmjs.org/jquery-ui/-/jquery-ui-1.14.1.tgz",
+                  "type": "tar",
+                  "shasum": "ba342ea3ffff662b787595391f607d923313e040"
+                }
+            }
         }
     ],
     "require": {
@@ -50,7 +62,7 @@
         "pear/http_request2": "^2.3",
         "horde/text_diff": "*",
         "components/jquery": "^3.1",
-        "components/jqueryui": "^1.12",
+        "components/jqueryui": "1.14.1",
         "components/highlightjs": "^9.5",
         "eastdesire/jscolor": "2.5.1",
         "pear/net_smtp": "^1.8",
@@ -58,7 +70,8 @@
         "pear/mail_mime": "^1.10",
         "dompdf/dompdf": "^3.1",
         "tinymce/tinymce": "^8.9",
-        "mklkj/tinymce-i18n": "^26.9"
+        "mklkj/tinymce-i18n": "^26.9",
+        "php-amqplib/php-amqplib": "^3.7"
     },
     "autoload": {
         "exclude-from-classmap": ["vendor/horde/exception/compat/"]

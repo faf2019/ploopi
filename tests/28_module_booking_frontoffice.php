@@ -199,7 +199,7 @@ H::req("/articles/reservations-h{$intRubrique}a{$intArticle}.html");
  * L'erreur SQL est avalee et le planning rendu vide : seule la journalisation des erreurs
  * de l'instance (_PLOOPI_LOG_ERRORS_FILE) revele la valeur transmise a la base.
  */
-$strJournal = defined('_PLOOPI_LOG_ERRORS_FILE') ? _PLOOPI_LOG_ERRORS_FILE : '/tmp/ploopi_error.log';
+$strJournal = defined('_PLOOPI_LOG_ERRORS_FILE') ? _PLOOPI_LOG_ERRORS_FILE : (string) cfg('journal_erreurs', '/tmp/ploopi_error.log');
 clearstatcache();
 $intTailleAvant = file_exists($strJournal) ? filesize($strJournal) : 0;
 

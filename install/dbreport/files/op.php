@@ -347,9 +347,12 @@ if (ploopi\acl::ismoduleallowed('dbreport'))
                 {
                     foreach ($_POST['dbreport_fieldnames'] as $strFieldName)
                     {
-                        $objDbrQueryField = new dbreport_queryfield();
+                        // « table.champ » proposé par le formulaire : champ visible de la métabase, d'une table de la requête
+                        if (!is_string($strFieldName) || substr_count($strFieldName, '.') != 1) continue;
+                        $key = explode('.', $strFieldName);
+                        if (!dbreport_field_isallowed($objDbrQuery->fields['id'], $key[0], $key[1])) continue;
 
-                        $key = explode(".", $strFieldName);
+                        $objDbrQueryField = new dbreport_queryfield();
 
                         $objMbField = new ploopi\mb_field();
                         $objMbField->open($key[0],$key[1]);
@@ -365,10 +368,34 @@ if (ploopi\acl::ismoduleallowed('dbreport'))
                 else
                 {
                     $objDbrQueryField = new dbreport_queryfield();
-                    if (isset($_GET['dbreport_queryfield_id']) && is_numeric($_GET['dbreport_queryfield_id']) && $objDbrQueryField->open($_GET['dbreport_queryfield_id']))
+                    if (isset($_GET['dbreport_queryfield_id']) && is_numeric($_GET['dbreport_queryfield_id']) && $objDbrQueryField->open($_GET['dbreport_queryfield_id']) && $objDbrQueryField->fields['id_query'] == $objDbrQuery->fields['id'])
                     {
-                        $objDbrQueryField->setvalues($_POST,'dbreport_queryfield_');
+                        // Colonnes du formulaire seulement : table, champ et requête ne se changent pas
+                        // (sinon un champ masqué de la métabase, ou une autre requête, était visé)
+                        $arrDbreportFieldValues = array();
+                        foreach (array('label', 'function', 'function_group', 'visible', 'sort', 'criteria', 'type_criteria', 'or', 'type_or', 'intervals', 'operation', 'position', 'series') as $strDbreportKey)
+                        {
+                            if (isset($_POST["dbreport_queryfield_{$strDbreportKey}"]) && is_scalar($_POST["dbreport_queryfield_{$strDbreportKey}"])) $arrDbreportFieldValues["dbreport_queryfield_{$strDbreportKey}"] = (string) $_POST["dbreport_queryfield_{$strDbreportKey}"];
+                        }
+
+                        // Valeurs entrant dans le SQL : fonctions contrôlées, listes fermées pour le reste
+                        $booDbreportRefus = false;
+                        foreach (array('function', 'function_group') as $strDbreportKey)
+                        {
+                            if (isset($arrDbreportFieldValues["dbreport_queryfield_{$strDbreportKey}"]) && !dbreport::isFunctionAllowed($arrDbreportFieldValues["dbreport_queryfield_{$strDbreportKey}"]))
+                            {
+                                unset($arrDbreportFieldValues["dbreport_queryfield_{$strDbreportKey}"]);
+                                $booDbreportRefus = true;
+                            }
+                        }
+                        foreach (array('type_criteria' => dbreport::getCriterias(), 'type_or' => dbreport::getCriterias(), 'operation' => dbreport::getOperations(), 'sort' => dbreport::getSorts()) as $strDbreportKey => $arrDbreportAllowed)
+                        {
+                            $strDbreportPost = "dbreport_queryfield_{$strDbreportKey}";
+                            if (isset($arrDbreportFieldValues[$strDbreportPost]) && $arrDbreportFieldValues[$strDbreportPost] !== '' && !isset($arrDbreportAllowed[$arrDbreportFieldValues[$strDbreportPost]])) unset($arrDbreportFieldValues[$strDbreportPost]);
+                        }
+                        $objDbrQueryField->setvalues($arrDbreportFieldValues, 'dbreport_queryfield_');
                         $objDbrQueryField->save();
+                        if ($booDbreportRefus) ploopi\output::redirect("admin.php?dbreport_op=query_modify&dbreport_query_id={$_GET['dbreport_query_id']}&dbreport_function_refused=1#dbreport_fields");
                     }
                 }
 
@@ -495,10 +522,13 @@ if (ploopi\acl::ismoduleallowed('dbreport'))
 
             if (isset($_GET['dbreport_query_id']) && is_numeric($_GET['dbreport_query_id']) && $objDbrQuery->open($_GET['dbreport_query_id']))
             {
-                $arrTableNames = is_array($_POST['dbreport_tablenames']) ? $_POST['dbreport_tablenames'] : array($_POST['dbreport_tablenames']);
+                $arrTableNames = !isset($_POST['dbreport_tablenames']) ? array() : (is_array($_POST['dbreport_tablenames']) ? $_POST['dbreport_tablenames'] : array($_POST['dbreport_tablenames']));
 
                 foreach ($arrTableNames as $strTableName)
                 {
+                    // Table proposée par le formulaire : visible dans la métabase, d'un module de la requête
+                    if (!dbreport_table_isallowed($objDbrQuery->fields['id'], $strTableName)) continue;
+
                     // Sélection des tables de la requête (pour chercher les relations avec les tables qu'on ajoute
                     $objQuery = new ploopi\query_select();
                     $objQuery->add_select('tablename');
@@ -585,8 +615,8 @@ if (ploopi\acl::ismoduleallowed('dbreport'))
                    list($strTableDest, $strFieldDest) = explode(',', $_GET['dbreport_queryrelation_dest']);
 
                    if ($objDbrQueryRelation->open($_GET['dbreport_query_id'], $strTableSrc, $strFieldSrc, $strTableDest, $strFieldDest)) {
-                       if (isset($_GET['dbreport_queryrelation_active'])) $objDbrQueryRelation->fields['active'] = $_GET['dbreport_queryrelation_active'];
-                       if (isset($_GET['dbreport_queryrelation_type_join'])) $objDbrQueryRelation->fields['type_join'] = $_GET['dbreport_queryrelation_type_join'];
+                       if (isset($_GET['dbreport_queryrelation_active'])) $objDbrQueryRelation->fields['active'] = empty($_GET['dbreport_queryrelation_active']) ? 0 : 1;
+                       if (isset($_GET['dbreport_queryrelation_type_join']) && in_array($_GET['dbreport_queryrelation_type_join'], array('inner', 'left', 'right'), true)) $objDbrQueryRelation->fields['type_join'] = $_GET['dbreport_queryrelation_type_join'];
                        $objDbrQueryRelation->save();
                    }
                 }
