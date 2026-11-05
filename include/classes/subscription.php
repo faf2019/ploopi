@@ -156,7 +156,7 @@ class subscription extends data_object
             </a>
         </div>
 
-        <div style="display:<?php echo $_SESSION['ploopi']['switchdisplay'][$div_id]; ?>;" id="<?php echo $div_id; ?>" class="ploopi_subscription_detail">
+        <div style="display:<?php echo $_SESSION['ploopi']['switchdisplay'][$div_id] == 'block' ? 'block' : 'none'; ?>;" id="<?php echo $div_id; ?>" class="ploopi_subscription_detail">
 
             <form action="" method="post" id="ploopi_form_subscription_<?php echo $ploopi_subscription_id; ?>" target="form_subscription_target_<?php echo $ploopi_subscription_id; ?>">
             <input type="hidden" name="ploopi_op" value="subscription_save">

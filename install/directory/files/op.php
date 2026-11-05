@@ -392,7 +392,13 @@ if ($_SESSION['ploopi']['connected'])
             break;
 
             case 'directory_choose_photo':
-                if (empty($_GET['directory_photo_id'])) ploopi\system::kill();
+                // Le contact visé doit être modifiable par l'utilisateur connecté
+                if (empty($_GET['directory_photo_id']) || !is_numeric($_GET['directory_photo_id'])) ploopi\system::kill();
+
+                ploopi\module::init('directory', false, false, false);
+                include_once './modules/directory/class_directory_contact.php';
+                $objPhotoContact = new directory_contact();
+                if (!$objPhotoContact->open($_GET['directory_photo_id']) || !directory_contact_ismodifiable($objPhotoContact->fields)) ploopi\system::kill();
 
                 // Popup de choix d'une photo pour un utilisateur
                 ob_start();
@@ -416,9 +422,15 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_send_photo':
                 // Envoi d'une photo temporaire dans la fiche contact
+                // Le contact visé doit être modifiable par l'utilisateur connecté
 
-                if (!empty($_GET['directory_photo_id']))
+                if (!empty($_GET['directory_photo_id']) && is_numeric($_GET['directory_photo_id']))
                 {
+                    ploopi\module::init('directory', false, false, false);
+                    include_once './modules/directory/class_directory_contact.php';
+                    $objPhotoContact = new directory_contact();
+                    if (!$objPhotoContact->open($_GET['directory_photo_id']) || !directory_contact_ismodifiable($objPhotoContact->fields)) ploopi\system::kill();
+
                     // reset suppression
                     ploopi\session::setvar("deletephoto_{$_GET['directory_photo_id']}", 0);
 
@@ -444,10 +456,17 @@ if ($_SESSION['ploopi']['connected'])
 
             case 'directory_delete_photo':
                 // demande de suppression d'une photo
+                // Le contact visé doit être modifiable par l'utilisateur connecté
                 if (!empty($_GET['directory_contact_id']) && is_numeric($_GET['directory_contact_id']))
                 {
-                    ploopi\session::setvar("deletephoto_{$_GET['directory_contact_id']}", 1);
-                    $_SESSION['directory']['contact_photopath'] = '';
+                    ploopi\module::init('directory', false, false, false);
+                    include_once './modules/directory/class_directory_contact.php';
+                    $objPhotoContact = new directory_contact();
+                    if ($objPhotoContact->open($_GET['directory_contact_id']) && directory_contact_ismodifiable($objPhotoContact->fields))
+                    {
+                        ploopi\session::setvar("deletephoto_{$_GET['directory_contact_id']}", 1);
+                        $_SESSION['directory']['contact_photopath'] = '';
+                    }
                 }
                 ploopi\system::kill();
             break;

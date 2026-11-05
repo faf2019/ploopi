@@ -207,7 +207,8 @@ class param
     {
         foreach($values as $name => $value)
         {
-            if (isset($this->arrParam[$name])) $this->arrParam[$name]['value'] = $value;
+            // Paramètre à liste de choix : seule une valeur proposée est acceptée
+            if (isset($this->arrParam[$name]) && (empty($this->arrParam[$name]['choices']) || (is_scalar($value) && array_key_exists((string) $value, $this->arrParam[$name]['choices'])))) $this->arrParam[$name]['value'] = $value;
         }
     }
 

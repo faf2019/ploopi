@@ -60,6 +60,8 @@ define ('_SYSTEM_MENU_INSTALLMODULES', 'Modules');
 define ('_SYSTEM_MENU_PARAMS', 'Paramètres');
 define ('_SYSTEM_MENU_DIRECTORY', 'Utilisateurs');
 define ('_SYSTEM_MENU_TOOLS', 'Outils');
+define ('_SYSTEM_MENU_API', 'API');
+define ('_SYSTEM_MENU_EVENTS', 'Événements');
 define ('_SYSTEM_MENU_SYSTEMUPDATE', 'Mise à jour');
 
 define ('_SYSTEM_WS_SUBTITLE', 'Espaces, groupes et utilisateurs de la plateforme.');

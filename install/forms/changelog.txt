@@ -1,3 +1,13 @@
+== Module FORMS - version 3.9.7 ====================================================
+
+2026-11-05  Ovensia <stephane@ovensia.fr>
+
+* jQuery UI 1.14.1 : chemin du script dans vendor/
+  devenu components/jqueryui/dist/jquery-ui.min.js.
+
+3.9.6 - 21/10/2026
+Création des tables en InnoDB.
+
 == Module FORMS - version 3.9.5 ====================================================
 
 2026-10-11  Ovensia <stephane@ovensia.fr>

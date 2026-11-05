@@ -250,7 +250,7 @@ class module extends data_object
                 define("_PLOOPI_INITMODULE_{$moduletype}",    1);
 
                 $defaultlanguagefile = "{$strModulePath}/lang/french.php";
-                $languagefile = (isset($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'])) ? "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php" : '';
+                $languagefile = (isset($_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']) && preg_match('/^[a-z_]+$/', (string) $_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language'])) ? "{$strModulePath}/lang/{$_SESSION['ploopi']['modules'][_PLOOPI_MODULE_SYSTEM]['system_language']}.php" : '';
 
                 $globalfile = "{$strModulePath}/include/global.php";
 

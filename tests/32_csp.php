@@ -50,7 +50,7 @@ exiger_instance();
  */
 function csp_journal()
 {
-    return '/tmp/ploopi_error.log';
+    return (string) cfg('journal_erreurs', '/tmp/ploopi_error.log');
 }
 
 T::section('Entête Report-Only sur les pages servies');
@@ -197,11 +197,11 @@ T::contient('formulaire d\'un fichier : paramètres en attributs', 'data-ploopi-
 T::eq('formulaire d\'un fichier : aucun script en ligne', '', ploopi\csp::inlinescript($arrRep['body']));
 T::contientpas('formulaire d\'un fichier : plus d\'alerte de débogage', "alert('submit')", file_get_contents(PLOOPI_ROOT.'/include/op/documents.php'));
 
-T::section('Garde-fou : texte qui ressemble à un gestionnaire');
+T::section('Échec fermé : script en ligne dans une page stricte');
 /**
- * Le contrôle de fin de requête est prudent : un nom d'utilisateur contenant
- * « onclick= » (affiché échappé, sans effet) fait garder la politique de base à la page,
- * journalisée ; rien ne casse.
+ * Un gestionnaire dans le HTML d'une page déclarée prête (ici un nom d'utilisateur
+ * « x onclick=1 », affiché échappé) : la politique stricte s'applique quand même,
+ * l'écart est journalisé.
  */
 db()->query("INSERT INTO ploopi_user (login, password, firstname, lastname, email, date_creation, disabled) VALUES ('csp_temoin', '', 'Garde', 'x onclick=1', 'csp@example.test', '".date('YmdHis')."', 0)");
 $intTemoin = db()->insert_id;
@@ -213,10 +213,11 @@ db()->query("DELETE FROM ploopi_workspace_user WHERE id_user = {$intTemoin}");
 db()->query("DELETE FROM ploopi_user WHERE id = {$intTemoin}");
 $strCsp = csp_entete($arrRep, 'Content-Security-Policy');
 T::contient('témoin : le nom est affiché, échappé', 'x onclick=1', $arrRep['body']);
-T::vrai('politique de base gardée', $strCsp !== '' && csp_nonce($strCsp) === '' && strpos($strCsp, "'unsafe-inline'") !== false, $strCsp);
+// 'unsafe-inline' n'y figure que pour CSP 1 : un navigateur qui lit le nonce l'ignore
+T::vrai('politique stricte appliquée malgré tout (nonce)', csp_nonce($strCsp) !== '', $strCsp);
 clearstatcache();
 $strAjout = file_exists($strJournal) ? (string)file_get_contents($strJournal, false, null, $intTailleAvant) : '';
-T::contient('écart journalisé, avec l\'extrait en cause', 'CSP stricte non appliquée', $strAjout);
+T::contient('écart journalisé, avec l\'extrait en cause', 'CSP stricte appliquée malgré un script en ligne', $strAjout);
 
 T::section('Politique de base : autres gabarits');
 

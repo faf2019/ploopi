@@ -74,6 +74,11 @@ abstract class query
         $this->arrRaw[] = array('rawsql' => $strRaw, 'values' => $mixValues);
     }
 
+    /**
+     * Supprime toutes les clauses SQL brutes.
+     */
+    public function remove_raw() { $this->arrRaw = array(); }
+
 
    /**
      * Retourne la clause Brute

@@ -349,7 +349,7 @@ abstract class search_index
                 }
 
                 // enregistrement du lien mot clé <-> enregistrement
-                $db->query("INSERT INTO ploopi_index_keyword_element(id_element, keyword, weight, ratio, relevance) VALUES('{$id_element}', '{$kw_value}', {$kw['weight']}, {$ratio}, {$relevance})");
+                $db->query("INSERT INTO ploopi_index_keyword_element(id_element, keyword, weight, ratio, relevance) VALUES('{$id_element}', '".$db->addslashes($kw_value)."', {$kw['weight']}, {$ratio}, {$relevance})");
             }
 
             $kw = next($words);

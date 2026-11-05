@@ -245,8 +245,14 @@ switch($op)
         {
             $user->setvalues($_POST,'user_');
             $passwordok = true;
-            if ($userx_password!='' && $userx_password == $userx_passwordconfirm) $user->fields['password'] = md5($userx_password);
-            elseif ($userx_password != $userx_passwordconfirm) $passwordok = false;
+            $userx_password = isset($_POST['userx_password']) ? trim($_POST['userx_password']) : '';
+            $userx_passwordconfirm = isset($_POST['userx_passwordconfirm']) ? trim($_POST['userx_passwordconfirm']) : '';
+            if ($userx_password != '')
+            {
+                // Mots de passe équivalents et complexité ok : empreinte bcrypt via setpassword()
+                if ($userx_password == $userx_passwordconfirm && ploopi\security::passwordallowed($userx_password)) $user->setpassword($userx_password);
+                else $passwordok = false;
+            }
             $user->save();
             ploopi\output::redirect('./?modcontent='._PLOOPI_MODULE_SYSTEM.'&op=showprofile&reloadsession&ok='.$passwordok);
         }

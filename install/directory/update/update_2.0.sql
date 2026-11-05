@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_directory_heading` (
   `id_module` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `id_rubrique` (`id_heading`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `ploopi_mod_directory_heading` (`id`, `label`, `description`, `position`, `id_heading`, `id_user`, `id_workspace`, `id_module`) VALUES 
 (1, 'Racine', 'Rubrique créée par défaut', 1, 0, 0, 0, 0);

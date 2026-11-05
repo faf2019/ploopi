@@ -49,11 +49,29 @@ abstract class ip
         $ip = '';
         $ret = array();
 
-        if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");
-        elseif(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");
-        else $ip = getenv("REMOTE_ADDR");
+        /**
+         * L'adresse est celle de la connexion. Client-IP et X-Forwarded-For sont écrits
+         * par le client : X-Forwarded-For n'est lu que si la connexion vient d'un frontal
+         * déclaré (_PLOOPI_TRUSTED_PROXIES), et on y retient l'adresse la plus à droite
+         * qui n'en est pas un.
+         */
+        $ip = (string) getenv('REMOTE_ADDR');
+        if ($ip === '' && isset($_SERVER['REMOTE_ADDR'])) $ip = (string) $_SERVER['REMOTE_ADDR'];
 
-        $ip_list = explode(',', $ip);
+        if (self::trustedproxy($ip))
+        {
+            $strXff = (string) getenv('HTTP_X_FORWARDED_FOR');
+            if ($strXff === '' && isset($_SERVER['HTTP_X_FORWARDED_FOR'])) $strXff = (string) $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+            foreach(array_reverse(explode(',', $strXff)) as $strCandidat)
+            {
+                if (($strCandidat = trim($strCandidat)) === '') continue;
+                $ip = $strCandidat;
+                if (!self::trustedproxy($strCandidat)) break;
+            }
+        }
+
+        $ip_list = array($ip);
 
         foreach($ip_list as $ip)
         {
@@ -90,6 +108,21 @@ abstract class ip
         }
 
         return $ret;
+    }
+
+    /**
+     * L'adresse est-elle celle d'un frontal déclaré (_PLOOPI_TRUSTED_PROXIES : adresses
+     * exactes séparées par des virgules ou des espaces) ?
+     *
+     * @param string $strIp adresse
+     * @return boolean
+     */
+
+    public static function trustedproxy($strIp)
+    {
+        if (!defined('_PLOOPI_TRUSTED_PROXIES') || $strIp === '') return false;
+
+        return in_array($strIp, preg_split('/[\s,;]+/', (string) _PLOOPI_TRUSTED_PROXIES, -1, PREG_SPLIT_NO_EMPTY), true);
     }
 
     /**

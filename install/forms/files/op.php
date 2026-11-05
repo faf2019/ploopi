@@ -144,7 +144,7 @@ switch($ploopi_op)
             <head>
                 <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
                 <script type="text/javascript" src="./vendor/components/jquery/jquery.min.js"></script>
-                <script type="text/javascript" src="./vendor/components/jqueryui/jquery-ui.min.js"></script>
+                <script type="text/javascript" src="./vendor/components/jqueryui/dist/jquery-ui.min.js"></script>
                 <script type="text/javascript" src="./js/functions.pack.js"></script>
                 <script type="text/javascript" src="./modules/forms/include/functions.js"></script>
                 <script type="text/javascript">

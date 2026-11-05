@@ -1,3 +1,17 @@
+== Module WEBEDIT - version 2.8.20 ===================================================
+
+2026-11-05  Ovensia <stephane@ovensia.fr>
+
+* jQuery UI 1.14.1 : chemin du script dans vendor/
+  devenu components/jqueryui/dist/jquery-ui.min.js.
+
+== Module WEBEDIT - version 2.8.19 ====================================================
+
+2026-10-21  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : webedit_subscribe ne reprend dans sa redirection que des valeurs
+  validées (chaîne [A-Za-z0-9_-] pour le mode, entiers pour les identifiants).
+
 == Module Webedit - version 2.8.18 ===================================================
 
 2026-10-13  Ovensia <stephane@ovensia.fr>

@@ -195,11 +195,12 @@ function audit_system_naviguer($strEnv, $strQuery = '')
  * @param string $strOp opération
  * @param string $strQuery paramètres supplémentaires
  * @param mixed $mixPost corps POST éventuel
+ * @param string $strScript script appelé (admin-light pour les popups photo, comme l'écran)
  * @return array réponse
  */
-function audit_system_op($strEnv, $strOp, $strQuery = '', $mixPost = null)
+function audit_system_op($strEnv, $strOp, $strQuery = '', $mixPost = null, $strScript = 'index-quick')
 {
-    return H::req("/index-quick.php?ploopi_op={$strOp}&ploopi_env=".urlencode($strEnv).$strQuery, $mixPost);
+    return H::req("/{$strScript}.php?ploopi_op={$strOp}&ploopi_env=".urlencode($strEnv).$strQuery, $mixPost);
 }
 
 /**
@@ -468,8 +469,72 @@ T::vrai('cible de B encore présente', audit_system_lire($intCibleB, 'lastname')
 // La barrière mesurée est ailleurs : le gestionnaire de A ne doit pas obtenir de
 // réponse traitée pour un utilisateur d'un AUTRE espace. On vérifie surtout que
 // la requête est sans effet ni erreur côté serveur.
-$arrRep = audit_system_op(audit_system_session('gest'), 'system_send_photo', "&system_user_id={$intCibleB}");
+$arrRep = audit_system_op(audit_system_session('gest'), 'system_send_photo', "&system_user_id={$intCibleB}", null, 'admin-light');
 T::vrai('gestionnaire de A : la cible de B survit à l\'appel', audit_system_lire($intCibleB, 'lastname') !== null);
+
+T::section('Photos d’utilisateur : choix, envoi, suppression');
+/**
+ * system_choose_photo, system_send_photo et system_delete_photo exigent
+ * system_user_isadministrable() sur l’utilisateur visé.
+ *
+ * La cible de B n’est administrable que par l’administrateur système : le gestionnaire
+ * de A et l’utilisateur simple ne doivent rien obtenir. La cible de A (l’utilisateur
+ * simple) est administrable par le gestionnaire de A (témoin) mais pas par un
+ * utilisateur sans niveau.
+ */
+// L'utilisateur simple a été supprimé par la section system_delete_user : cible
+// propre à cette section, nettoyée par son courriel (audit_system_nettoyer).
+$intCibleA = audit_system_creer_utilisateur('audit_system_cible_a', 2, _PLOOPI_ID_LEVEL_USER);
+$strDossierPhotos = _PLOOPI_PATHDATA._PLOOPI_SEP.'system';
+if (!is_dir($strDossierPhotos)) mkdir($strDossierPhotos, 0777, true);
+$objImage = imagecreatetruecolor(4, 4);
+$strPhotoCibleB = $strDossierPhotos._PLOOPI_SEP.$intCibleB.'.png';
+$strPhotoCibleA = $strDossierPhotos._PLOOPI_SEP.$intCibleA.'.png';
+register_shutdown_function(function() use ($strPhotoCibleB, $strPhotoCibleA) {
+    foreach (array($strPhotoCibleB, $strPhotoCibleA) as $strPhoto) @unlink($strPhoto);
+});
+
+// Popup de choix : la cible de B n’est pas administrable par le gestionnaire de A
+$arrRep = audit_system_op(audit_system_session('gest'), 'system_choose_photo', "&system_user_id={$intCibleB}", null, 'admin-light');
+T::contientpas('gestionnaire de A : pas de popup photo pour la cible de B', 'name="system_user_photo"', $arrRep['body']);
+$arrRep = audit_system_op(audit_system_session('sans'), 'system_choose_photo', "&system_user_id={$intCibleB}", null, 'admin-light');
+T::contientpas('utilisateur simple : pas de popup photo pour la cible de B', 'name="system_user_photo"', $arrRep['body']);
+
+// Témoin : le gestionnaire de A ouvre la popup pour un utilisateur de SON espace
+$arrRep = audit_system_op(audit_system_session('gest'), 'system_choose_photo', "&system_user_id={$intCibleA}", null, 'admin-light');
+T::contient('témoin : le gestionnaire de A ouvre la popup pour un utilisateur de A', 'name="system_user_photo"', $arrRep['body']);
+
+// Envoi d’une photo : le gestionnaire de A ne dépose rien pour la cible de B
+$strFichier = tempnam(sys_get_temp_dir(), 'sys_photo');
+imagepng($objImage, $strFichier);
+$arrRep = audit_system_op(audit_system_session('gest'), 'system_send_photo', "&system_user_id={$intCibleB}", array('system_user_photo' => new CURLFile($strFichier, 'image/png', 'photo.png')), 'admin-light');
+T::vrai('gestionnaire de A : pas de script de retour pour la cible de B', strpos($arrRep['body'], 'popup_system_choose_photo') === false, substr($arrRep['body'], 0, 200));
+@unlink($strFichier);
+
+// Témoin : le gestionnaire de A envoie une photo pour un utilisateur de A
+$strFichier = tempnam(sys_get_temp_dir(), 'sys_photo');
+imagepng($objImage, $strFichier);
+$arrRep = audit_system_op(audit_system_session('gest'), 'system_send_photo', "&system_user_id={$intCibleA}", array('system_user_photo' => new CURLFile($strFichier, 'image/png', 'photo.png')), 'admin-light');
+T::vrai('témoin : le gestionnaire de A envoie une photo pour un utilisateur de A', strpos($arrRep['body'], 'popup_system_choose_photo') !== false, substr($arrRep['body'], 0, 200));
+@unlink($strFichier);
+
+// Suppression : la photo de la cible de B n’est pas supprimée par le gestionnaire de A
+imagepng($objImage, $strPhotoCibleB);
+imagepng($objImage, $strPhotoCibleA);
+audit_system_op(audit_system_session('gest'), 'system_delete_photo', "&system_user_id={$intCibleB}", null, 'admin-light');
+// La photo n’est supprimée qu’à l’enregistrement de l’utilisateur (le drapeau vit en session) :
+// on enregistre par l’écran d’administration, comme le fait le formulaire.
+$strEnvGest = audit_system_session('gest');
+$arrPost = 'user_lastname=EspaceB&user_firstname=Cible&user_ticketsbyemail=1&user_password_force_update=1&user_disabled=1&user_servertimezone=1&usernewpass=&usernewpass_confirm=';
+H::req("/admin.php?op=save_user&user_id={$intCibleB}&ploopi_env=".urlencode($strEnvGest), $arrPost);
+T::vrai('la photo de la cible de B n’est pas supprimée par le gestionnaire de A', file_exists($strPhotoCibleB));
+
+// Témoin : le gestionnaire de A supprime la photo d’un utilisateur de A
+$strEnvGest = audit_system_session('gest');
+audit_system_op($strEnvGest, 'system_delete_photo', "&system_user_id={$intCibleA}", null, 'admin-light');
+$arrPost = 'user_lastname=System&user_firstname=Audit&user_ticketsbyemail=1&user_password_force_update=1&user_disabled=0&user_servertimezone=1&usernewpass=&usernewpass_confirm=';
+H::req("/admin.php?op=save_user&user_id={$intCibleA}&ploopi_env=".urlencode($strEnvGest), $arrPost);
+T::vrai('témoin : la photo d’un utilisateur de A est supprimée', !file_exists($strPhotoCibleA));
 
 /**
  * updatemb / updatedesc (métabase d'un type de module) : réservées à l'administrateur

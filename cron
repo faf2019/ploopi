@@ -55,22 +55,34 @@ ploopi\loader::boot_cli();
 
 $db = ploopi\db::get();
 
+// Ordre fixe (system d'abord) : sans ORDER BY, InnoDB rend l'ordre de l'index sur label.
 $cron_rs = $db->query("
     SELECT      label
     FROM        ploopi_module_type
+    ORDER BY    id
 ");
 
+$arrCronControllers = array();
 while ($cron_fields = $db->fetchrow($cron_rs))
 {
+    if (!preg_match('/^[a-z0-9_]+$/D', $cron_fields['label'])) continue;
     $strControllerFile = "ploopi\\{$cron_fields['label']}\\controller";
     if (ploopi\loader::classExists($strControllerFile)) {
-        // Wrapper pour compatibilité avec le contrôleur du module
-        $_REQUEST['entity'] = 'cron';
-        $strControllerFile::get()->dispatch();
+        // Seulement si le module déclare l'entité cron : sinon dispatch() servirait l'entité
+        // d'erreur, et son system::kill() final (mode light) arrêterait la boucle
+        if (is_dir("./modules/{$cron_fields['label']}/actions/cron")) $arrCronControllers[] = $strControllerFile;
     }
     else {
         // Rétrocompatibilité
         $cronfile = "./modules/{$cron_fields['label']}/cron.php";
         if (file_exists($cronfile)) include $cronfile;
     }
+}
+
+// Contrôleurs en dernier : dispatch() se termine par system::kill() en mode light,
+// seul le premier s'exécute (les cron.php sont tous passés avant)
+foreach ($arrCronControllers as $strControllerFile) {
+    // Wrapper pour compatibilité avec le contrôleur du module
+    $_REQUEST['entity'] = 'cron';
+    $strControllerFile::get()->dispatch();
 }

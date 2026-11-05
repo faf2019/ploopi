@@ -1,0 +1,67 @@
+# À combiner avec docker-compose.yml, après installation et migration de Ploopi.
+# Renseigner PLOOPI_RABBITMQ_USER et PLOOPI_RABBITMQ_PASSWORD dans .env.
+# docker compose -f docker-compose.yml -f docker-compose.events.yml up -d
+services:
+  web:
+    environment: &events_environment
+      PLOOPI_EVENTS_ENABLED: "1"
+      PLOOPI_RABBITMQ_HOST: rabbitmq
+      PLOOPI_RABBITMQ_USER: ${PLOOPI_RABBITMQ_USER:?à renseigner dans .env}
+      PLOOPI_RABBITMQ_PASSWORD: ${PLOOPI_RABBITMQ_PASSWORD:?à renseigner dans .env}
+      PLOOPI_CONFIG: /var/www/ploopi-config/config.php
+
+  rabbitmq:
+    image: rabbitmq:4.4-management
+    hostname: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${PLOOPI_RABBITMQ_USER:?à renseigner dans .env}
+      RABBITMQ_DEFAULT_PASS: ${PLOOPI_RABBITMQ_PASSWORD:?à renseigner dans .env}
+    volumes:
+      - evenements_rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "gosu", "rabbitmq", "rabbitmq-diagnostics", "-q", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    # Aucun port AMQP ou d'administration publié sur l'hôte.
+
+  events-publisher:
+    image: ploopi-web:php${PHP_VERSION:-8.5}
+    restart: unless-stopped
+    working_dir: /var/www/html
+    entrypoint: ["php", "/var/www/html/bin/events.php"]
+    command: ["publish", "--watch"]
+    environment: *events_environment
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
+    volumes: &events_volumes
+      - .:/var/www/html:ro
+      - configuration:/var/www/ploopi-config:ro
+      - documents:/var/www/ploopi-data
+
+  # Facultatif : activer seulement après déclaration des gestionnaires locaux.
+  events-consumer:
+    profiles: ["events-consumer"]
+    image: ploopi-web:php${PHP_VERSION:-8.5}
+    restart: unless-stopped
+    working_dir: /var/www/html
+    entrypoint: ["php", "/var/www/html/bin/events.php"]
+    command: ["consume", "--watch", "--queue=ploopi.events"]
+    environment: *events_environment
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
+    volumes: *events_volumes
+
+volumes:
+  evenements_rabbitmq:

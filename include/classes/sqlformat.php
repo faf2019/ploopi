@@ -41,7 +41,7 @@ abstract class sqlformat
      *
      * @var string
      */
-    private static $strRegExFormat = '|%(([0-9]*)\$){0,1}([s,d,f,t,e,g,r])|';
+    private static $strRegExFormat = '/%%|%(([0-9]*)\$){0,1}([sdftegr])/';
 
     /**
      * Numéro du paramètre traité
@@ -75,7 +75,8 @@ abstract class sqlformat
      */
     private static function cb_replace($arrMatches)
     {
-        $db = db::get();
+        // %% : signe % littéral (LIKE 'a%%', DATE_FORMAT(d, '%%Y'))
+        if ($arrMatches[0] == '%%') return '%';
 
         if (sizeof($arrMatches) == 4)
         {

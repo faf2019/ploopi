@@ -111,13 +111,23 @@ abstract class system
         {
             if (defined('_PLOOPI_MAIL_ERRORS') && _PLOOPI_MAIL_ERRORS  && defined('_PLOOPI_SYSMAIL') && _PLOOPI_SYSMAIL != '')
             {
+                // Mots de passe, jetons, cookie de session et Authorization masqués
+                $funcMasquer = function($arrVar) use (&$funcMasquer) {
+                    foreach($arrVar as $strCle => $mixVal)
+                    {
+                        if (is_array($mixVal)) $arrVar[$strCle] = $funcMasquer($mixVal);
+                        elseif (preg_match('/pass|token|secret|cookie|authorization|ploopi_url|ploopi_env|code/i', (string) $strCle)) $arrVar[$strCle] = '***';
+                    }
+                    return $arrVar;
+                };
+
                 mail(
                     _PLOOPI_SYSMAIL,
                     "[".error::$errorlevel[error::$level]."] sur [{$strHost}]",
                     error::$nb." erreur(s) sur ".error::$msg.
-                    "\n_SERVER:\n".print_r($_SERVER, true).
-                    "\n_POST:\n".print_r($_POST, true).
-                    "\n_GET:\n".print_r($_GET, true),
+                    "\n_SERVER:\n".print_r($funcMasquer($_SERVER), true).
+                    "\n_POST:\n".print_r($funcMasquer($_POST), true).
+                    "\n_GET:\n".print_r($funcMasquer($_GET), true),
                     "From: ".trim(current(explode(',', _PLOOPI_ADMINMAIL)))
                 );
             }

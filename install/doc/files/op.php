@@ -526,9 +526,18 @@ if ($_SESSION['ploopi']['connected'])
                 if (!empty($_GET['docfile_md5id']))
                 {
                     include_once './modules/doc/class_docfile.php';
+                    include_once './modules/doc/class_docfolder.php';
                     $docfile = new docfile();
-                    $docfile->openmd5($_GET['docfile_md5id']);
+                    $docfolder = new docfolder();
 
+                    /**
+                     * Le téléchargement révèle le contenu du document : il est soumis au même
+                     * contrôle de visibilité que le dossier qui le porte (doc_isfolderallowed).
+                     */
+                    if ($docfile->openmd5($_GET['docfile_md5id'])
+                        && $docfolder->open($docfile->fields['id_folder'])
+                        && doc_isfolderallowed($docfolder->fields))
+                    {
                     if (!empty($_GET['version']))
                     {
                         include_once './modules/doc/class_docfilehistory.php';
@@ -558,14 +567,27 @@ if ($_SESSION['ploopi']['connected'])
                             else ploopi\fs::downloadfile($docfile->getfilepath(), $docfile->fields['name'], false, ($ploopi_op != 'doc_fileview'));
                         }
                     }
+                    } // fin du contrôle de visibilité du dossier
                 }
 
                 if (!empty($_GET['docfiledraft_md5id']))
                 {
                     include_once './modules/doc/class_docfiledraft.php';
+                    include_once './modules/doc/class_docfolder.php';
                     $docfiledraft = new docfiledraft();
-                    $docfiledraft->openmd5($_GET['docfiledraft_md5id']);
-                    if (file_exists($docfiledraft->getfilepath())) ploopi\fs::downloadfile($docfiledraft->getfilepath(),$docfiledraft->fields['name']);
+                    $docfolderdraft = new docfolder();
+
+                    /**
+                     * Même contrôle pour un brouillon : le téléchargement révèle le contenu.
+                     * Un brouillon n'est lisible que de son propriétaire et des gestionnaires
+                     * du dossier (doc_file_isreadonly), jamais d'un utilisateur quelconque.
+                     */
+                    if ($docfiledraft->openmd5($_GET['docfiledraft_md5id'])
+                        && $docfolderdraft->open($docfiledraft->fields['id_folder'])
+                        && doc_isfolderallowed($docfolderdraft->fields))
+                    {
+                        if (file_exists($docfiledraft->getfilepath())) ploopi\fs::downloadfile($docfiledraft->getfilepath(),$docfiledraft->fields['name']);
+                    }
                 }
 
                 ploopi\system::kill();
@@ -577,7 +599,13 @@ if ($_SESSION['ploopi']['connected'])
                     ploopi\module::init('doc');
                     include_once './modules/doc/class_docfiledraft.php';
                     $docfiledraft = new docfiledraft();
-                    if ($docfiledraft->openmd5($_GET['docfiledraft_md5id']))
+                    /**
+                     * Un brouillon n'est supprimable que par son propriétaire ou un
+                     * gestionnaire du dossier : docfiledraft hérite de data_object, dont
+                     * delete() n'applique aucun contrôle.
+                     */
+                    if ($docfiledraft->openmd5($_GET['docfiledraft_md5id'])
+                        && !doc_file_isreadonly($docfiledraft->fields, _DOC_ACTION_DELETEFILE))
                     {
                         $error = $docfiledraft->delete();
                     }

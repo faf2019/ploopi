@@ -5,10 +5,11 @@
 # machine, ni PHP, ni MySQL, ni Node.
 #
 # Usage :
-#   tests/docker.sh 8.1|8.2|8.3|8.4|8.5 [--navigateur] [--publier]
-#   tests/docker.sh tout [--navigateur] [--publier]   les cinq versions, comme la matrice de la CI
+#   tests/docker.sh 8.1|8.2|8.3|8.4|8.5 [--navigateur] [--events] [--publier]
+#   tests/docker.sh tout [--navigateur] [--events] [--publier]   les cinq versions, comme la matrice de la CI
 #
 #   --navigateur    ajoute le parcours navigateur (Playwright et Chromium dans l'image)
+#   --events        ajoute les tests réels RabbitMQ 4.4
 #   --publier       publie le résultat de chaque version comme statut du commit testé sur
 #                   GitHub (contexte tests-docker/php<version>), sans minute de CI. Exige un
 #                   commit poussé, aucune modification suivie, et gh connecté ou GITHUB_TOKEN
@@ -54,10 +55,12 @@ usage() { sed -n '2,32p' "$0" | sed 's/^# \{0,1\}//'; exit 2; }
 
 CIBLE=""
 NAVIGATEUR=0
+EVENTS=0
 PUBLIER=0
 for a in "$@"; do
     case "$a" in
         --navigateur) NAVIGATEUR=1 ;;
+        --events) EVENTS=1 ;;
         --publier) PUBLIER=1 ;;
         tout|8.1|8.2|8.3|8.4|8.5) CIBLE="$a" ;;
         *) usage ;;
@@ -274,7 +277,7 @@ NOM=""
 nettoyer()
 {
     [ -n "$NOM" ] || return 0
-    docker rm -f "${NOM}-php" "${NOM}-db" >/dev/null 2>&1
+    docker rm -f -v "${NOM}-php" "${NOM}-db" "${NOM}-rabbit" >/dev/null 2>&1
     docker network rm "$NOM" >/dev/null 2>&1
     NOM=""
 }
@@ -301,6 +304,20 @@ passage()
         sleep 1
     done
 
+    local -a rabbit_options=()
+    if [ $EVENTS -eq 1 ]; then
+        info "RabbitMQ 4.4…"
+        docker run -d --name "${nom}-rabbit" --network "$nom" --network-alias rabbitmq \
+            --hostname rabbitmq --memory 512m -e RABBITMQ_DEFAULT_USER=ploopi_test -e RABBITMQ_DEFAULT_PASS=ploopi_test \
+            -e 'RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=+S 2:2 +A 4' -e 'RABBITMQ_CTL_ERL_ARGS=+S 1:1 +A 1' rabbitmq:4.4-management >/dev/null || return 2
+        for i in $(seq 1 60); do
+            docker exec --user rabbitmq "${nom}-rabbit" rabbitmq-diagnostics -q check_port_connectivity >/dev/null 2>&1 && break
+            [ "$i" -eq 60 ] && { docker logs --tail 30 "${nom}-rabbit" >&2; rouge "RabbitMQ n'a pas démarré."; return 2; }
+            sleep 1
+        done
+        rabbit_options=(-e PLOOPI_TEST_RABBITMQ_HOST=rabbitmq -e PLOOPI_RABBITMQ_HOST=rabbitmq -e PLOOPI_RABBITMQ_USER=ploopi_test -e PLOOPI_RABBITMQ_PASSWORD=ploopi_test)
+    fi
+
     local -a options=()
     [ $NAVIGATEUR -eq 1 ] && options+=(--navigateur)
     mkdir -p "${RACINE}/data"
@@ -313,6 +330,7 @@ passage()
         -v ploopi-tests-composer:/composer-cache -v ploopi-tests-vendor:/ploopi/vendor \
         -e PLOOPI_TEST_DB_HOST=db -e PLOOPI_TEST_DB_ADMIN=root -e PLOOPI_TEST_DB_ADMINPWD=root \
         -e "PLOOPI_TEST_DB_USER_HOSTS=%" -e "PLOOPI_TESTS_BASE=MariaDB 10.11" \
+        "${rabbit_options[@]}" \
         -e "HOTE_UID=$(id -u)" -e "HOTE_GID=$(id -g)" \
         ${PLOOPI_NAV_PASSES:+-e "PLOOPI_NAV_PASSES=${PLOOPI_NAV_PASSES}"} \
         "$image" bash tests/docker/entree.sh ${options[@]+"${options[@]}"}

@@ -158,8 +158,8 @@ if ($alphaTabItem == 99) // tous ou recherche
     if ($arrFilter['ploopi_firstname'] != '') $where[] = "firstname LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_firstname'])."%'";
     if ($arrFilter['ploopi_login'] != '') $where[] = "login LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_login'])."%'";
     if ($arrFilter['ploopi_email'] != '') $where[] = "email LIKE '%".ploopi\db::get()->addslashes($arrFilter['ploopi_email'])."%'";
-    if ($arrFilter['ploopi_last_connection_1'] != '') $where[] = "last_connection >= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_1'], '00:00:00')."'";
-    if ($arrFilter['ploopi_last_connection_2'] != '') $where[] = "last_connection <= '".ploopi_local2timestamp($arrFilter['ploopi_last_connection_2'], '23:59:59')."'";
+    if ($arrFilter['ploopi_last_connection_1'] != '') $where[] = "last_connection >= '".ploopi\date::local2timestamp($arrFilter['ploopi_last_connection_1'], '00:00:00')."'";
+    if ($arrFilter['ploopi_last_connection_2'] != '') $where[] = "last_connection <= '".ploopi\date::local2timestamp($arrFilter['ploopi_last_connection_2'], '23:59:59')."'";
 }
 else
 {

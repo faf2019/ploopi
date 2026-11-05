@@ -72,9 +72,15 @@ $demander = function ($arrEntetes = array()) {
     H::reset();
     H::req('/admin.php?ploopi_op=ploopi_lostpassword&ploopi_lostpassword_login=mdp_oublie', null, $arrEntetes);
 };
-$confirmer = function ($strCode) {
+// Le lien mène à un formulaire ; le nouveau mot de passe est posté
+$confirmer = function ($strCode, $strNouveau = 'Nouveau!Mdp2026') {
     H::reset();
-    H::req('/admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login=mdp_oublie&ploopi_lostpassword_confirmcode='.urlencode($strCode));
+    return H::req('/admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login=mdp_oublie&ploopi_lostpassword_confirmcode='.urlencode($strCode),
+        'ploopi_lostpassword_new='.urlencode($strNouveau).'&ploopi_lostpassword_new_confirm='.urlencode($strNouveau));
+};
+$message = function () {
+    $arrRep = H::req('/admin.php');
+    return preg_match('@p4-login-message.*?<span>([^<]*)</span>@s', $arrRep['body'], $m) ? trim($m[1]) : '';
 };
 
 T::section('Expiration du code de confirmation');
@@ -91,10 +97,42 @@ T::eq('code périmé : mot de passe inchangé', $strAvant, $lire_hash());
 T::vrai('code périmé : supprimé', $lire_code() === null);
 
 // témoin : un code frais aboutit
+courriels_vider();
 $demander();
 $arrCode = $lire_code();
+$arrCourriels = courriels();
+$strCourriel = (string) end($arrCourriels);
+T::contient('le courriel porte un lien de confirmation', 'ploopi_url=', $strCourriel);
+T::contientpas('le courriel ne porte aucun mot de passe', 'mot de passe est le suivant', $strCourriel);
+
+H::reset();
+$arrRep = H::req('/admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login=mdp_oublie&ploopi_lostpassword_confirmcode='.urlencode($arrCode ? $arrCode['code'] : ''));
+T::contient('le lien affiche un formulaire de saisie', 'name="ploopi_lostpassword_new"', $arrRep['body']);
+T::eq('affichage seul : mot de passe inchangé', $strAvant, $lire_hash());
+
+$confirmer($arrCode ? $arrCode['code'] : '', 'court');
+T::eq('mot de passe trop court : refusé', $strAvant, $lire_hash());
+
 $confirmer($arrCode ? $arrCode['code'] : '');
 T::neq('témoin : code frais, mot de passe renouvelé', $strAvant, $lire_hash());
+H::reset();
+H::req('/admin.php', 'ploopi_login=mdp_oublie&ploopi_password='.urlencode('Nouveau!Mdp2026'));
+T::vrai('le mot de passe choisi ouvre la session', stripos(H::req('/admin.php')['headers'], 'Ploopi-Connected: 1') !== false);
+T::vrai('code consommé : supprimé', $lire_code() === null);
+
+T::section('Réponses neutres et limitation');
+H::reset(); H::req('/admin.php?ploopi_op=ploopi_lostpassword&ploopi_lostpassword_login=mdp_oublie');
+$strConnu = $message();
+H::reset(); H::req('/admin.php?ploopi_op=ploopi_lostpassword&ploopi_lostpassword_login=inconnu_audit_xyz');
+$strInconnu = $message();
+T::vrai('témoin : un message est affiché', $strConnu !== '', $strConnu);
+T::eq('même message pour un compte inconnu', $strConnu, $strInconnu);
+
+$arrCode = $lire_code();
+courriels_vider();
+$demander();
+T::eq('nouvelle demande dans les cinq minutes : aucun courriel', 0, count(courriels()));
+T::eq('nouvelle demande dans les cinq minutes : code inchangé', $arrCode['code'] ?? null, $lire_code()['code'] ?? null);
 
 T::section('Lien envoyé : jamais vers l\'hôte de la requête');
 

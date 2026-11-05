@@ -53,6 +53,9 @@ if (isset($_POST['dbreport_query_id']) && is_numeric($_POST['dbreport_query_id']
     $objQuery->add_where('drt.id_query = %d', $_POST['dbreport_query_id']);
     $objQuery->add_where('drt.tablename = mbt.name');
     $objQuery->add_where('mbt.id_module_type = mt.id');
+    // Mêmes tables que dbreport_field_isallowed() : visibles, d'un module de la requête
+    $objQuery->add_where('mbt.visible = 1');
+    $objQuery->add_where('mbt.id_module_type IN (SELECT id_module_type FROM ploopi_mod_dbreport_query_module_type WHERE id_query = %d)', $_POST['dbreport_query_id']);
     $objQuery->add_orderby('mt.label');
     $objRs = $objQuery->execute();
 

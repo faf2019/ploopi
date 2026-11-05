@@ -78,6 +78,10 @@ $toolbar['directory'] =
         'icon'  => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_directory.png"
     );
 
+$toolbar['api'] = array('title' => _SYSTEM_MENU_API, 'url' => 'admin.php?sysToolbarItem=api', 'icon' => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_api.png");
+
+$toolbar['events'] = array('title' => _SYSTEM_MENU_EVENTS, 'url' => 'admin.php?sysToolbarItem=events', 'icon' => "{$_SESSION['ploopi']['template_path']}/img/system/icons/tab_events.png");
+
 $toolbar['tools'] =
     array(
         'title' => _SYSTEM_LABELICON_TOOLS,
@@ -160,6 +164,14 @@ echo ploopi\skin::get()->create_toolbar($toolbar,$_SESSION['system']['sysToolbar
                 break;
 
             }
+        break;
+
+        case 'events':
+            include './modules/system/admin_system_events.php';
+        break;
+
+        case 'api':
+            include './modules/system/admin_system_api.php';
         break;
 
         case 'directory':

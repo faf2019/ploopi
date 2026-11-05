@@ -195,13 +195,15 @@ remplace : [Tabler Icons](https://tabler.io/icons) (MIT), au trait.
 
 ### Administration (gabarit `ploopi3`)
 
-Les 151 images de `templates/backoffice/ploopi3/img/` qu'appellent le socle et les
+Les 153 images de `templates/backoffice/ploopi3/img/` qu'appellent le socle et les
 modules : barres d'outils, outils du système, niveaux d'administration, actions des
 listes, messagerie, abonnements, exports, arborescences, sélecteur de date, partages,
 validations, champ obligatoire des formulaires générés, et GED du socle (boutons,
 dossiers, types de fichiers). Les boutons de la GED passent leur glyphe en blanc par
 `filter: brightness(0) invert(1)`, quelle que soit sa couleur : les mêmes SVG servent,
-colorés, dans les listes. `ploopi2` garde ses images.
+colorés, dans les listes. `ploopi2` garde ses images ; seuls les écrans ajoutés depuis
+(Système → API, Système → Événements) y reçoivent une icône d'onglet au même glyphe, en
+blanc comme les siennes (`ICONES_PLOOPI2` de `tools/icones/correspondances.js`).
 
 Trois images de la racine passaient outre le gabarit : exports des listes
 d'utilisateurs (`img/export/`), icône de courriel (`email.gif`) et bouton du sélecteur

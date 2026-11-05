@@ -60,6 +60,11 @@ sudo composer install --no-dev --no-interaction
 sudo cp .htaccess_modele .htaccess
 ```
 
+Le `.htaccess` refuse les chemins cachés (`.git/`…), les fichiers du dépôt (`*.md`,
+`composer.*`, `*.yml`…) et les dossiers `tests/`, `docker/`, `screenshots/`. Mieux encore,
+servir une copie sans historique : `git archive master | sudo tar -x -C /var/www/ploopi`
+ou `rsync --exclude .git`.
+
 `composer.lock` est versionné : l'installation est reproductible, avec les versions
 éprouvées par la CI.
 
@@ -76,9 +81,15 @@ sudo chown www-data:www-data /var/www/ploopi-data
 
 ### Droits des fichiers
 
-Le code reste en lecture seule pour Apache ; seuls `config/` (écrit par l'assistant),
-`modules/` (installation des modules depuis le backoffice) et le dossier des documents
-sont inscriptibles :
+Pendant l'installation, l'assistant écrit `config/config.php` :
+
+```sh
+sudo chown www-data:www-data /var/www/ploopi/config
+```
+
+Une fois l'assistant passé, le code appartient à root et n'est que lisible par Apache,
+`config/` compris ; seuls `modules/` (installation des modules depuis le backoffice) et
+le dossier des documents restent inscriptibles :
 
 ```sh
 sudo tools/postinstall.sh www-data:www-data /var/www/ploopi-data
@@ -120,6 +131,13 @@ masquer la version d'Apache dans `/etc/apache2/conf-enabled/security.conf` :
 ServerTokens Prod
 ServerSignature Off
 ```
+
+et celle de PHP (`/etc/php/8.x/apache2/php.ini`) : `expose_php = Off`.
+
+Derrière un répartiteur ou un proxy inverse, déclarer son adresse dans
+`_PLOOPI_TRUSTED_PROXIES` (`config/config.php`) : l'en-tête `X-Forwarded-For` n'est cru
+que s'il vient de lui, et `Client-IP` jamais. Les règles d'IP des espaces et les adresses
+des journaux reposent sur ce réglage.
 
 ## 6. Assistant d'installation
 
@@ -171,8 +189,10 @@ Sans elle, seul un hôte déclaré en clair dans les domaines d'un espace reçoi
 ## 7. Tâches planifiées et ligne de commande
 
 Le point d'entrée `cron` lance le traitement périodique de chaque module qui en déclare
-un (entité `cron` de son contrôleur, ou `cron.php`). Aucun module livré n'en a
-aujourd'hui : la ligne de crontab n'est utile qu'avec un module qui en a besoin.
+un (entité `cron` de son contrôleur, ou `cron.php`). Celui du module `system` purge le
+journal des accès (`ploopi_log`, 7 jours) et celui des appels de l'API
+(`ploopi_api_request`, 30 jours) : sans cette ligne de crontab, ces tables grossissent
+sans limite.
 
 ```sh
 # crontab de www-data : sudo crontab -u www-data -e
@@ -199,17 +219,49 @@ constantes à revoir le plus souvent :
 |---|---|
 | `_PLOOPI_PATHDATA` | dossier des documents (hors racine web) |
 | `_PLOOPI_MAXFILESIZE` | taille maximale d'un dépôt (à accorder avec `upload_max_filesize` et `post_max_size` de PHP) |
-| `_PLOOPI_SESSIONTIME`, `_PLOOPI_SESSION_HANDLER` | durée de session ; `php`, `db`, `file` ou `memcached` |
+| `_PLOOPI_SESSIONTIME`, `_PLOOPI_SESSION_HANDLER` | durée de session sans activité ; `php`, `db`, `file` ou `memcached` |
+| `_PLOOPI_SESSION_MAXLIFETIME` | durée de vie absolue d'une session connectée, en secondes, même entretenue (défaut 43200, soit 12 h ; 0 : pas de limite) |
 | `_PLOOPI_DISPLAY_ERRORS` | **`false` en production** |
-| `_PLOOPI_LOG_ERRORS_FILE` | journal des erreurs PHP |
+| `_PLOOPI_LOG_ERRORS_FILE` | journal des erreurs PHP (`_PLOOPI_PATHDATA/ploopi_error.log` pour les nouvelles installations, plus `/tmp`) |
 | `_PLOOPI_ADMINMAIL`, `_PLOOPI_SYSMAIL` | destinataire des alertes, expéditeur des courriels |
 | `_PLOOPI_FRONTOFFICE`, `_PLOOPI_FRONTOFFICE_REWRITERULE` | site public et URL réécrites |
-| `_PLOOPI_USE_COMPLEXE_PASSWORD`, `_PLOOPI_MAX_CONNECTION_ATTEMPS`, `_PLOOPI_JAILING_TIME` | politique de mots de passe et blocage après échecs |
+| `_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE` | longueur minimale d'un mot de passe, **toujours exigée** côté serveur (12 pour les nouvelles installations ; 128 caractères au plus) |
+| `_PLOOPI_USE_COMPLEXE_PASSWORD` | exige en plus minuscule, majuscule, chiffre et ponctuation (`true` pour les nouvelles installations) |
+| `_PLOOPI_MAX_CONNECTION_ATTEMPS`, `_PLOOPI_JAILING_TIME` | échecs admis sur un compte avant sa suspension, et durée de la suspension en secondes |
+| `_PLOOPI_MAX_CONNECTION_ATTEMPS_IP` | échecs de connexion admis depuis une même adresse, tous comptes confondus, pendant `_PLOOPI_JAILING_TIME` (défaut 30 ; 0 : pas de limite) |
+| `_PLOOPI_TRUSTED_PROXIES` | adresses exactes (séparées par des virgules) des frontaux dont l'en-tête `X-Forwarded-For` est cru ; vide par défaut : l'adresse du client est celle de la connexion (ci-dessous) |
 | `_PLOOPI_INTERNETPROXY_*` | mandataire HTTP sortant |
 | `_PLOOPI_CSP` | Content-Security-Policy : `strict` (défaut), `base` ou `report` (ci-dessous) |
 
 Un même code peut servir plusieurs configurations : le fichier est structuré par
 `switch ($http_host)`.
+
+### Réglages ajoutés le 5 novembre 2026
+
+`_PLOOPI_SESSION_MAXLIFETIME`, `_PLOOPI_MAX_CONNECTION_ATTEMPS_IP` et
+`_PLOOPI_TRUSTED_PROXIES` prennent leur valeur par défaut quand `config/config.php` ne les
+définit pas : une installation existante fonctionne sans y toucher. Pour les régler, les
+ajouter à côté des autres :
+
+```php
+define ('_PLOOPI_SESSION_MAXLIFETIME', 43200);          // durée absolue d'une session, en secondes
+define ('_PLOOPI_MAX_CONNECTION_ATTEMPS_IP', 30);       // échecs admis par adresse pendant _PLOOPI_JAILING_TIME
+define ('_PLOOPI_TRUSTED_PROXIES', '10.0.0.5');         // frontaux dont X-Forwarded-For est cru
+define ('_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE', 12);      // valait 8 : désormais exigée même sans complexité
+```
+
+**Adresse du client.** Les règles d'IP des espaces et des clés d'API, la limite d'échecs
+par adresse et les adresses des journaux reposent sur l'adresse de la connexion
+(`REMOTE_ADDR`). `Client-IP` n'est jamais lu ; `X-Forwarded-For` ne l'est que si la
+connexion vient d'un frontal listé dans `_PLOOPI_TRUSTED_PROXIES`, et l'adresse retenue est
+la plus à droite qui n'en est pas un. Derrière un répartiteur ou un proxy inverse qui ne
+réécrit pas `REMOTE_ADDR`, **renseigner son adresse** : sinon toutes les connexions
+paraissent venir de lui, et la limite d'échecs par adresse les bloque ensemble. Inutile
+derrière un Apache qui applique `mod_remoteip` (image Docker, `docker/remoteip.conf`).
+
+**Mot de passe.** `_PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE` s'applique désormais même quand
+`_PLOOPI_USE_COMPLEXE_PASSWORD` vaut `false`. Les mots de passe déjà enregistrés restent
+valables ; la règle joue au prochain changement.
 
 ### Content-Security-Policy
 
@@ -224,8 +276,8 @@ navigateur applique toutes les politiques reçues).
 | cible, Report-Only | partout | la politique stricte, mesurée : chaque écart est journalisé (`CSP Report-Only : …`) |
 
 Une page déclarée prête qui contient malgré tout du script en ligne (composant historique
-inséré) garde la politique de base : rien ne casse, l'écart est journalisé
-(`CSP stricte non appliquée …`). Un blocage effectif est journalisé `CSP bloquante : …`.
+inséré, ou gestionnaire injecté) reçoit quand même la politique stricte : ce script-là est
+bloqué, et l'écart journalisé (`CSP stricte appliquée malgré un script en ligne …`). Un blocage effectif est journalisé `CSP bloquante : …`.
 Le frontoffice n'a que la politique de base sans `script-src` ni `form-action` : les
 gabarits et les articles des sites peuvent appeler des services tiers.
 

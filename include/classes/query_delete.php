@@ -164,4 +164,19 @@ class query_delete extends query_sud
 
         return $strSql;
     }
+
+    /**
+     * Supprime les cibles ajoutées par add_delete().
+     */
+    public function remove_delete() { $this->arrDelete = array(); }
+
+    /**
+     * Supprime toutes les jointures INNER JOIN.
+     */
+    public function remove_innerjoin() { $this->arrInnerJoin = array(); }
+
+    /**
+     * Supprime toutes les jointures LEFT JOIN.
+     */
+    public function remove_leftjoin() { $this->arrLeftJoin = array(); }
 }

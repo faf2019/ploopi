@@ -22,7 +22,7 @@ RUN apt-get update \
         libfreetype-dev libjpeg62-turbo-dev libpng-dev libzip-dev libicu-dev \
         unzip git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" mysqli gd zip exif intl \
+    && docker-php-ext-install -j"$(nproc)" mysqli gd zip sockets exif intl \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
@@ -60,7 +60,7 @@ COPY . .
 # Copie de référence des modules versionnés (system) : l'entrée la remet dans le
 # volume modules/ à chaque démarrage, pour qu'une nouvelle image s'applique.
 RUN cp .htaccess_modele .htaccess \
-    && rm -rf docker tests .git* \
+    && rm -rf docker tests screenshots .git* .claude .ddev .dockerignore *.md docker-compose*.yml \
     && cp -a modules /opt/ploopi-modules \
     && chown -R root:root . && chmod -R a+rX,go-w .
 

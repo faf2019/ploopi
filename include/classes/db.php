@@ -37,6 +37,9 @@ use ploopi;
 
 class db
 {
+    /** Profondeur des transactions ouvertes par ce connecteur (savepoints imbriqués). */
+    private $intTransactionDepth = 0;
+
     /**
      * Détermine si la connexion est permanente
      *
@@ -309,15 +312,39 @@ class db
     }
 
 
-    /**
-     * Nouvelle transaction
-     */
+    /** Le worker ne doit jamais publier ou acquitter dans une transaction de l'appelant. */
+    public function in_transaction()
+    {
+        return $this->intTransactionDepth > 0;
+    }
 
+    /** Exécute une opération avec commit/rollback et savepoint si une transaction est déjà ouverte. */
+    public function transaction(callable $fnOperation)
+    {
+        if (!$this->begin_transaction()) throw new \RuntimeException('Transaction impossible.');
+        try
+        {
+            $mixResult = $fnOperation();
+            if (!$this->commit()) throw new \RuntimeException('Validation de transaction impossible.');
+            return $mixResult;
+        }
+        catch (\Throwable $objError)
+        {
+            $this->rollback();
+            throw $objError;
+        }
+    }
+
+    /** Ouvre une transaction ou un niveau imbriqué, sans valider les écritures de l’appelant. */
     public function begin_transaction() {
 
         if (!$this->isconnected()) return false;
 
-        return $this->mysqli->begin_transaction();
+        $booOk = $this->intTransactionDepth === 0
+            ? $this->mysqli->begin_transaction()
+            : $this->mysqli->query('SAVEPOINT ploopi_tx_'.$this->intTransactionDepth);
+        if ($booOk) $this->intTransactionDepth++;
+        return $booOk;
 
     }
 
@@ -329,7 +356,11 @@ class db
 
         if (!$this->isconnected()) return false;
 
-        return $this->mysqli->commit();
+        $booOk = $this->intTransactionDepth <= 1
+            ? $this->mysqli->commit()
+            : $this->mysqli->query('RELEASE SAVEPOINT ploopi_tx_'.($this->intTransactionDepth - 1));
+        if ($booOk) $this->intTransactionDepth = max(0, $this->intTransactionDepth - 1);
+        return $booOk;
     }
 
     /**
@@ -340,7 +371,15 @@ class db
 
         if (!$this->isconnected()) return false;
 
-        return $this->mysqli->rollback();
+        if ($this->intTransactionDepth <= 1) $booOk = $this->mysqli->rollback();
+        else
+        {
+            $strSavepoint = 'ploopi_tx_'.($this->intTransactionDepth - 1);
+            $booOk = $this->mysqli->query('ROLLBACK TO SAVEPOINT '.$strSavepoint);
+            if ($booOk) $this->mysqli->query('RELEASE SAVEPOINT '.$strSavepoint);
+        }
+        if ($booOk) $this->intTransactionDepth = max(0, $this->intTransactionDepth - 1);
+        return $booOk;
     }
 
 
@@ -364,6 +403,10 @@ class db
         if($strQuery != '')
         {
             $this->num_queries++;
+
+            // Une structure modifiée rend caduques les descriptions de tables en cache.
+            // Seul le début est lu (après blancs et commentaires, que split_sql() laisse en tête).
+            if (preg_match('%\A(?:\s+|--[^\n]*|#[^\n]*|/\*.*?\*/)*(?:ALTER|CREATE|DROP|RENAME)\b%is', $strQuery)) data_object::reset_descriptions();
 
             $this->timer_start();
 
@@ -411,7 +454,7 @@ class db
                 }
 
                 $count = 0;
-                if (in_array($this->mysqli->errno, array(1205, 1213, 1146, 2006))) {
+                if ($this->intTransactionDepth === 0 && in_array($this->mysqli->errno, array(1205, 1213, 1146, 2006))) {
                     while (in_array($this->mysqli->errno, array(1205, 1213, 1146, 2006)) && $count++ < 5) {
                         // sleep($count);
                         usleep($count*10000);
@@ -435,6 +478,14 @@ class db
                     $this->last_error = $this->mysqli->error;
                     $this->last_errorno = $this->mysqli->errno;
                     $this->last_query = $query;
+                    // Ne pas rejouer une requête après l'annulation serveur d'une transaction :
+                    // elle serait exécutée seule en autocommit, hors de l'outbox.
+                    if ($this->intTransactionDepth > 0)
+                    {
+                        $intError = $this->mysqli->errno;
+                        if (in_array($intError, array(1213, 2006, 2013), true)) $this->intTransactionDepth = 0;
+                        throw new \RuntimeException('Échec SQL transactionnel (code '.$intError.').');
+                    }
                     trigger_error($this->mysqli->error.' ('.$this->mysqli->errno.") (Retries:".$count.")<br /><b>query:</b> {$query}", E_USER_WARNING);
                 }
             }
@@ -463,6 +514,10 @@ class db
         if($strQuery != '')
         {
             $this->num_queries++;
+
+            // Une structure modifiée rend caduques les descriptions de tables en cache.
+            // Chaque ordre commence au début du script ou après un « ; ».
+            if (preg_match('%(?:\A|;)(?:\s+|--[^\n]*|#[^\n]*|/\*.*?\*/)*(?:ALTER|CREATE|DROP|RENAME)\b%is', $strQuery)) data_object::reset_descriptions();
 
             $this->timer_start();
 
@@ -521,8 +576,9 @@ class db
               | /\*[^*]*\*+(?:[^*/][^*]*\*+)*/      # or a multi-line comment,
               | \#.*                                # or a # single line comment,
               | --.*                                # or a -- single line comment,
-              | [^"\';#]                            # or one non-["\';#-]
-              )+                                    # One or more content alternatives
+              | [^"\';#/-]++                        # or a run of non-["\';#/-]
+              | [-/]                                # or a lone dash or slash (not a comment)
+              )++                                   # Possessive: no backtracking (PCRE JIT stack)
               (?:;|$)                               # Record end is a ; or string end.
             )                                       # End $1: Trimmed SQL record.
             %x';  // End $re_split_sql.

@@ -4,7 +4,8 @@
     GNU General Public License (GPL) version 2 ou ultérieure
 
     Rastérise le jeu d'icônes à la taille exacte de chaque image remplacée :
-    - administration (correspondances.js) dans templates/backoffice/ploopi3/img/ ;
+    - administration (correspondances.js) dans templates/backoffice/ploopi3/img/, et les
+      seules icônes des écrans ajoutés depuis dans templates/backoffice/ploopi2/img/ ;
     - modules et types de fichiers du socle (modules.js) dans install/<module>/files/img/
       et img/mimetypes/.
 
@@ -24,7 +25,7 @@ const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const { COULEURS, ICONES } = require('./correspondances.js');
+const { COULEURS, ICONES, ICONES_PLOOPI2 } = require('./correspondances.js');
 const { JEUX } = require('./modules.js');
 
 const RACINE = path.resolve(__dirname, '../..');
@@ -79,7 +80,7 @@ function svg(icone, intCote)
     const intSeul = process.argv.indexOf('--seul');
     const arrSeul = intSeul > 0 ? process.argv[intSeul + 1].split(',').map(s => s.replace(/\/+$/, '')) : [];
 
-    const arrJeux = [{ racine: 'templates/backoffice/ploopi3/img', icones: ICONES }, ...JEUX]
+    const arrJeux = [{ racine: 'templates/backoffice/ploopi3/img', icones: ICONES }, { racine: 'templates/backoffice/ploopi2/img', icones: ICONES_PLOOPI2 }, ...JEUX]
         .filter(jeu => !arrSeul.length || arrSeul.some(s => jeu.racine === s || jeu.racine.startsWith(s + '/')));
     if (!arrJeux.length) throw new Error(`aucun jeu sous ${arrSeul.join(', ')}`);
 

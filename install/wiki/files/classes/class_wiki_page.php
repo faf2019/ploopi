@@ -48,6 +48,9 @@ include_once './modules/wiki/classes/class_wiki_page_history.php';
 
 class wiki_page extends ploopi\data_object
 {
+    protected $strEventPrefix = 'wiki.page';
+    protected $arrEventFields = array('id', 'content', 'tags', 'locked', 'revision');
+
 
     private $objPageHistory;
 
@@ -107,6 +110,12 @@ class wiki_page extends ploopi\data_object
      */
     public function save()
     {
+        if (!ploopi\events::enabled()) return $this->save_page();
+        return ploopi\db::get()->transaction(function () { return $this->save_page(); });
+    }
+
+    private function save_page()
+    {
         if ($this->isnew())
         {
             $this->fields['ts_created'] = ploopi\date::createtimestamp();
@@ -136,6 +145,12 @@ class wiki_page extends ploopi\data_object
      * @return boolean true si la page a pu être enregistrée
      */
     public function redirectLinks($strNewId)
+    {
+        if (!ploopi\events::enabled()) return $this->redirect_links($strNewId);
+        return ploopi\db::get()->transaction(function () use ($strNewId) { return $this->redirect_links($strNewId); });
+    }
+
+    private function redirect_links($strNewId)
     {
         $strOldId = ploopi\str::htmlentities($this->fields['id']);
         $strNewId = ploopi\str::htmlentities($strNewId);
@@ -187,6 +202,12 @@ class wiki_page extends ploopi\data_object
      * @return boolean true si la page a pu être enregistrée
      */
     public function rename($strNewId, $booRedirectLinks)
+    {
+        if (!ploopi\events::enabled()) return $this->rename_page($strNewId, $booRedirectLinks);
+        return ploopi\db::get()->transaction(function () use ($strNewId, $booRedirectLinks) { return $this->rename_page($strNewId, $booRedirectLinks); });
+    }
+
+    private function rename_page($strNewId, $booRedirectLinks)
     {
         $db = ploopi\db::get();
 

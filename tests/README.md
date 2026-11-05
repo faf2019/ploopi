@@ -27,6 +27,14 @@ Cinq niveaux, du plus immédiat au plus complet :
 Chaque passage de `tests/run.sh` (et donc des deux suivants) écrit ses résultats dans
 `tests/resultats/<version de PHP>/` (voir [Résultats](#résultats)).
 
+## Événements RabbitMQ
+
+`tests/docker.sh 8.5 --events` ajoute un RabbitMQ 4.4 jetable à la suite complète.
+La suite `46_events` teste l’atomicité, les reprises, les doublons, les files d’échec
+et les publishers concurrents contre ce broker réel. Sans broker configuré, seule
+sa partie transport est déclarée non évaluée ; ses contrôles SQL et d’administration
+tournent normalement. Voir [le guide événements](../doc/events.md).
+
 ## Prérequis
 
 Les suites unitaires n'en ont aucun : `tests/run.sh` fonctionne sur une copie de travail
@@ -169,6 +177,7 @@ bloque l'installation.
 | `40_flux` | `ploopi\feed` (flux RSS 2.0 et Atom 1.0, qui remplace FeedWriter) : XML bien formé, valeurs échappées, caractères interdits et UTF-8 invalide retirés, identifiants Atom identiques à ceux de FeedWriter, plus de FeedWriter dans les flux de webedit et de la GED | Aucun (unitaire) |
 | `41_demo` | Site de démonstration (*Système → Modules*, `ploopi\system\demo`) : bouton proposé sur une instance vierge seulement, webedit installé par la procédure habituelle, site public servi par le gabarit `corporate` avec recherche, bouton retiré et opération sans effet une fois un module installé | Instance vierge (sinon non évaluée) ; destructive, remet tout en état |
 | `42_documents_stockage` | Stockage des documents de la GED du socle, local ou S3 selon l'instance : dépôt par le formulaire (envoi multipart), téléchargement (pièce jointe, `nosniff`, aucune copie temporaire laissée), archive zip, remplacement par un fichier d'une autre extension et renommage (l'ancien fichier ne reste pas orphelin), suppression ; le stockage est lu directement (dossier, ou dépôt par le SDK) | Instance ; S3 si `PLOOPI_TEST_S3_ENDPOINT` (voir plus haut) |
+| `47_query_builder` | SQL généré sans base : compatibilité de `query_*`, groupes AND/OR, IN/NOT IN, NULL, DISTINCT, EXISTS, pagination, retrait des clauses et validation des arguments | Aucun |
 | `99_obsolescences` | Passée en dernier : aucune obsolescence (`E_DEPRECATED`) levée par le code de Ploopi dans le journal d'erreurs de l'instance depuis son montage, installation et suites comprises ; celles de `vendor/` sont listées sans faire échouer. Sous PHP 8.5, c'est l'annonce des erreurs de PHP 9 | Aucun (lit le journal) |
 
 Une suite s'exécute seule :

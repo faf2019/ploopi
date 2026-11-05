@@ -40,7 +40,10 @@
  * Gerer les ressources : action declaree 11.
  */
 ploopi\module::init('booking', false, false, false);
-if (!ploopi\acl::isactionallowed(_BOOKING_ACTION_ADMIN_RESOURCE)) ploopi\output::redirect('admin.php');
+// Le contrôle ne vaut que pour les opérations de ce fichier : op.php inclut les
+// fichiers d'opérations à la suite, et une redirection ici bloquait aussi celles
+// des autres (booking_event_save pour un simple demandeur).
+if (strpos($_REQUEST['ploopi_op'], 'booking_resource_') === 0 && !ploopi\acl::isactionallowed(_BOOKING_ACTION_ADMIN_RESOURCE)) ploopi\output::redirect('admin.php');
 
 switch($_REQUEST['ploopi_op'])
 {

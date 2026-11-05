@@ -41,6 +41,8 @@
 require __DIR__.'/bootstrap.php';
 exiger_instance();
 
+amorcer_socle();
+
 $strModule  = PLOOPI_ROOT.'/modules/doc';
 $strSource  = PLOOPI_ROOT.'/install/doc/files';
 $booDeploye = false;
@@ -56,7 +58,10 @@ function doc_nettoyer()
     // absente ne doit pas interrompre le nettoyage.
     $arrRequetes = array(
         "DELETE FROM `ploopi_mod_doc_file`",
+        "DELETE FROM `ploopi_mod_doc_file_draft`",
         "DELETE FROM `ploopi_mod_doc_folder`",
+        "DELETE FROM ploopi_workspace_user WHERE id_user IN (SELECT id FROM ploopi_user WHERE login = 'doc_sansdroit')",
+        "DELETE FROM ploopi_user WHERE login = 'doc_sansdroit'",
         "DELETE FROM ploopi_module_workspace WHERE id_module IN (SELECT id FROM ploopi_module WHERE label = 'doc')",
         "DELETE FROM ploopi_module WHERE label = 'doc'",
         "DELETE FROM ploopi_module_type WHERE label = 'doc'"
@@ -333,5 +338,97 @@ T::section('Sans session établie');
 H::reset();
 $arrRep = doc_appel('doc_file_download', $arrDocs['public']['md5']);
 T::vrai('aucun document servi sans session', strpos($arrRep['body'], 'contenu publie') === false, strlen($arrRep['body']).' octets');
+
+T::section('Bloc connecté : téléchargement et brouillons');
+/**
+ * doc_filedownload et doc_fileview existent aussi dans le bloc CONNECTÉ de op.php
+ * (les liens du backoffice y passent) : ils appliquent le contrôle de visibilité du
+ * dossier porteur, et doc_filedraftdelete celui des droits sur le brouillon.
+ *
+ * Le bloc connecté exige un jeton : l'environnement d'un utilisateur simple (niveau
+ * 10, aucun rôle) est construit comme celui de l'administrateur.
+ */
+define('DOC_LOGIN', 'doc_sansdroit');
+define('DOC_MDP', 'D0c!Test2026');
+db()->query(sprintf(
+    "INSERT INTO ploopi_user (login, password, firstname, lastname, email, date_creation, disabled)
+     VALUES ('%s', '%s', 'Essai', 'Doc', 'doc@example.test', '%s', 0)",
+    DOC_LOGIN, db()->real_escape_string(ploopi\user::generate_hash(DOC_MDP, DOC_LOGIN)), date('YmdHis')
+));
+$intDocSansDroit = db()->insert_id;
+db()->query("INSERT INTO ploopi_workspace_user (id_user, id_workspace, id_profile, adminlevel) VALUES ({$intDocSansDroit}, 2, 1, 10)");
+
+/**
+ * Connecte un utilisateur et entre dans l'instance doc (espace 2, comme bk_connecter).
+ */
+$doc_connecter = function ($strLogin, $strMdp) use ($intModule) {
+    H::reset();
+    H::req('/admin.php', 'ploopi_login='.urlencode($strLogin).'&ploopi_password='.urlencode($strMdp));
+    $arrEnv = explode('/', H::env());
+    if (sizeof($arrEnv) !== 5) return '';
+    $arrEnv[1] = 2;
+    $arrEnv[2] = (int)$intModule;
+    $arrEnv[3] = 'public';
+    $strEnv = implode('/', $arrEnv);
+    H::req('/admin.php?ploopi_env='.urlencode($strEnv));
+
+    return $strEnv;
+};
+
+/**
+ * Appelle une opération du bloc connecté du module doc.
+ */
+$doc_op = function ($strEnv, $strOp, $strQuery = '') {
+    return H::req("/index-quick.php?ploopi_op={$strOp}&ploopi_env=".urlencode($strEnv).$strQuery);
+};
+
+$strEnvSimple = $doc_connecter(DOC_LOGIN, DOC_MDP);
+T::vrai('session d\'un utilisateur sans droit ouverte', $strEnvSimple !== '');
+
+// Témoin : l'administrateur télécharge le document public (le bloc connecté fonctionne)
+$strEnvAdmin = $doc_connecter(cfg('admin_login'), cfg('admin_password'));
+$arrRep = $doc_op($strEnvAdmin, 'doc_filedownload', '&docfile_md5id='.$arrDocs['public']['md5']);
+T::vrai('témoin : l\'administrateur télécharge le document public', strpos($arrRep['body'], 'contenu publie') !== false, "HTTP {$arrRep['code']}");
+
+// Le document d'un dossier privé d'autrui : refusé à un utilisateur sans droit
+foreach (array('doc_filedownload', 'doc_fileview') as $strOp)
+{
+    $arrRep = $doc_op($strEnvSimple, $strOp, '&docfile_md5id='.$arrDocs['prive']['md5']);
+    T::vrai("{$strOp} : document d'un dossier privé d'autrui refusé", strpos($arrRep['body'], 'contenu prive') === false, strlen($arrRep['body']).' octets servis');
+}
+
+// Le document d'un dossier public d'un espace étranger : refusé aussi
+$arrRep = $doc_op($strEnvSimple, 'doc_filedownload', '&docfile_md5id='.$arrDocs['etranger']['md5']);
+T::vrai('document d\'un espace étranger refusé', strpos($arrRep['body'], 'contenu etranger') === false, strlen($arrRep['body']).' octets servis');
+
+// Un brouillon du dossier privé : son téléchargement est refusé, et sa suppression aussi
+$strTs = date('YmdHis');
+$strMd5Brouillon = bin2hex(random_bytes(16));
+db()->query(sprintf(
+    "INSERT INTO ploopi_mod_doc_file_draft (md5id, id_docfile, name, description, timestp_create, size,
+                                           readonly, extension, parents, id_folder, id_user_modify, id_user, id_workspace, id_module)
+     VALUES ('%s', 0, 'brouillon.txt', '', '%s', 16, 0, 'txt', '0', %d, 999, 999, 2, %d)",
+    $strMd5Brouillon, $strTs, (int)$intDossierPrive, (int)$intModule
+));
+$intBrouillon = db()->insert_id;
+// Même disposition que docfiledraft::getfilepath() : <pathdata>/doc-<module>/drafts/<id>/<id>.<ext>
+$strDossierBrouillon = PLOOPI_ROOT.'/data/doc-'.(int)$intModule.'/drafts/'.$intBrouillon;
+if (!is_dir($strDossierBrouillon)) mkdir($strDossierBrouillon, 0777, true);
+file_put_contents("{$strDossierBrouillon}/{$intBrouillon}.txt", 'contenu brouillon');
+
+$arrRep = $doc_op($strEnvSimple, 'doc_filedownload', '&docfiledraft_md5id='.$strMd5Brouillon);
+T::vrai('téléchargement du brouillon d\'autrui refusé', strpos($arrRep['body'], 'contenu brouillon') === false, strlen($arrRep['body']).' octets servis');
+
+$doc_op($strEnvSimple, 'doc_filedraftdelete', '&docfiledraft_md5id='.$strMd5Brouillon);
+T::vrai('suppression du brouillon d\'autrui refusée', (int)db()->query("SELECT COUNT(*) FROM ploopi_mod_doc_file_draft WHERE id = {$intBrouillon}")->fetch_row()[0] === 1);
+
+// Témoin : le propriétaire du brouillon (l'administrateur) le supprime
+db()->query("UPDATE ploopi_mod_doc_file_draft SET id_user = 2, id_user_modify = 2 WHERE id = {$intBrouillon}");
+$doc_op($strEnvAdmin, 'doc_filedraftdelete', '&docfiledraft_md5id='.$strMd5Brouillon);
+T::vrai('témoin : le propriétaire supprime le brouillon', (int)db()->query("SELECT COUNT(*) FROM ploopi_mod_doc_file_draft WHERE id = {$intBrouillon}")->fetch_row()[0] === 0);
+
+// Nettoyage de l'utilisateur d'essai
+db()->query("DELETE FROM ploopi_workspace_user WHERE id_user = {$intDocSansDroit}");
+db()->query("DELETE FROM ploopi_user WHERE id = {$intDocSansDroit}");
 
 exit(T::bilan('15_module_doc'));

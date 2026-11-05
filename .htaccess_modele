@@ -22,7 +22,8 @@ AddDefaultCharset UTF-8
 </Files>
 
 <IfModule mod_php.c>
-    AddType application/x-httpd-php .php .php3 .php4 .php5
+    # Pas d'AddType : mod_mime lit toutes les extensions, « x.php.<inconnue> » aurait été
+    # exécuté. La configuration PHP d'Apache traite .php.
 
     php_flag display_startup_errors off
     php_flag display_errors off
@@ -113,8 +114,15 @@ AddDefaultCharset UTF-8
 
 FileETag None
 
+# Sans mod_rewrite, aucune des interdictions ci-dessous ne s'appliquerait : tout est refusé
+<IfModule !rewrite_module>
+    Require all denied
+</IfModule>
+
 <IfModule rewrite_module>
     RewriteEngine on
+    # Conserver Bearer lors de la réécriture vers index.php.
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Exemple de blocage des urls publiques vers les documents (version rewritée)
     #RewriteRule ^documents/[a-z0-9]{32}/.*$ - [F]
@@ -135,8 +143,12 @@ FileETag None
     RewriteRule ^(.+) $1.gz [QSA,L]
 
     # Quelques restrictions d'acces
+    # Chemins caches (.git, .claude, .github...) et fichiers du depot
+    RewriteRule (^|/)\.(?!well-known/) - [F]
+    RewriteRule \.(md|lock|ya?ml|model|dist)$ - [F]
+    RewriteRule (^|/)(composer\.json|installed\.json|package\.json)$ - [F]
     # Dossiers interdits
-    RewriteRule ^(config|bin|data|doc|include|install|lang|tools)/.*$ - [F]
+    RewriteRule ^(config|bin|data|doc|docker|include|install|lang|screenshots|tests|tools)/.*$ - [F]
     # Fichiers interdits dans un sous-dossier
     RewriteRule ^[^/]*/(.*\.php[345]?|.*\.txt)$ - [F]
     # Fichiers interdits à la racine

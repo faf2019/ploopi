@@ -29,6 +29,9 @@ include_once './include/constants.php';
  */
 mysqli_report(MYSQLI_REPORT_OFF);
 
+// Jamais sur une installation configurée, quel que soit le chemin qui y mène
+if (file_exists(ploopi\loader::configpath())) die();
+
 session_start();
 
 ploopi\buffer::clean();
@@ -173,9 +176,10 @@ if (!empty($_POST)) {
         $strPublique = isset($S['saved']['PUBLIC_URL']) ? trim($S['saved']['PUBLIC_URL']) : installer_publicurl();
         $S['saved']['PUBLIC_URL'] = (filter_var($strPublique, FILTER_VALIDATE_URL) && preg_match('@^https?://[^\'"\\\\\s]+$@i', $strPublique)) ? rtrim($strPublique, '/') : '';
 
+        // Valeurs écrites entre apostrophes dans du PHP : apostrophe et antislash échappés
         foreach($S['saved'] as $k => $v) {
             $tags[] = "<{$k}>";
-            $replacements[] = $v;
+            $replacements[] = addcslashes((string) $v, "'\\");
         }
 
         // Génération IV
@@ -234,7 +238,7 @@ if (!empty($_POST)) {
         switch($S['saved']['HASH_ALGO']) {
             case 'bcrypt':
                 // Même entrée que user::generate_hash() : bcrypt ne lit que 72 octets
-                $hash = password_hash(ploopi\user::bcrypt_input($S['saved']['ADMIN_PASSWORD'], $S['saved']['ADMIN_LOGIN'], $S['saved']['SECRETKEY']), PASSWORD_BCRYPT);
+                $hash = password_hash(ploopi\user::bcrypt_input($S['saved']['ADMIN_PASSWORD'], $S['saved']['ADMIN_LOGIN'], $S['saved']['SECRETKEY']), PASSWORD_BCRYPT, array('cost' => ploopi\user::BCRYPT_COST));
             break;
 
             default:
@@ -332,7 +336,7 @@ $arrVariables = [
         'CIPHER' => [
             'Algorithme de chiffrement des URLs',
             '',
-            'AES-128-CBC',
+            'AES-256-CBC',
             []
         ],
         'HASH_ALGO' => [
@@ -351,9 +355,9 @@ $arrVariables = [
     ]
 ];
 
-foreach(openssl_get_cipher_methods() as $method) {
-    $method = strtoupper($method);
-    $arrVariables['security']['CIPHER'][3][$method] = $method;
+// Chiffrements proposés : AES en mode CBC (l'HMAC du socle authentifie), plus de DES, RC4 ni ECB
+foreach(array('AES-256-CBC', 'AES-192-CBC', 'AES-128-CBC') as $method) {
+    if (in_array(strtolower($method), openssl_get_cipher_methods())) $arrVariables['security']['CIPHER'][3][$method] = $method;
 }
 
 

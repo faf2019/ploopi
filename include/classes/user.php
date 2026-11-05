@@ -37,6 +37,20 @@ use ploopi;
 class user extends data_object
 {
     /**
+     * Empreinte factice, au même coût que les vraies : vérifiée pour un identifiant
+     * inconnu, elle égalise la durée d'une connexion refusée.
+     */
+    const DUMMY_HASH = '$2y$12$884uenfF3VmhQ7iydkgQG.ajZ/yDjSkUENZi7MAPYFrYy4HCNLjFC';
+
+    /**
+     * Coût de bcrypt (12 : recommandation courante, défaut de PHP 8.4)
+     */
+    const BCRYPT_COST = 12;
+
+    protected $strEventPrefix = 'user';
+    protected $arrEventFields = array('login', 'firstname', 'lastname', 'email', 'disabled');
+
+    /**
      * Sauvegarde du précédent mot de passe pour détection de modification
      *
      * @var string
@@ -93,6 +107,12 @@ class user extends data_object
      */
 
     public function delete()
+    {
+        if (!events::enabled()) return $this->delete_user();
+        return db::get()->transaction(function () { return $this->delete_user(); });
+    }
+
+    private function delete_user()
     {
         $db = db::get();
 
@@ -462,7 +482,9 @@ class user extends data_object
     {
         if (_PLOOPI_HASH_ALGO != 'bcrypt') return false;
 
-        return !password_verify(self::bcrypt_input($strPassword, $strLogin), (string)$strHash);
+        // Ancienne forme d'entrée, ou coût inférieur au coût courant
+        return !password_verify(self::bcrypt_input($strPassword, $strLogin), (string)$strHash)
+            || password_needs_rehash((string)$strHash, PASSWORD_BCRYPT, array('cost' => self::BCRYPT_COST));
     }
 
     /**
@@ -476,7 +498,7 @@ class user extends data_object
     {
         switch(_PLOOPI_HASH_ALGO) {
             case 'bcrypt':
-                return password_hash(self::bcrypt_input($strPassword, $strLogin), PASSWORD_BCRYPT);
+                return password_hash(self::bcrypt_input($strPassword, $strLogin), PASSWORD_BCRYPT, array('cost' => self::BCRYPT_COST));
             break;
 
             default:

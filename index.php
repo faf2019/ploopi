@@ -42,6 +42,18 @@ define('_PLOOPI_DIRNAME',  dirname(__FILE__));
 
 include_once './include/classes/loader.php';
 
+// L'API est sans cookie : elle ne doit pas emprunter le routage interactif du portail.
+$strApiPath = (string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$strApiBase = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+if (strpos($strApiPath, $strApiBase.'/api/') === 0)
+{
+    ob_start();
+    ini_set('display_errors', '0');
+    ploopi\loader::boot_cli();
+    ploopi\api::run(substr($strApiPath, strlen($strApiBase.'/api')));
+    exit;
+}
+
 ploopi\loader::boot();
 ploopi\loader::dispatch();
 ploopi\system::kill();

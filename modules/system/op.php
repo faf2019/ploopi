@@ -66,7 +66,7 @@ if ($_SESSION['ploopi']['connected'])
                         if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])
                         {
                             // Complexité ok
-                            if (!_PLOOPI_USE_COMPLEXE_PASSWORD || ploopi\security::checkpasswordvalidity($_POST['usernewpass']))
+                            if (ploopi\security::passwordallowed($_POST['usernewpass']))
                             {
                                 // Affectation du mot de passe
                                 $user->setpassword($_POST['usernewpass']);
@@ -1282,7 +1282,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
 
                     case 'system_choose_photo':
                         // Popup de choix d'une photo pour un utilisateur
-                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']))
+                        // L'utilisateur visé doit être administrable par l'utilisateur connecté
+                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id'])
+                            && system_user_isadministrable($_GET['system_user_id']))
                         {
                             ob_start();
                             ploopi\module::init('system');
@@ -1305,7 +1307,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     break;
 
                     case 'system_send_photo':
-                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']))
+                        // L'utilisateur visé doit être administrable par l'utilisateur connecté
+                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id'])
+                            && system_user_isadministrable($_GET['system_user_id']))
                         {
                             // Envoi d'une photo temporaire dans la fiche utilisateur
                             // On vérifie qu'un fichier a bien été uploadé
@@ -1331,7 +1335,9 @@ if ($_SESSION['ploopi']['connected'] && $_SESSION['ploopi']['moduleid'] == _PLOO
                     break;
 
                     case 'system_delete_photo':
-                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id']))
+                        // L'utilisateur visé doit être administrable par l'utilisateur connecté
+                        if (!empty($_GET['system_user_id']) && is_numeric($_GET['system_user_id'])
+                            && system_user_isadministrable($_GET['system_user_id']))
                         {
                             ploopi\session::setvar("deletephoto_{$_GET['system_user_id']}", 1);
                             $_SESSION['system']['user_photopath'] = '';

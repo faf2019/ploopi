@@ -227,11 +227,12 @@ function dir_connecter($strLogin, $strMdp)
  * @param string $strOp opération
  * @param string $strQuery paramètres supplémentaires
  * @param mixed $mixPost corps POST
+ * @param string $strScript script appelé (admin-light pour les popups photo, comme l'écran)
  * @return array réponse
  */
-function dir_op($strEnv, $strOp, $strQuery = '', $mixPost = null)
+function dir_op($strEnv, $strOp, $strQuery = '', $mixPost = null, $strScript = 'index-quick')
 {
-    return H::req("/index-quick.php?ploopi_op={$strOp}&ploopi_env=".urlencode($strEnv).$strQuery, $mixPost);
+    return H::req("/{$strScript}.php?ploopi_op={$strOp}&ploopi_env=".urlencode($strEnv).$strQuery, $mixPost);
 }
 
 $strEnvAdmin = dir_connecter(cfg('admin_login'), cfg('admin_password'));
@@ -466,5 +467,61 @@ T::eq('le visiteur reçoit la photo d\'un contact partagé', "\x89PNG", substr($
 H::reset();
 $arrRep = H::req('/index-light.php?ploopi_op=directory_contact_getphoto&directory_contact_id='.DIR_PERSO);
 T::neq('pas celle d\'un contact personnel', "\x89PNG", substr($arrRep['body'], 0, 4));
+
+T::section('Photos : changement et suppression');
+/**
+ * directory_choose_photo, directory_send_photo et directory_delete_photo exigent
+ * directory_contact_ismodifiable() sur le contact visé.
+ *
+ * DIR_CONTACT est un contact partagé de DIR_RUB, gérée par DIR_LOGIN_GEST : le
+ * gestionnaire le modifie (témoin), l\'utilisateur sans droit ne le peut pas.
+ * DIR_PERSO est le contact personnel de l\'administrateur : personne d\'autre ne
+ * le modifie.
+ */
+dir_reinitialiser();
+
+// Le gestionnaire ouvre la popup de choix de photo du contact de sa rubrique
+$strEnv = dir_session('gest');
+$arrRep = dir_op($strEnv, 'directory_choose_photo', '&directory_photo_id='.DIR_CONTACT, null, 'admin-light');
+T::contient('témoin : le gestionnaire ouvre la popup photo de son contact', 'name="directory_contact_photo"', $arrRep['body']);
+
+// L\'utilisateur sans droit ne l\'ouvre pas, ni sur le contact partagé, ni sur le contact personnel
+$strEnv = dir_session('sans');
+$arrRep = dir_op($strEnv, 'directory_choose_photo', '&directory_photo_id='.DIR_CONTACT, null, 'admin-light');
+T::contientpas('l\'utilisateur sans droit n\'ouvre pas la popup du contact partagé', 'name="directory_contact_photo"', $arrRep['body']);
+$arrRep = dir_op($strEnv, 'directory_choose_photo', '&directory_photo_id='.DIR_PERSO, null, 'admin-light');
+T::contientpas('ni celle du contact personnel d\'autrui', 'directory_send_photo', $arrRep['body']);
+
+// Envoi d\'une photo : le gestionnaire remplace celle de son contact
+$strEnv = dir_session('gest');
+$strFichier = tempnam(sys_get_temp_dir(), 'dir_photo');
+$objImage = imagecreatetruecolor(4, 4);
+imagepng($objImage, $strFichier);
+$arrRep = dir_op($strEnv, 'directory_send_photo', '&directory_photo_id='.DIR_CONTACT, array('directory_contact_photo' => new CURLFile($strFichier, 'image/png', 'photo.png')), 'admin-light');
+T::vrai('témoin : le gestionnaire envoie une photo', strpos($arrRep['body'], 'popup_directory_choose_photo') !== false, substr($arrRep['body'], 0, 200));
+@unlink($strFichier);
+
+// L\'utilisateur sans droit n\'envoie rien, même sur son propre contact personnel
+$strEnv = dir_session('sans');
+$strFichier = tempnam(sys_get_temp_dir(), 'dir_photo');
+imagepng($objImage, $strFichier);
+$arrRep = dir_op($strEnv, 'directory_send_photo', '&directory_photo_id='.DIR_PERSO, array('directory_contact_photo' => new CURLFile($strFichier, 'image/png', 'photo.png')), 'admin-light');
+T::vrai('l\'utilisateur sans droit n\'envoie pas de photo sur le contact d\'autrui', strpos($arrRep['body'], 'popup_directory_choose_photo') === false, substr($arrRep['body'], 0, 200));
+@unlink($strFichier);
+
+// Suppression : le gestionnaire marque la suppression de la photo de son contact
+$strEnv = dir_session('gest');
+imagepng($objImage, $strDossierPhotos._PLOOPI_SEP.DIR_CONTACT.'.png');
+dir_op($strEnv, 'directory_delete_photo', '&directory_contact_id='.DIR_CONTACT, null, 'admin-light');
+// La photo n'est supprimée qu'à l'enregistrement du contact (le drapeau vit en session)
+$arrRep = dir_op($strEnv, 'directory_contact_save', '&directory_contact_id='.DIR_CONTACT, 'directory_contact_lastname=CONTACTPARTAGE');
+T::vrai('témoin : la photo du contact géré est supprimée à l\'enregistrement', !file_exists($strDossierPhotos._PLOOPI_SEP.DIR_CONTACT.'.png'));
+
+// L\'utilisateur sans droit ne supprime pas la photo du contact personnel de l\'administrateur
+imagepng($objImage, $strDossierPhotos._PLOOPI_SEP.DIR_PERSO.'.png');
+$strEnv = dir_session('sans');
+dir_op($strEnv, 'directory_delete_photo', '&directory_contact_id='.DIR_PERSO, null, 'admin-light');
+$arrRep = dir_op($strEnv, 'directory_contact_save', '&directory_contact_id='.DIR_PERSO, 'directory_contact_lastname=CONTACTPERSONNEL');
+T::vrai('la photo du contact personnel d\'autrui n\'est pas supprimée', file_exists($strDossierPhotos._PLOOPI_SEP.DIR_PERSO.'.png'));
 
 exit(T::bilan('23_module_directory'));

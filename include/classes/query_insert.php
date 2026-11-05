@@ -86,6 +86,16 @@ class query_insert extends query
     }
 
     /**
+     * Supprime toutes les affectations SET.
+     */
+    public function remove_set() { $this->arrSet = array(); }
+
+    /**
+     * Supprime la table définie par set_table().
+     */
+    public function remove_table() { $this->arrFrom = array(); }
+
+    /**
      * Retourne la table
      *
      * @return string

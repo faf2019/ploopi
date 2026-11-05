@@ -389,9 +389,10 @@ scripts du site et les scripts en ligne du socle portant le nonce de la session
 s'exécutent. Un écran qui insère un composant historique doit donc le prendre sans
 gestionnaire en ligne : la GED du socle (`data-ploopi-documents`, `js/documents.js`) et
 les fenêtres de `create_popup` (rendues déplaçables par `js/popup.js` à leur insertion)
-le sont. Sinon, le contrôle de fin de requête garde la politique de base à la page et
-journalise l'écart (« CSP stricte non appliquée ») ; mais un fragment AJAX chargé dans
-une page stricte voit ses gestionnaires en ligne **bloqués**.
+le sont. Sinon, ses gestionnaires en ligne sont **bloqués** : le contrôle de fin de
+requête applique la politique stricte quand même (un gestionnaire injecté ne doit pas
+la désactiver) et journalise l'écart (« CSP stricte appliquée malgré un script en
+ligne ») ; de même dans un fragment AJAX chargé par une page stricte.
 
 **Composition d'un message.** Les fenêtres de nouveau message, de réponse et de
 modification (`include/op/tickets.php`, socle : elles s'ouvrent aussi depuis l'annuaire et
@@ -416,6 +417,10 @@ Les outils historiques (`tools_*.php`) et la recherche rendent leurs blocs et le
 tableaux par `system_open_bloc()`, `system_close_bloc()` et `system_display_array()`
 (`include/functions.php`) : `skin::open_simplebloc()` et `display_array()` sous
 `ploopi2`/`ploopi3`, cartes et `ui::table()` sous `ploopi4`.
+Un écran neuf de `system` servi par tous les gabarits (Système → API, Système →
+Événements) complète ces fonctions par `system_pagehead()`, `system_tabs()` (onglets
+historiques ou `ui::seg()`), `system_message()`, `system_button()`, `system_stats()` et
+`system_bloc_padding()` : un seul code d'écran, sans test du gabarit dans l'écran.
 
 ### 5.2 Correctifs de sécurité
 

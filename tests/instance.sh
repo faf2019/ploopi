@@ -216,10 +216,10 @@ up()
         sleep 0.25
     done
 
-    # Journal des erreurs de l'instance (_PLOOPI_LOG_ERRORS_FILE du modèle de configuration) :
-    # la suite 99 n'en lit que la partie écrite par cette instance, installation comprise
+    # Journal des erreurs de l'instance (_PLOOPI_LOG_ERRORS_FILE du modèle : sous le dossier
+    # des données, ici data/) : la suite 99 n'en lit que la partie écrite par cette instance
     local journal_erreurs debut_erreurs
-    journal_erreurs="$(sed -n "s/.*define *('_PLOOPI_LOG_ERRORS_FILE', *'\([^']*\)').*/\1/p" "${RACINE}/config/config.php.model" | head -1)"
+    journal_erreurs="${RACINE}/data/ploopi_error.log"
     debut_erreurs=0
     [ -n "$journal_erreurs" ] && [ -f "$journal_erreurs" ] && debut_erreurs="$(wc -c < "$journal_erreurs" | tr -d ' ')"
 

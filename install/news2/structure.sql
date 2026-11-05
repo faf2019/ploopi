@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_news2_cat` (
   `title` varchar(100) default NULL,
   `id_workspace` int(10) unsigned default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `ploopi_mod_news2_entry`;
 CREATE TABLE IF NOT EXISTS `ploopi_mod_news2_entry` (
@@ -30,4 +30,4 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_news2_entry` (
   `nbclick` int(10) unsigned default '0',
   `id_workspace` int(10) unsigned default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

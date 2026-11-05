@@ -118,6 +118,11 @@ switch($ploopi_op)
             <div class="ploopi_annotation_popup_list">
             <?php
 
+            // Seulement les annotations des modules des espaces de l'utilisateur
+            $arrAnnoModules = array((int) _PLOOPI_MODULE_SYSTEM);
+            foreach($_SESSION['ploopi']['workspaces'] as $arrAnnoEspace) if (!empty($arrAnnoEspace['modules'])) $arrAnnoModules = array_merge($arrAnnoModules, array_map('intval', $arrAnnoEspace['modules']));
+            $arrAnnoModules = array_unique($arrAnnoModules);
+
             $select =   "
                         SELECT      a.*,
                                     o.script,
@@ -136,6 +141,7 @@ switch($ploopi_op)
                         LEFT JOIN   ploopi_mb_object o ON o.id = a.id_object AND o.id_module_type = m.id_module_type
 
                         WHERE       (a.private = 0 OR a.id_user = ".((int) $_SESSION['ploopi']['userid']).")
+                        AND         a.id_module IN (".implode(',', $arrAnnoModules).")
 
                         ORDER BY    a.date_annotation DESC
                         ";

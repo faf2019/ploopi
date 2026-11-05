@@ -85,7 +85,7 @@ self::$template_body->assign_block_vars('ploopi_js', array(
 ));
 
 self::$template_body->assign_block_vars('ploopi_js', array(
-    'PATH' => './vendor/components/jqueryui/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
+    'PATH' => './vendor/components/jqueryui/dist/jquery-ui.min.js?v='.urlencode(_PLOOPI_VERSION.','._PLOOPI_REVISION)
 ));
 
 
@@ -336,9 +336,9 @@ if ($_SESSION['ploopi']['connected'])
 
         'NEWTICKETS'                => $newtickets,
         'LAST_NEWTICKET'            => $lastticket,
-        'SHOW_BLOCKMENU'            => (!empty($_SESSION['ploopi']['switchdisplay']['block_modules'])) ? $_SESSION['ploopi']['switchdisplay']['block_modules'] : 'block',
+        'SHOW_BLOCKMENU'            => (isset($_SESSION['ploopi']['switchdisplay']['block_modules']) && $_SESSION['ploopi']['switchdisplay']['block_modules'] == 'none') ? 'none' : 'block',
 
-        'USER_DECONNECT'        => ploopi\crypt::urlencode("admin.php?ploopi_logout", null, null, null, null, false)
+        'USER_DECONNECT'        => ploopi\crypt::urlencode("admin.php?ploopi_logout")
     ));
 
     if ($newtickets) self::$template_body->assign_block_vars('switch_user_logged_in.switch_newtickets', array());

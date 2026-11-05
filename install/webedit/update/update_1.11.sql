@@ -7,4 +7,4 @@ CREATE TABLE `dims_mod_webedit_article_backup` (
   `content` longtext NOT NULL,
   PRIMARY KEY  (`id_article`,`timestp`),
   KEY `timestp` (`timestp`)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;

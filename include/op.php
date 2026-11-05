@@ -167,158 +167,145 @@ if (isset($_REQUEST['ploopi_op']))
             // Adresse et nom du site pour les courriels : jamais l'entête Host (system::publicurl)
             $strAdresse = ploopi\system::publicurl();
             $strSite = $strAdresse === false ? '' : (string)parse_url($strAdresse, PHP_URL_HOST);
+            $strLpLogin = isset($_REQUEST['ploopi_lostpassword_login']) && is_string($_REQUEST['ploopi_lostpassword_login']) ? $_REQUEST['ploopi_lostpassword_login'] : '';
+            $strLpEmail = isset($_REQUEST['ploopi_lostpassword_email']) && is_string($_REQUEST['ploopi_lostpassword_email']) ? $_REQUEST['ploopi_lostpassword_email'] : '';
 
-            $arrWhere = array();
-            if (!empty($_REQUEST['ploopi_lostpassword_login'])) $arrWhere[] = "login = '".ploopi\db::get()->addslashes($_REQUEST['ploopi_lostpassword_login'])."'";
-            if (!empty($_REQUEST['ploopi_lostpassword_email'])) $arrWhere[] = "email = '".ploopi\db::get()->addslashes($_REQUEST['ploopi_lostpassword_email'])."'";
+            /**
+             * La réponse ne dit jamais si le compte existe :
+             * même message pour un compte inconnu, sans adresse, ambigu ou servi. Les cas
+             * sont journalisés pour l'administrateur.
+             */
+            $intMsg = _PLOOPI_MSG_MAILSENT;
+            $row = false;
 
-            if (empty($arrWhere)) $intError = _PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN;
-            else {
-                ploopi\db::get()->query('
-                    SELECT  id,
-                            email,
-                            lastname,
-                            firstname
+            if ($strAdresse === false)
+            {
+                // Aucune adresse sûre pour le lien : voir system::publicurl()
+                ploopi\error::syslog(LOG_WARNING, "Mot de passe oublié : hôte '{$_SERVER['HTTP_HOST']}' non déclaré, aucun lien envoyé. Renseigner _PLOOPI_PUBLIC_URL dans config/config.php");
+                $intError = _PLOOPI_ERROR_LOSTPASSWORD_UNAVAILABLE;
+            }
+            elseif ($strLpLogin !== '' || $strLpEmail !== '')
+            {
+                $arrWhere = array();
+                if ($strLpLogin !== '') $arrWhere[] = "login = '".ploopi\db::get()->addslashes($strLpLogin)."'";
+                if ($strLpEmail !== '') $arrWhere[] = "email = '".ploopi\db::get()->addslashes($strLpEmail)."'";
 
-                    FROM    ploopi_user
+                ploopi\db::get()->query('SELECT id, email, lastname, firstname FROM ploopi_user WHERE '.implode(' AND ', $arrWhere));
 
-                    WHERE   '.implode(' AND ', $arrWhere)
-                );
+                if (ploopi\db::get()->numrows() == 1) $row = ploopi\db::get()->fetchrow();
+                else ploopi\error::syslog(LOG_INFO, 'Mot de passe oublié : '.ploopi\db::get()->numrows().' compte(s) pour la demande');
 
-                switch (ploopi\db::get()->numrows())
-                {
-                    case 0: // erreur : inconnu
-                        $intError = _PLOOPI_ERROR_LOSTPASSWORD_UNKNOWN;
-                    break;
-
-                    case 1: // ok
-                        $row = ploopi\db::get()->fetchrow();
-                        if (!empty($row['email']))
-                        {
-
-                            $objUser = new ploopi\user();
-                            $objUser->open($row['id']);
-
-                            // confirmation de modification de mdp
-                            if ($ploopi_op == 'ploopi_lostpassword_confirm')
-                            {
-                                // si code de confirmation fourni
-                                if (!empty($_GET['ploopi_lostpassword_confirmcode']))
-                                {
-                                    $confirmation_code = new ploopi\confirmation_code();
-
-                                    // si action en cours avec le bon code de confirmation
-                                    if ($confirmation_code->open("ploopi_lostpassword{$objUser->fields['id']}") && hash_equals((string)$confirmation_code->fields['code'], (string)$_GET['ploopi_lostpassword_confirmcode']))
-                                    {
-                                        /**
-                                         * Le code n'expirait jamais : un lien de confirmation resté
-                                         * dans une boîte aux lettres valait indéfiniment. Il n'est
-                                         * accepté que pendant _PLOOPI_LOSTPASSWORD_DELAY secondes
-                                         * (une heure par défaut), puis supprimé.
-                                         */
-                                        $intDelai = defined('_PLOOPI_LOSTPASSWORD_DELAY') ? (int)_PLOOPI_LOSTPASSWORD_DELAY : 3600;
-                                        if (ploopi\date::timestamp2unixtimestamp($confirmation_code->fields['timestp']) < time() - $intDelai)
-                                        {
-                                            $confirmation_code->delete();
-                                            $_SESSION['ploopi']['errorcode'] = _PLOOPI_ERROR_LOSTPASSWORD_EXPIRED;
-                                            ploopi\output::redirect('admin.php');
-                                        }
-
-                                        // ok on peut générer le nouveau mot de passe et l'enregistrer
-                                        $strPass = ploopi\security::generatepassword();
-                                        $objUser->setpassword($strPass);
-                                        $objUser->fields['password_force_update'] = 1;
-                                        $objUser->save();
-
-                                        // ok on peut envoyer le mail
-                                        ploopi\mail::send(
-                                            array(
-                                                array(
-                                                        'name' => $strSite,
-                                                        'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
-                                                )
-                                            ),
-                                            array(
-                                                array(
-                                                    'name' => "{$row['lastname']} {$row['firstname']}",
-                                                    'address' => $row['email']
-                                                )
-                                            ),
-                                            "{$strSite} : modification de votre mot de passe",
-                                            "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$strSite}.\n\nVotre nouveau mot de passe est le suivant :\n\n{$strPass}",
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            false
-                                        );
-
-                                        $confirmation_code->delete();
-                                        $intMsg = _PLOOPI_MSG_PASSWORDSENT;
-                                    }
-                                }
-                            }
-                            elseif ($strAdresse === false)
-                            {
-                                // Aucune adresse sûre pour le lien : voir system::publicurl()
-                                ploopi\error::syslog(LOG_WARNING, "Mot de passe oublié : hôte '{$_SERVER['HTTP_HOST']}' non déclaré, aucun lien envoyé. Renseigner _PLOOPI_PUBLIC_URL dans config/config.php");
-                                $intError = _PLOOPI_ERROR_LOSTPASSWORD_UNAVAILABLE;
-                            }
-                            else
-                            {
-                                $confirmation_code = new ploopi\confirmation_code();
-                                $strAction = "ploopi_lostpassword{$objUser->fields['id']}";
-
-                                if ($confirmation_code->open($strAction))
-                                {
-                                    $confirmation_code->delete();
-                                    $confirmation_code = new ploopi\confirmation_code();
-                                }
-
-                                $confirmation_code = new ploopi\confirmation_code();
-                                $confirmation_code->fields['action'] = $strAction;
-                                $confirmation_code->save();
-
-                                ploopi\mail::send(
-                                    array(
-                                        array(
-                                                'name' => $strSite,
-                                                'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
-                                        )
-                                    ),
-                                    array(
-                                        array(
-                                            'name' => "{$row['lastname']} {$row['firstname']}",
-                                            'address' => $row['email']
-                                        )
-                                    ),
-                                    "{$strSite} : modification de votre mot de passe",
-                                    "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$strSite}.\n\nVous devez confirmer cette demande en cliquant sur le lien suivant:\n\n".$strAdresse."/".ploopi\crypt::urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login=".urlencode((string)$_REQUEST['ploopi_lostpassword_login'])."&ploopi_lostpassword_email=".urlencode((string)$_REQUEST['ploopi_lostpassword_email'])."&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}"),
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    false
-                                );
-
-                                $intMsg = _PLOOPI_MSG_MAILSENT;
-                            }
-                        }
-                        else $intError = _PLOOPI_ERROR_LOSTPASSWORD_INVALID;
-                    break;
-
-                    default:  // erreur : plusieurs réponses
-                        $intError = _PLOOPI_ERROR_LOSTPASSWORD_MANYRESPONSES;
-                    break;
-                }
+                if ($row && empty($row['email'])) { ploopi\error::syslog(LOG_INFO, "Mot de passe oublié : compte {$row['id']} sans adresse"); $row = false; }
             }
 
+            if ($row && $ploopi_op == 'ploopi_lostpassword_confirm')
+            {
+                /**
+                 * Le lien mène à la saisie d'un nouveau mot de passe : plus aucun mot de passe
+                 * n'est envoyé en clair par courriel. Le code vaut une heure
+                 * (_PLOOPI_LOSTPASSWORD_DELAY) et une seule fois.
+                 */
+                $strCode = isset($_GET['ploopi_lostpassword_confirmcode']) && is_string($_GET['ploopi_lostpassword_confirmcode']) ? $_GET['ploopi_lostpassword_confirmcode'] : '';
+                $confirmation_code = new ploopi\confirmation_code();
+                $intDelai = defined('_PLOOPI_LOSTPASSWORD_DELAY') ? (int)_PLOOPI_LOSTPASSWORD_DELAY : 3600;
+
+                $booCode = $strCode !== '' && $confirmation_code->open("ploopi_lostpassword{$row['id']}") && hash_equals((string)$confirmation_code->fields['code'], $strCode);
+                // Code juste mais périmé : supprimé
+                if ($booCode && ploopi\date::timestamp2unixtimestamp($confirmation_code->fields['timestp']) < time() - $intDelai) { $confirmation_code->delete(); $booCode = false; }
+
+                if (!$booCode)
+                {
+                    $_SESSION['ploopi']['errorcode'] = _PLOOPI_ERROR_LOSTPASSWORD_EXPIRED;
+                    ploopi\output::redirect('admin.php');
+                }
+
+                $strErreur = '';
+                if (isset($_POST['ploopi_lostpassword_new']) && isset($_POST['ploopi_lostpassword_new_confirm']))
+                {
+                    if ($_POST['ploopi_lostpassword_new'] !== $_POST['ploopi_lostpassword_new_confirm']) $strErreur = 'Les deux saisies ne correspondent pas';
+                    elseif (!ploopi\security::passwordallowed($_POST['ploopi_lostpassword_new'])) $strErreur = 'Mot de passe refusé : au moins '.(int) _PLOOPI_COMPLEXE_PASSWORD_MIN_SIZE.' caractères'.(_PLOOPI_USE_COMPLEXE_PASSWORD ? ', dont une minuscule, une majuscule, un chiffre et un caractère de ponctuation' : '');
+                    else
+                    {
+                        $objUser = new ploopi\user();
+                        $objUser->open($row['id']);
+                        $objUser->setpassword($_POST['ploopi_lostpassword_new']);
+                        $objUser->fields['password_force_update'] = 0;
+                        $objUser->fields['failed_attemps'] = 0;
+                        $objUser->fields['jailed_since'] = 0;
+                        $objUser->save();
+                        $confirmation_code->delete();
+                        ploopi\user_action_log::record(_SYSTEM_ACTION_LOGIN_OK, "mot de passe réinitialisé ({$row['id']})", _PLOOPI_MODULE_SYSTEM, _PLOOPI_MODULE_SYSTEM);
+
+                        $_SESSION['ploopi']['msgcode'] = _PLOOPI_MSG_PASSWORDSENT;
+                        ploopi\output::redirect('admin.php');
+                    }
+                }
+
+                // Formulaire de saisie, sans script (CSP stricte)
+                $strAction = ploopi\crypt::urlencode('admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login='.urlencode($strLpLogin).'&ploopi_lostpassword_email='.urlencode($strLpEmail).'&ploopi_lostpassword_confirmcode='.urlencode($strCode));
+                ploopi\buffer::clean();
+                ploopi\csp::strict();
+                $strTitre = 'Nouveau mot de passe';
+                ?><!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?php echo $strTitre; ?></title>
+<style>body{font-family:sans-serif;max-width:24rem;margin:3rem auto;padding:0 1rem}label,input,button{display:block;width:100%;box-sizing:border-box;margin:.4rem 0}input{padding:.5rem}button{padding:.6rem}.erreur{color:#b00020}</style></head>
+<body><h1><?php echo $strTitre; ?></h1>
+<?php if ($strErreur !== '') echo '<p class="erreur" role="alert">'.ploopi\str::htmlentities($strErreur).'</p>'; ?>
+<form method="post" action="<?php echo ploopi\str::htmlentities($strAction); ?>">
+<label for="lp_new">Nouveau mot de passe</label><input type="password" id="lp_new" name="ploopi_lostpassword_new" autocomplete="new-password" required>
+<label for="lp_conf">Confirmation</label><input type="password" id="lp_conf" name="ploopi_lostpassword_new_confirm" autocomplete="new-password" required>
+<button type="submit">Enregistrer</button>
+</form></body></html><?php
+                ploopi\system::kill();
+            }
+            elseif ($row)
+            {
+                $confirmation_code = new ploopi\confirmation_code();
+                $strAction = "ploopi_lostpassword{$row['id']}";
+
+                // Une demande toutes les cinq minutes au plus par compte
+                if ($confirmation_code->open($strAction) && ploopi\date::timestamp2unixtimestamp($confirmation_code->fields['timestp']) > time() - 300)
+                {
+                    ploopi\error::syslog(LOG_INFO, "Mot de passe oublié : demande répétée pour le compte {$row['id']}, ignorée");
+                }
+                else
+                {
+                    if (!$confirmation_code->isnew()) $confirmation_code->delete();
+
+                    $confirmation_code = new ploopi\confirmation_code();
+                    $confirmation_code->fields['action'] = $strAction;
+                    $confirmation_code->save();
+
+                    ploopi\mail::send(
+                        array(
+                            array(
+                                    'name' => $strSite,
+                                    'address' => trim(current(explode(',', _PLOOPI_ADMINMAIL)))
+                            )
+                        ),
+                        array(
+                            array(
+                                'name' => "{$row['lastname']} {$row['firstname']}",
+                                'address' => $row['email']
+                            )
+                        ),
+                        "{$strSite} : modification de votre mot de passe",
+                        "Bonjour,\n\nvous recevez ce message car vous avez effectué une demande de mot de passe sur le site {$strSite}.\n\nPour choisir un nouveau mot de passe, suivez ce lien (valable une heure, une seule fois) :\n\n".$strAdresse."/".ploopi\crypt::urlencode("admin.php?ploopi_op=ploopi_lostpassword_confirm&ploopi_lostpassword_login=".urlencode($strLpLogin)."&ploopi_lostpassword_email=".urlencode($strLpEmail)."&ploopi_lostpassword_confirmcode={$confirmation_code->fields['code']}")."\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.",
+                        null,
+                        null,
+                        null,
+                        null,
+                        false
+                    );
+                }
+            }
+            elseif ($ploopi_op == 'ploopi_lostpassword_confirm') $intError = _PLOOPI_ERROR_LOSTPASSWORD_EXPIRED;
+
             if (isset($intError)) $_SESSION['ploopi']['errorcode'] = $intError;
-            elseif (isset($intMsg)) $_SESSION['ploopi']['msgcode'] = $intMsg;
+            else $_SESSION['ploopi']['msgcode'] = $intMsg;
 
             ploopi\output::redirect('admin.php');
         break;
-
         case 'calendar_open':
             ob_start();
 
@@ -545,7 +532,11 @@ if (isset($_REQUEST['ploopi_op']))
         case 'ploopi_get_userphoto':
             // Envoi de la photo d'un utilisateur vers le client
             $objUser = new ploopi\user();
-            if (!empty($_GET['ploopi_user_id']) && is_numeric($_GET['ploopi_user_id']) && $objUser->open($_GET['ploopi_user_id']))
+            /**
+             * Session connectée, ou URL chiffrée par le serveur (objet WCE de system en
+             * frontoffice)
+             */
+            if ((!empty($_SESSION['ploopi']['connected']) || ploopi\loader::urlchiffree()) && !empty($_GET['ploopi_user_id']) && is_numeric($_GET['ploopi_user_id']) && $objUser->open($_GET['ploopi_user_id']))
             {
                 $strPhotoPath = $objUser->getphotopath();
                 if (file_exists($strPhotoPath)) ploopi\fs::downloadfile($strPhotoPath, 'user.png', false, false);
@@ -588,17 +579,18 @@ if (isset($_REQUEST['ploopi_op']))
         }
         else ploopi\error::syslog(LOG_INFO, "Jeton absent ou non valide, opération '{$ploopi_op}' ignorée");
 
-        switch($ploopi_op)
+        // Opérations du bloc « connecté » : jeton exigé comme les autres
+        if ($booTokenValide) switch($ploopi_op)
         {
             case 'ploopi.switchdisplay':
-                if (!empty($_GET['id'])) $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
+                // Valeur réécrite dans un attribut style : block ou none, rien d'autre
+                if (!empty($_GET['id']) && isset($_GET['display']) && in_array($_GET['display'], array('block', 'none'), true)) $_SESSION['ploopi']['switchdisplay'][$_GET['id']] = $_GET['display'];
                 ploopi\system::kill();
             break;
 
             case 'ploopi_checkpasswordvalidity':
                 if (!isset($_POST['password'])) ploopi\system::kill();
-                if (_PLOOPI_USE_COMPLEXE_PASSWORD) echo ploopi\security::checkpasswordvalidity($_POST['password']);
-                else echo true;
+                echo ploopi\security::passwordallowed($_POST['password']);
                 ploopi\system::kill();
             break;
 
@@ -750,9 +742,13 @@ if (isset($_REQUEST['ploopi_op']))
                     ORDER BY module_label, label
                 ";
 
+                $array_modules = array();
                 $result_object = ploopi\db::get()->query($select_object);
                 while ($fields_object = ploopi\db::get()->fetchrow($result_object))
                 {
+                    // Seulement les modules où l'utilisateur détient au moins une action
+                    if ($fields_object['module_id'] != _PLOOPI_MODULE_SYSTEM && !ploopi\acl::isactionallowed(-1, $_SESSION['ploopi']['workspaceid'], $fields_object['module_id'])) continue;
+
                     if ($fields_object['select_label'] != '')
                     {
                         $select = "select {$fields_object['select_id']}, {$fields_object['select_label']} from {$fields_object['select_table']} where id_module = {$fields_object['module_id']} ORDER BY {$fields_object['select_label']}";

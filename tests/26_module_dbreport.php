@@ -40,7 +40,9 @@ exiger_instance();
 
 amorcer_socle();
 
-$strModule = PLOOPI_ROOT.'/modules/dbreport';
+// Chemin du module déployé : constante, qu'aucune variable de la suite ne peut écraser
+// (une boucle réutilisait $strModule, et le nettoyage final visait un autre chemin)
+define('DBR_MODULE', PLOOPI_ROOT.'/modules/dbreport');
 $booDeploye = false;
 
 define('DBR_LOGIN', 'dbreport_lecteur');
@@ -55,7 +57,7 @@ define('DBR_QB', 7603);        // requete de l'instance B
  */
 function dbr_nettoyer()
 {
-    global $strModule, $booDeploye;
+    global $booDeploye;
 
     $strUsers = "SELECT id FROM ploopi_user WHERE login IN ('".DBR_LOGIN."', '".DBR_LOGIN_GEST."')";
     $strRoles = "SELECT id FROM ploopi_role WHERE label = 'dbreport_tests'";
@@ -77,7 +79,7 @@ function dbr_nettoyer()
         try { db()->query($strRequete); } catch (Throwable $objErreur) { }
     }
 
-    if ($booDeploye && is_dir($strModule)) exec('rm -rf '.escapeshellarg($strModule));
+    if ($booDeploye && is_dir(DBR_MODULE)) exec('rm -rf '.escapeshellarg(DBR_MODULE));
 }
 
 register_shutdown_function('dbr_nettoyer');
@@ -85,10 +87,17 @@ dbr_nettoyer();
 
 T::section('Deploiement du module');
 
-if (!is_dir($strModule))
+if (!is_dir(DBR_MODULE))
 {
-    exec('cp -r '.escapeshellarg(PLOOPI_ROOT.'/install/dbreport/files').' '.escapeshellarg($strModule), $arrSortie, $intRc);
+    exec('cp -r '.escapeshellarg(PLOOPI_ROOT.'/install/dbreport/files').' '.escapeshellarg(DBR_MODULE), $arrSortie, $intRc);
     $booDeploye = ($intRc === 0);
+}
+else
+{
+    // Copie déjà présente (déploiement du développeur, ou reste d'un passage interrompu) :
+    // conservée, mais signalée si elle diffère de la source, que la suite ne teste alors pas
+    exec('diff -rq '.escapeshellarg(PLOOPI_ROOT.'/install/dbreport/files').' '.escapeshellarg(DBR_MODULE).' 2>&1', $arrEcarts, $intRc);
+    T::chk('modules/dbreport conforme à install/dbreport/files', $intRc === 0, $intRc === 0 ? '' : 'copie existante différente, testée telle quelle (la supprimer pour tester la source) : '.implode(' ; ', array_slice($arrEcarts, 0, 3)));
 }
 
 foreach (preg_split('/;\s*\n/', file_get_contents(PLOOPI_ROOT.'/install/dbreport/structure.sql')) as $strRequete)
@@ -118,7 +127,7 @@ function dbr_instance($strLabel)
 
 $intModA = dbr_instance('dbreport');
 $intModB = dbr_instance('dbreport_autre');
-T::vrai('deux instances du module', is_dir($strModule.'/include') && $intModA > 0 && $intModB > 0);
+T::vrai('deux instances du module', is_dir(DBR_MODULE.'/include') && $intModA > 0 && $intModB > 0);
 
 /**
  * Cree un utilisateur sans role, rattache a l'espace 2.
@@ -334,5 +343,134 @@ $strEnv = dbr_connecter(DBR_LOGIN, $intModA);
 $arrRep = dbr_op($strEnv, 'dbreport_chart_generate', '&dbreport_query_id='.DBR_QA);
 T::contient('le graphique est rendu', 'dbreport_chart.render(', $arrRep['body']);
 T::contientpas('sans page d\'erreur', 'Une erreur est survenue', $arrRep['body']);
+
+T::section('Intitulé contenant un backtick ou un %');
+// L'intitulé (alias) était placé entre backticks sans échappement : un ` le refermait,
+// et un %s consommait un paramètre de la clause SELECT
+dbr_reinitialiser();
+$intChamp = (int)db()->query('SELECT id FROM ploopi_mod_dbreport_queryfield WHERE id_query = '.DBR_QA)->fetch_row()[0];
+db()->query("UPDATE ploopi_mod_dbreport_queryfield SET label = 'Taux `%s` x', sort = 'asc' WHERE id = {$intChamp}");
+$strEnv = dbr_connecter(DBR_LOGIN, $intModA);
+$arrRep = dbr_op($strEnv, 'dbreport_query_exec', '&dbreport_query_id='.DBR_QA.'&dbreport_format=html');
+T::contient('l\'intitulé est restitué intact en en-tête', '<th>Taux `%s` x</th>', $arrRep['body']);
+T::contientpas('sans page d\'erreur', 'Une erreur est survenue', $arrRep['body']);
+
+T::section('Jointure RIGHT');
+// L'écran propose RIGHT, mais query_select n'avait pas d'add_rightjoin() : erreur fatale à l'exécution
+dbr_reinitialiser();
+db()->query('DELETE FROM ploopi_mod_dbreport_queryrelation');
+db()->query("INSERT INTO ploopi_mod_dbreport_querytable (tablename, alias, id_module_type, id_query) VALUES ('ploopi_workspace', '', 1, ".DBR_QA.")");
+db()->query("INSERT INTO ploopi_mod_dbreport_queryrelation (id_query, tablename_src, fieldname_src, tablename_dest, fieldname_dest, type_join, active)
+             VALUES (".DBR_QA.", 'ploopi_user', 'id', 'ploopi_workspace', 'id', 'right', 1)");
+$strEnv = dbr_connecter(DBR_LOGIN, $intModA);
+$arrRep = dbr_op($strEnv, 'dbreport_query_exec', '&dbreport_query_id='.DBR_QA.'&dbreport_format=html');
+T::contient('le rapport est rendu', '<th>', $arrRep['body']);
+T::contientpas('sans erreur fatale', 'add_rightjoin', $arrRep['body']);
+db()->query('DELETE FROM ploopi_mod_dbreport_queryrelation');
+
+T::section('Tables et champs limités à la métabase');
+/**
+ * Seuls les tables et champs proposés par les formulaires sont acceptés, la
+ * modification d'un champ ne change ni sa table ni son nom, et l'exécution ignore
+ * les autres.
+ */
+dbr_reinitialiser();
+db()->query('DELETE FROM ploopi_mod_dbreport_query_module_type');
+db()->query('INSERT INTO ploopi_mod_dbreport_query_module_type (id_query, id_module_type) VALUES ('.DBR_QA.', 1)');
+$fnDbrChamps = function($strWhere) { return (int)db()->query('SELECT COUNT(*) FROM ploopi_mod_dbreport_queryfield WHERE id_query = '.DBR_QA.' AND '.$strWhere)->fetch_row()[0]; };
+$fnDbrTables = function($strWhere) { return (int)db()->query('SELECT COUNT(*) FROM ploopi_mod_dbreport_querytable WHERE id_query = '.DBR_QA.' AND '.$strWhere)->fetch_row()[0]; };
+$strEnv = dbr_connecter(DBR_LOGIN_GEST, $intModA);
+
+dbr_op($strEnv, 'dbreport_queryfield_save', '&dbreport_query_id='.DBR_QA, http_build_query(array('dbreport_fieldnames' => array('ploopi_user.email'))));
+T::eq('témoin : un champ visible d\'une table de la requête s\'ajoute', 1, $fnDbrChamps("fieldname = 'email'"));
+dbr_op($strEnv, 'dbreport_queryfield_save', '&dbreport_query_id='.DBR_QA, http_build_query(array('dbreport_fieldnames' => array('ploopi_user.password', 'ploopi_user.id', 'ploopi_workspace.label', 'ploopi_user.login`, (SELECT 1) AS `x', 'ploopi_user'))));
+T::eq('ni un champ absent de la métabase (mot de passe)', 0, $fnDbrChamps("fieldname = 'password'"));
+T::eq('ni un champ masqué (identifiant)', 0, $fnDbrChamps("fieldname = 'id'"));
+T::eq('ni un champ d\'une table hors de la requête', 0, $fnDbrChamps("tablename = 'ploopi_workspace'"));
+T::eq('ni un nom forgé', 2, $fnDbrChamps('1'));
+
+dbr_op($strEnv, 'dbreport_querytable_save', '&dbreport_query_id='.DBR_QA, http_build_query(array('dbreport_tablenames' => array('ploopi_session', 'ploopi_user` UNION SELECT 1 -- ', 'ploopi_inexistante'))));
+T::eq('une table masquée, forgée ou inconnue ne s\'ajoute pas', 1, $fnDbrTables('1'));
+dbr_op($strEnv, 'dbreport_querytable_save', '&dbreport_query_id='.DBR_QA, http_build_query(array('dbreport_tablenames' => array('ploopi_workspace'))));
+T::eq('témoin : une table visible d\'un module de la requête s\'ajoute', 1, $fnDbrTables("tablename = 'ploopi_workspace'"));
+
+$intChamp = (int)db()->query('SELECT id FROM ploopi_mod_dbreport_queryfield WHERE id_query = '.DBR_QA." AND fieldname = 'login'")->fetch_row()[0];
+dbr_op($strEnv, 'dbreport_queryfield_save', '&dbreport_query_id='.DBR_QA.'&dbreport_queryfield_id='.$intChamp, http_build_query(array('dbreport_queryfield_label' => 'Identifiant', 'dbreport_queryfield_fieldname' => 'password', 'dbreport_queryfield_tablename' => 'ploopi_session', 'dbreport_queryfield_id_query' => DBR_QB)));
+$arrChamp = db()->query("SELECT label, tablename, fieldname, id_query FROM ploopi_mod_dbreport_queryfield WHERE id = {$intChamp}")->fetch_assoc();
+T::eq('témoin : la modification d\'un champ change son intitulé', 'Identifiant', $arrChamp['label']);
+T::eq('mais ni sa table, ni son nom, ni sa requête', array('ploopi_user', 'login', DBR_QA), array($arrChamp['tablename'], $arrChamp['fieldname'], (int)$arrChamp['id_query']));
+
+// Rapport enregistré avant le contrôle : champ hors métabase et table masquée ignorés à l'exécution
+db()->query("INSERT INTO ploopi_mod_dbreport_queryfield (tablename, id_module_type, fieldname, label, function, function_group, visible, sort,
+                                                         criteria, type_criteria, `or`, type_or, intervals, operation, position, series, id_query)
+             VALUES ('ploopi_user', 1, 'password', 'champcache', '', '', 1, '', '', '', '', '', '', '', 9, 0, ".DBR_QA.")");
+db()->query("INSERT INTO ploopi_mod_dbreport_querytable (tablename, alias, id_module_type, id_query) VALUES ('ploopi_session', '', 1, ".DBR_QA.")");
+$arrRep = dbr_op($strEnv, 'dbreport_query_exec', '&dbreport_query_id='.DBR_QA.'&dbreport_format=sql');
+T::contient('témoin : le rapport s\'exécute', 'Identifiant', $arrRep['body']);
+T::contientpas('un champ hors métabase enregistré (mot de passe) est ignoré', 'champcache', $arrRep['body']);
+T::contientpas('une table masquée enregistrée est ignorée', 'ploopi_session', $arrRep['body']);
+
+// « Fonction appliquée » : seules les expressions admises s'enregistrent
+$fnDbrFonction = function() use ($intChamp) { return db()->query("SELECT function, function_group FROM ploopi_mod_dbreport_queryfield WHERE id = {$intChamp}")->fetch_row(); };
+dbr_op($strEnv, 'dbreport_queryfield_save', '&dbreport_query_id='.DBR_QA.'&dbreport_queryfield_id='.$intChamp, http_build_query(array('dbreport_queryfield_function' => "DATE_FORMAT(FROM_UNIXTIME(%), '%Y')", 'dbreport_queryfield_function_group' => 'UPPER( % )')));
+T::eq('témoin : une fonction proposée s\'enregistre', array("DATE_FORMAT(FROM_UNIXTIME(%), '%Y')", 'UPPER( % )'), $fnDbrFonction());
+foreach (array('(SELECT password FROM ploopi_user LIMIT 1)', 'CONCAT(%, ploopi_user.password)', 'CONCAT(%, `password`)', '% /*', 'SLEEP(5)') as $strFonction)
+{
+    $arrRep = dbr_op($strEnv, 'dbreport_queryfield_save', '&dbreport_query_id='.DBR_QA.'&dbreport_queryfield_id='.$intChamp, http_build_query(array('dbreport_queryfield_function' => $strFonction, 'dbreport_queryfield_function_group' => $strFonction)));
+    T::eq("fonction « {$strFonction} » refusée, l'ancienne conservée", array("DATE_FORMAT(FROM_UNIXTIME(%), '%Y')", 'UPPER( % )'), $fnDbrFonction());
+}
+db()->query("UPDATE ploopi_mod_dbreport_queryfield SET function = '(SELECT password FROM ploopi_user LIMIT 1)', function_group = '', type_criteria = '= 1 OR 1=1 OR 1 =', criteria = 'x' WHERE id = {$intChamp}");
+$arrRep = dbr_op($strEnv, 'dbreport_query_exec', '&dbreport_query_id='.DBR_QA.'&dbreport_format=sql');
+T::contient('témoin : le rapport enregistré s\'exécute', 'Identifiant', $arrRep['body']);
+T::contientpas('une fonction forgée enregistrée est ignorée', 'SELECT password', $arrRep['body']);
+T::contientpas('un opérateur de critère forgé est ignoré', '1=1', $arrRep['body']);
+db()->query('DELETE FROM ploopi_mod_dbreport_query_module_type');
+
+T::section('Webservice : code et adresse IP');
+/**
+ * Le code était comparé avec == (« 1e3 » == « 1000 ») et, cache actif, le résultat
+ * mis en cache pour un client autorisé était servi avant tout contrôle de code ou
+ * d'IP. L'instance de test n'active pas le cache : seul l'ordre du code le garantit.
+ */
+dbr_reinitialiser();
+db()->query("UPDATE ploopi_mod_dbreport_query SET ws_id = 'wstest', ws_activated = 1, ws_code = '1000' WHERE id = ".DBR_QA);
+H::reset();
+$strWs = '/webservice.php?module=dbreport&dbreport_ws_id=wstest&format=sql';
+T::contient('temoin : le bon code donne la requete', 'champ'.DBR_QA, H::req($strWs.'&code=1000')['body']);
+T::contientpas('un code numeriquement egal est refuse', 'champ'.DBR_QA, H::req($strWs.'&code=1e3')['body']);
+T::contientpas('sans code, refuse', 'champ'.DBR_QA, H::req($strWs)['body']);
+
+db()->query("UPDATE ploopi_mod_dbreport_query SET ws_code = '', ws_ip = '10.255.255.254' WHERE id = ".DBR_QA);
+$arrRep = H::req($strWs);
+T::contient('une IP non autorisee est refusee', 'Adresse IP invalide', $arrRep['body']);
+T::contientpas('sans rien livrer', 'champ'.DBR_QA, $arrRep['body']);
+
+T::contient('un identifiant inconnu est signale', 'incorrect', H::req('/webservice.php?module=dbreport&format=sql&dbreport_ws_id=inconnu')['body']);
+db()->query("UPDATE ploopi_mod_dbreport_query SET ws_id = '', ws_activated = 0, ws_ip = '' WHERE id = ".DBR_QA);
+
+T::section('Webservice : validation du nom de module');
+/**
+ * include/webservice.php : le nom de module doit être un identifiant [a-z0-9_],
+ * sinon ploopi\system::kill().
+ */
+dbr_reinitialiser();
+db()->query("UPDATE ploopi_mod_dbreport_query SET ws_id = 'wstest', ws_activated = 1, ws_code = '1000' WHERE id = ".DBR_QA);
+H::reset();
+$strWs = '/webservice.php?module=dbreport&dbreport_ws_id=wstest&format=sql';
+T::contient('temoin : un nom de module valide fonctionne', 'champ'.DBR_QA, H::req($strWs.'&code=1000')['body']);
+// Traversées : le webservice.php visé existe hors de modules/, il ne doit plus être inclus
+foreach (array('../install/doc/files', 'doc/../dbreport', '..') as $strModuleWs)
+{
+    $arrRep = H::req('/webservice.php?module='.urlencode($strModuleWs).'&dbreport_ws_id=wstest&format=sql&code=1000');
+    T::chk("traversée « {$strModuleWs} » refusée, rien exécuté", strpos($arrRep['body'], 'champ'.DBR_QA) === false, 'le webservice hors modules/ a répondu : '.substr($arrRep['body'], 0, 120));
+}
+// Autres formes refusées par le filtre [a-z0-9_]
+foreach (array('DBREPORT', 'dbreport.', '.dbreport', 'dbreport ', 'dbreport/../dbreport') as $strModuleWs)
+{
+    $arrRep = H::req('/webservice.php?module='.urlencode($strModuleWs).'&dbreport_ws_id=wstest&format=sql&code=1000');
+    T::chk("forme « {$strModuleWs} » refusée", strpos($arrRep['body'], 'champ'.DBR_QA) === false, 'le webservice a répondu : '.substr($arrRep['body'], 0, 120));
+}
+T::chk('module vide refusé', strpos(H::req('/webservice.php?dbreport_ws_id=wstest&format=sql&code=1000')['body'], 'champ'.DBR_QA) === false);
+db()->query("UPDATE ploopi_mod_dbreport_query SET ws_id = '', ws_activated = 0, ws_ip = '' WHERE id = ".DBR_QA);
 
 exit(T::bilan('26_module_dbreport'));

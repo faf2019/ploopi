@@ -1,3 +1,10 @@
+== Module DIRECTORY - version 2.5.13 =================================================
+
+2026-10-21  Ovensia <stephane@ovensia.fr>
+
+* Sécurité : directory_choose_photo, directory_send_photo et directory_delete_photo
+  exigent directory_contact_ismodifiable() sur le contact visé.
+
 == Module DIRECTORY - version 2.5.12 ===================================================
 
 2026-10-11  Ovensia <stephane@ovensia.fr>

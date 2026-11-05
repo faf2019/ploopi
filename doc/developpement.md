@@ -12,7 +12,7 @@ Pour installer Ploopi en production, voir [`deploiement.md`](deploiement.md).
 ## 1. Prérequis
 
 - **PHP 8.1 à 8.5** en ligne de commande, avec les extensions `mysqli`, `gd`, `zip`,
-  `curl`, `xml`, `mbstring`, `openssl` et `memcached` (exigées par `composer.json`) ;
+  `curl`, `xml`, `mbstring`, `openssl`, `sockets` et `memcached` (exigées par `composer.json`) ;
 - **Composer** ;
 - **MariaDB** (10.11 en CI) ou MySQL ;
 - `git`.
@@ -171,6 +171,15 @@ maintenir les modules historiques.
 
 ## 5. Tests
 
+Pour construire des filtres SQL avec `query_*` (groupes AND/OR, listes typées,
+valeurs nulles et DISTINCT), voir [le guide des requêtes](query.md).
+
+L’API REST en lecture seule, son tableau de bord système et son extension à un
+module métier sont décrits dans [API Ploopi v1](api.md). Les événements RabbitMQ et leurs producteurs/consommateurs sont décrits dans
+[Événements métier](events.md). Les nouvelles tables
+doivent utiliser InnoDB ; la migration du socle 2.1.0 convertit les tables
+existantes, y compris celles des modules métiers.
+
 Le dépôt a sa propre suite, sans dépendance Composer : `tests/bootstrap.php` en est le
 harnais, chaque suite est un fichier `tests/NN_nom.php`. Le détail est dans
 [`tests/README.md`](../tests/README.md).
@@ -309,7 +318,9 @@ Le détail est dans `doc/reference.md` § 8 (sécurité) et § 14 (code). L'esse
 - Notation hongroise des variables (`$str…`, `$int…`, `$arr…`, `$obj…`, `$boo…`).
 - URL internes toujours par `ploopi\crypt::urlencode()` / `queryencode()` (jeton
   anti-CSRF) ; affichage toujours par `ploopi\str::htmlentities()` ; SQL toujours par
-  les marqueurs `%s` / `%d` du constructeur de requêtes ou `addslashes()`.
+  les marqueurs `%s` / `%d` du constructeur de requêtes (`%%` pour un `%` littéral),
+  ou `addslashes()` hors constructeur : une donnée concaténée dans une clause du
+  constructeur, même échappée, y verrait ses `%s` lus comme des marqueurs.
 - Droits contrôlés en tête de **chaque** action, y compris les `op_*`.
 - **Pas de nouvelle dépendance** (Composer ou bibliothèque embarquée) sans vérifier sa
   licence : elle doit être compatible avec la GPL (voir [`licence.md`](licence.md) § 4).

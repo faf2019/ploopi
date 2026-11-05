@@ -68,7 +68,7 @@ $objDb->query(
         `id_workspace` int(10) unsigned default '0',
         `id_user` int(10) unsigned default '0',
         PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8"
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 );
 
 $objDb->query("DROP TABLE IF EXISTS `{$strTableCle}`");
@@ -78,7 +78,7 @@ $objDb->query(
         `id_b` int(10) unsigned NOT NULL default '0',
         `valeur` varchar(50) default '',
         PRIMARY KEY (`id_a`, `id_b`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8"
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
 );
 
 T::section('construction');
@@ -254,6 +254,160 @@ $objPiege->fields['titre'] = "x'); DROP TABLE `{$strTable}`; --";
 $objPiege->save();
 $arrCompte = $objDb->fetchrow($objDb->query("SELECT COUNT(*) AS nb FROM `{$strTable}`"));
 T::vrai('la table a survécu à la charge d\'injection', $arrCompte !== false && $arrCompte['nb'] > 0, 'la table a disparu');
+
+T::section('mise à jour partielle');
+$objPartiel = new article();
+$objPartiel->init_description();
+$objPartiel->fields['titre'] = 'Partiel';
+$objPartiel->fields['contenu'] = 'Contenu initial';
+$intIdPartiel = $objPartiel->save();
+
+$objEdite = new article();
+$objEdite->open($intIdPartiel);
+// Modification concurrente d'une autre colonne, entre la lecture et l'enregistrement.
+$objDb->query("UPDATE `{$strTable}` SET `contenu` = 'Contenu concurrent' WHERE `id` = ".intval($intIdPartiel));
+$objEdite->fields['titre'] = 'Partiel modifié';
+$objEdite->save();
+T::vrai('seul le champ modifié est écrit', strpos($objEdite->getsql(), '`contenu`') === false && strpos($objEdite->getsql(), '`titre`') !== false, $objEdite->getsql());
+$objVerif = new article();
+$objVerif->open($intIdPartiel);
+T::eq('le champ modifié est persisté', 'Partiel modifié', $objVerif->fields['titre']);
+T::eq('la modification concurrente d\'un autre champ est conservée', 'Contenu concurrent', $objVerif->fields['contenu']);
+
+$objVerif->fields['note'] = intval($objVerif->fields['note']);
+$strSqlAvant = $objVerif->getsql();
+$objVerif->save();
+T::eq('sans modification réelle (7 / \'7\'), aucune requête n\'est émise', $strSqlAvant, $objVerif->getsql());
+
+$objVerif->fields['note'] = 9;
+$objVerif->save();
+$objVerif->fields['note'] = 9;
+$objVerif->fields['titre'] = 'Après un premier save()';
+$objVerif->save();
+T::vrai('après un save(), un champ déjà enregistré n\'est pas réécrit', strpos($objVerif->getsql(), '`note`') === false && strpos($objVerif->getsql(), '`titre`') !== false, $objVerif->getsql());
+
+$objVerif->fields['note'] = 0;
+$objVerif->save();
+$objVerif->fields['note'] = false;
+$objVerif->fields['titre'] = 'Booléen inchangé';
+$objVerif->save();
+T::vrai('false / 0 : un booléen égal à la valeur en base n\'est pas réécrit', strpos($objVerif->getsql(), '`note`') === false && strpos($objVerif->getsql(), '`titre`') !== false, $objVerif->getsql());
+$objVerif->fields['note'] = true;
+$objVerif->save();
+T::vrai('true / 0 : un booléen différent est écrit', strpos($objVerif->getsql(), '`note` = 1') !== false, $objVerif->getsql());
+
+$arrLigne = $objDb->fetchrow($objDb->query("SELECT a.*, 'jointure' AS `colonne_jointe` FROM `{$strTable}` a WHERE a.`id` = ".intval($intIdPartiel)));
+$objJoint = new article();
+$objJoint->open_row($arrLigne);
+$objJoint->fields['titre'] = 'Depuis une jointure';
+$objJoint->save();
+T::vrai('open_row() sur une jointure : la colonne étrangère n\'est pas écrite', strpos($objJoint->getsql(), 'colonne_jointe') === false, $objJoint->getsql());
+$objVerif = new article();
+$objVerif->open($intIdPartiel);
+T::eq('open_row() sur une jointure : la mise à jour aboutit', 'Depuis une jointure', $objVerif->fields['titre']);
+
+$objManuel = new article();
+$objManuel->fields = array('id' => $intIdPartiel, 'titre' => 'Rempli à la main');
+$objManuel->new = false;
+$objManuel->save();
+$objVerif = new article();
+$objVerif->open($intIdPartiel);
+T::eq('objet rempli à la main (new = false) : écrit en entier, par sa clé', 'Rempli à la main', $objVerif->fields['titre']);
+
+T::section('échec d\'insertion');
+$objEchec = new article();
+$objEchec->init_description();
+$objEchec->fields['note'] = 'pas un entier';
+$mixRetour = @$objEchec->save();
+T::chk('mode strict : l\'insertion est refusée', $mixRetour === false, var_export($mixRetour, true));
+if ($mixRetour === false) T::eq('après un échec, l\'objet reste neuf', true, $objEchec->isnew());
+
+T::section('clé de l\'enregistrement');
+$objA = new article();
+$objA->init_description();
+$objA->fields['titre'] = 'A';
+$intIdA = $objA->save();
+$objB = new article();
+$objB->init_description();
+$objB->fields['titre'] = 'B';
+$intIdB = $objB->save();
+
+$objSuppr = new article();
+$objSuppr->open($intIdA);
+$objSuppr->fields['id'] = $intIdB;
+$objSuppr->delete();
+T::eq('delete() vise la clé lue, pas un champ de clé modifié', false, (new article())->open($intIdA));
+T::eq('l\'autre enregistrement est intact', true, (new article())->open($intIdB));
+
+$objReutil = new article();
+$objReutil->open($intIdB);
+$objReutil->open(999999);
+T::eq('un objet réutilisé redevient neuf si la clé est absente', true, $objReutil->isnew());
+
+$objCle = new article();
+$objCle->open($intIdB);
+$intNouvelleCle = $intIdB + 1000;
+$objCle->fields['id'] = $intNouvelleCle;
+$objCle->save();
+$objCle->fields['titre'] = 'B déplacé';
+$objCle->save();
+$objVerif = new article();
+T::eq('après un changement de clé, les mises à jour suivent la nouvelle clé', true, $objVerif->open($intNouvelleCle) && $objVerif->fields['titre'] == 'B déplacé');
+
+T::section('cache de DESCRIBE');
+$objDesc = new article();
+$objDesc->init_description();
+$objDb->query("ALTER TABLE `{$strTable}` ADD `ajoutee` varchar(20) NOT NULL default 'neuve'");
+$objDesc = new article();
+$objDesc->init_description();
+T::eq('une colonne ajoutée par ALTER TABLE est vue par init_description()', 'neuve', isset($objDesc->fields['ajoutee']) ? $objDesc->fields['ajoutee'] : null);
+
+// Ordre précédé d'un commentaire, comme le premier ordre d'un fichier découpé par split_sql().
+$objDb->query("-- mise à jour\n/* commentaire */ ALTER TABLE `{$strTable}` ADD `apres_commentaire` varchar(20) NOT NULL default 'vue'");
+$objDesc = new article();
+$objDesc->init_description();
+T::eq('un ALTER précédé de commentaires vide le cache', 'vue', isset($objDesc->fields['apres_commentaire']) ? $objDesc->fields['apres_commentaire'] : null);
+
+$objDb->multiplequeries("SELECT 1; ALTER TABLE `{$strTable}` ADD `apres_point_virgule` varchar(20) NOT NULL default 'vue'");
+$objDesc = new article();
+$objDesc->init_description();
+T::eq('multiplequeries() : un ALTER après « ; » sur la même ligne vide le cache', 'vue', isset($objDesc->fields['apres_point_virgule']) ? $objDesc->fields['apres_point_virgule'] : null);
+
+$objCache = new ReflectionProperty('ploopi\data_object', 'arrDescriptions');
+$objCache->setAccessible(true);
+$objDb->query("INSERT INTO `{$strTable}` SET `titre` = 'x', `contenu` = 'Ligne 1\nCreate et Drop en début de ligne'");
+T::vrai('un contenu dont une ligne commence par « Create » ne vide pas le cache', !empty($objCache->getValue()));
+
+T::section('injection par les noms de champs');
+/**
+ * Régression surveillée : les clés de setvalues($_POST, 'prefixe_') deviennent des noms
+ * de colonnes, et security::filtervar() ne nettoie que les valeurs. Une clé contenant un
+ * accent grave sortait du nom de colonne et injectait du SQL dans l'INSERT ou l'UPDATE.
+ */
+$strClePiege = "titre`=(SELECT/**/'pirate'),`contenu";
+$objPiege = new article();
+$objPiege->init_description();
+$objPiege->setvalues(array('art_'.$strClePiege => 'x', 'art_titre' => 'Saisie normale'), 'art_');
+T::eq('setvalues() ignore une clé qui ne peut pas être un nom de colonne', false, isset($objPiege->fields[$strClePiege]));
+T::eq('setvalues() reprend les clés valides', 'Saisie normale', $objPiege->fields['titre']);
+
+$objPiege->fields[$strClePiege] = 'x';
+T::vrai('un nom de champ affecté directement reste un seul identifiant', strpos($objPiege->dump(), '`titre``=(SELECT/**/\'pirate\'),``contenu`') !== false, $objPiege->dump());
+/**
+ * Même charge exécutée pour de bon, avec exfiltration de ploopi_user : setvalues()
+ * l'écarte désormais, on l'affecte donc directement dans fields pour éprouver
+ * l'échappement du nom de colonne lui-même. La clé reste une colonne (inexistante),
+ * l'injection ne s'exécute pas.
+ */
+$objPiege = new article();
+$objPiege->init_description();
+$strClePiege = "titre`=(SELECT(GROUP_CONCAT(login,0x3a,password))FROM(ploopi_user)),`contenu";
+$objPiege->fields[$strClePiege] = 'injic';
+$objPiege->fields['titre'] = 'normal';
+@$objPiege->save();
+T::contient('le backtick du nom de champ est doublé dans le SQL', '``=(SELECT', $objPiege->getsql());
+$arrDerniere = $objDb->fetchrow($objDb->query("SELECT titre FROM `{$strTable}` ORDER BY id DESC LIMIT 1"));
+T::contientpas('aucun identifiant exfiltré dans la colonne titre', ':', $arrDerniere === false ? '' : (string)$arrDerniere['titre']);
 
 $objDb->query("DROP TABLE IF EXISTS `{$strTable}`");
 $objDb->query("DROP TABLE IF EXISTS `{$strTableCle}`");

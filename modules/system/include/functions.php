@@ -703,23 +703,6 @@ function system_group_isattachable($intGroupId)
     return isset($workspaces['list'][$workspaceid]['groups'][$intGroupId]);
 }
 
-function system_getallworkspaces($idworkspacetop = '')
-{
-    $db = ploopi\db::get();
-    $workspaces = array();
-
-    $select = "SELECT * FROM ploopi_workspace WHERE system = 0 ORDER BY label";
-    $result = $db->query($select);
-    while ($fields = $db->fetchrow($result))
-    {
-        $workspaces[$fields['id_workspace']][$fields['id']] = $fields;
-    }
-
-    $ar = array();
-    $depth = system_getallworkspacesrec($ar, $workspaces, _PLOOPI_SYSTEMGROUP, 0, $idworkspacetop);
-    return($ar);
-}
-
 function system_updateparents($idgroup=0,$parents='',$depth=1)
 {
     $db = ploopi\db::get();
@@ -1119,6 +1102,106 @@ function system_display_array($arrColumns, $arrValues, $strId, $arrOptions = arr
 {
     if (ploopi\skin::get()->version() < 4) ploopi\skin::get()->display_array($arrColumns, $arrValues, $strId, $arrOptions);
     else echo ploopi\system\ui::table($arrColumns, $arrValues, $arrOptions + array('limit' => 50, 'empty' => _SYSTEM_TABLE_EMPTY));
+}
+
+/**
+ * En-tête d'un écran de system : titre et sous-titre de ploopi4 ; rien sous les gabarits
+ * historiques, dont la barre d'outils de system porte déjà le titre.
+ *
+ * @param string $strTitle titre (texte)
+ * @param string $strSubtitle sous-titre (texte)
+ * @return string code html
+ */
+
+function system_pagehead($strTitle, $strSubtitle = '')
+{
+    return ploopi\skin::get()->version() < 4 ? '' : ploopi\system\ui::pagehead($strTitle, $strSubtitle);
+}
+
+/**
+ * Sous-écrans d'un écran de system : contrôle segmenté de ploopi4, onglets historiques
+ * (create_tabs) sinon.
+ *
+ * @param array $arrItems clé => array(libellé (texte), url non chiffrée, icône ploopi4)
+ * @param string $strCurrent clé du sous-écran courant
+ * @param string $strLabel libellé d'accessibilité (ploopi4)
+ * @return string code html
+ */
+
+function system_tabs($arrItems, $strCurrent, $strLabel = '')
+{
+    if (ploopi\skin::get()->version() >= 4)
+    {
+        foreach($arrItems as $strKey => $arrItem) $arrItems[$strKey][1] = ploopi\crypt::urlencode($arrItem[1]);
+        return ploopi\system\ui::seg($arrItems, $strCurrent, $strLabel);
+    }
+
+    $arrTabs = array();
+    foreach($arrItems as $strKey => $arrItem) $arrTabs[$strKey] = array('title' => ploopi\str::htmlentities($arrItem[0]), 'url' => $arrItem[1]);
+    return ploopi\skin::get()->create_tabs($arrTabs, $strCurrent);
+}
+
+/**
+ * Message d'un écran de system : encadré de ploopi4, texte en évidence (classes error /
+ * information des gabarits historiques) sinon.
+ *
+ * @param string $strType info, success, warning, danger
+ * @param string $strHtml contenu (html déjà échappé)
+ * @return string code html
+ */
+
+function system_message($strType, $strHtml)
+{
+    if (ploopi\skin::get()->version() >= 4) return ploopi\system\ui::callout($strType, $strHtml);
+
+    return '<div class="'.(in_array($strType, array('warning', 'danger')) ? 'error' : 'information').'" style="padding:4px;" role="'.($strType == 'danger' ? 'alert' : 'status').'">'.$strHtml.'</div>';
+}
+
+/**
+ * Bouton d'un écran de system : ploopi\system\ui::button() sous ploopi4, bouton historique
+ * (flatbutton) sinon. La confirmation passe dans les deux cas par data-p4-confirm
+ * (include/p4.js, chargé par ploopi\system\ui::script()).
+ *
+ * @param array $arrBtn options de ploopi\system\ui::button() (label, href chiffrée, type, confirm…)
+ * @return string code html
+ */
+
+function system_button($arrBtn)
+{
+    if (ploopi\skin::get()->version() >= 4) return ploopi\system\ui::button($arrBtn);
+
+    $strConfirm = empty($arrBtn['confirm']) ? '' : ' data-p4-confirm="'.ploopi\system\ui::e($arrBtn['confirm']).'"';
+    if (!empty($arrBtn['href'])) return '<a class="flatbutton" href="'.ploopi\system\ui::e($arrBtn['href']).'"'.$strConfirm.'>'.ploopi\system\ui::e($arrBtn['label']).'</a>';
+
+    return '<input type="'.(isset($arrBtn['type']) && $arrBtn['type'] == 'button' ? 'button' : 'submit').'" class="flatbutton" value="'.ploopi\system\ui::e($arrBtn['label']).'"'.$strConfirm.' />';
+}
+
+/**
+ * Compteurs d'un écran de system : tuiles de ploopi4, ligne de texte dans un bloc sinon.
+ *
+ * @param array $arrStats liste de array(libellé, valeur, icône ploopi4)
+ * @return string code html
+ */
+
+function system_stats($arrStats)
+{
+    if (ploopi\skin::get()->version() >= 4) return ploopi\system\ui::stats($arrStats);
+
+    $arrTexts = array();
+    foreach($arrStats as $arrStat) $arrTexts[] = ploopi\system\ui::e($arrStat[0]).' : <strong>'.ploopi\system\ui::e($arrStat[1]).'</strong>';
+    return ploopi\skin::get()->open_simplebloc().'<div style="padding:4px;">'.implode(' — ', $arrTexts).'</div>'.ploopi\skin::get()->close_simplebloc();
+}
+
+/**
+ * Marge intérieure d'un contenu libre placé dans system_open_bloc() : la carte de ploopi4
+ * a la sienne, le bloc historique non.
+ *
+ * @return string attribut html (vide sous ploopi4)
+ */
+
+function system_bloc_padding()
+{
+    return ploopi\skin::get()->version() < 4 ? ' style="padding:4px;"' : '';
 }
 
 /**

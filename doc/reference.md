@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `ploopi_mod_news2_entry` (
   `id_workspace` int(10) unsigned default '0',   -- ★ cloisonnement par espace
   `id_user`      int(10) unsigned default '0',   -- ★ auteur
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
 `data_object::setuwm()` renseigne d'un coup ces trois champs depuis la session.
@@ -510,11 +510,11 @@ class news2 extends ploopi\data_object {
 |---|---|
 | `open(...$ids)` | Charge un enregistrement (retourne `false` si absent). Positionne `$this->fields`. |
 | `open_row($row)` | Hydrate depuis une ligne de recordset (sans requête) |
-| `init_description()` | Initialise `fields` depuis `DESCRIBE` (valeurs par défaut) — **à faire avant un insert**. La clé auto-incrémentée est laissée à `null`, c'est le serveur qui la renseigne |
-| `setvalues($array, $prefix = '')` | Alimente depuis `$_POST` avec dépréfixage (`news_title` → `title`) |
+| `init_description()` | Initialise `fields` depuis `DESCRIBE` (valeurs par défaut) — **à faire avant un insert**. La clé auto-incrémentée est laissée à `null`, c'est le serveur qui la renseigne. Un `DESCRIBE` par table et par requête (cache vidé à chaque `ALTER`/`CREATE`/`DROP`/`RENAME`) |
+| `setvalues($array, $prefix = '')` | Alimente depuis `$_POST` avec dépréfixage (`news_title` → `title`) ; une clé hors `[A-Za-z0-9_]` est ignorée |
 | `setuwm()` | Renseigne `id_user`, `id_workspace`, `id_module` depuis la session |
-| `save()` | INSERT ou UPDATE selon `$this->new` ; retourne la clé |
-| `delete()` | DELETE |
+| `save()` | INSERT ou UPDATE selon `$this->new` ; retourne la clé, ou `false` si l'INSERT échoue (l'objet reste neuf). L'UPDATE n'écrit que les champs modifiés depuis `open()`/`open_row()`/le dernier `save()`, et rien sans modification |
+| `delete()` | DELETE de l'enregistrement **lu** : la clé de `open()` prime sur un champ de clé modifié dans `fields` |
 | `isnew()` / `gethash()` / `getsql()` / `gettablename()` | Divers |
 | `totemplate($tpl, $prefix)` | Exporte les champs en variables de template (MAJUSCULES) |
 | `static get_collection()` / `get_objects()` | Collection (`data_object_collection`) |
@@ -553,7 +553,10 @@ $objRs->numrows(); $objRs->getarray(); $objRs->getjson(); $objRs->getcsv();
 ```
 
 **Le 2e argument de `add_where()`/`add_select()`/`add_having()` est échappé** (format `sprintf` :
-`%s` chaîne échappée, `%d` entier). C'est la façon sûre d'injecter des valeurs.
+`%s` chaîne échappée, `%d` entier, `%%` signe `%` littéral). C'est la façon sûre d'injecter des valeurs.
+Ne jamais concaténer une donnée dans la clause elle-même, même passée par `addslashes()` : un `%s`
+qu'elle contiendrait serait lu comme marqueur et consommerait le paramètre suivant (injection).
+Un `%` littéral écrit dans la clause (`LIKE 'a%'`, `DATE_FORMAT`) se double : `%%`.
 
 Accès direct :
 
@@ -1027,14 +1030,17 @@ _PLOOPI_PATHDATA / _PATHCACHE / _PATHSHARED          Chemins physiques
 _PLOOPI_USE_CACHE                                    Cache interne
 _PLOOPI_MAXFILESIZE                                  Taille max d'upload
 _PLOOPI_SESSIONTIME / _SESSION_HANDLER               php | db | file | memcached
+_PLOOPI_SESSION_MAXLIFETIME                          Durée absolue d'une session connectée (12 h)
 _PLOOPI_MEMCACHED_SERVER / _PORT
 _PLOOPI_ELASTICSEARCH_HOST
 _PLOOPI_DISPLAY_ERRORS / _ERROR_REPORTING / _MAIL_ERRORS / _ADMINMAIL
 _PLOOPI_TOKEN / _TOKENTIME / _TOKENMAX               Jetons anti-CSRF
 _PLOOPI_FRONTOFFICE / _FRONTOFFICE_REWRITERULE       Frontoffice et règles de rewriting
 _PLOOPI_DEFAULT_TEMPLATE
-_PLOOPI_USE_COMPLEXE_PASSWORD / _COMPLEXE_PASSWORD_MIN_SIZE
-_PLOOPI_MAX_CONNECTION_ATTEMPS / _JAILING_TIME
+_PLOOPI_USE_COMPLEXE_PASSWORD / _COMPLEXE_PASSWORD_MIN_SIZE   Longueur minimale toujours exigée
+_PLOOPI_MAX_CONNECTION_ATTEMPS / _JAILING_TIME       Suspension d'un compte après échecs
+_PLOOPI_MAX_CONNECTION_ATTEMPS_IP                    Échecs admis par adresse (30)
+_PLOOPI_TRUSTED_PROXIES                              Frontaux dont X-Forwarded-For est cru (vide)
 _PLOOPI_ACTIVELOG
 ```
 
@@ -1147,5 +1153,5 @@ install/monmodule/
 | Insert sans `init_description()` | `save()` n'insère que les champs présents dans `fields` ; sans `init_description()` les colonnes NOT NULL sans défaut échouent |
 | `_PLOOPI_MODULE_SYSTEM` = 1 | L'instance système est traitée à part dans de nombreux tests |
 | Deux jeux de fichiers | `install/<mod>/files/` (source) vs `modules/<mod>/` (déployé, non versionné) : modifier la source |
-| CSP stricte | Sur les écrans prêts (`csp::strict()`), un `onclick`, une URL `javascript:` ou un `<script>` sans nonce dans la page la fait retomber sur la politique de base (journal : « CSP stricte non appliquée ») ; dans un fragment AJAX chargé par un tel écran, il est **bloqué**. Les fenêtres de `ploopi4` (`create_popup`) sont rendues déplaçables par `js/popup.js` |
+| CSP stricte | Sur les écrans prêts (`csp::strict()`), un `onclick`, une URL `javascript:` ou un `<script>` sans nonce dans la page est **bloqué** : la politique stricte s'applique quand même (journal : « CSP stricte appliquée malgré un script en ligne »), comme dans un fragment AJAX chargé par un tel écran. Les fenêtres de `ploopi4` (`create_popup`) sont rendues déplaçables par `js/popup.js` |
 | `*.sh`, `modules/`, `*.sql` gitignorés | Les ajouts dans ces chemins nécessitent `git add -f` |
