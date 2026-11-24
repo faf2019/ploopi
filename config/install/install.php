@@ -194,7 +194,8 @@ if (!empty($_POST)) {
 
         switch($S['saved']['HASH_ALGO']) {
             case 'bcrypt':
-                $hash = password_hash("{$S['saved']['SECRETKEY']}/{$S['saved']['ADMIN_LOGIN']}/{$S['saved']['ADMIN_PASSWORD']}", PASSWORD_BCRYPT);
+                // Même entrée que user::generate_hash() : bcrypt ne lit que 72 octets
+                $hash = password_hash(ploopi\user::bcrypt_input($S['saved']['ADMIN_PASSWORD'], $S['saved']['ADMIN_LOGIN'], $S['saved']['SECRETKEY']), PASSWORD_BCRYPT);
             break;
 
             default:

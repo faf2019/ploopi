@@ -6,7 +6,20 @@ http://www.ploopi.org/
 
 ## Avertissement
 
-Version de développement
+**Branche 1.10 en fin de vie.** Elle ne reçoit plus que des correctifs critiques et ne contient
+pas les correctifs de sécurité de la version 2 (jeton anti-CSRF des opérations, contrôle d'accès
+de la GED et des modules, injections SQL, désérialisation de cookie, XSS du wiki…). Migrer vers la
+version 2 (branche `master`).
+
+Correctifs critiques reportés :
+
+- Mots de passe : bcrypt ne lisant que 72 octets, un identifiant long pouvait ouvrir la session
+  avec n'importe quel mot de passe. Les empreintes sont recalculées à la connexion ; les comptes
+  dont l'ancienne empreinte ne contient pas au moins 8 caractères du mot de passe doivent recevoir
+  un nouveau mot de passe.
+- Documents : dépôt et lecture rétablis sans stockage S3.
+- `.htaccess_modele` : plus de `session.upload_progress` (erreur 500 depuis PHP 8.2.36 avec les
+  gestionnaires de session `db` et `file`).
 
 ## Installation
 
