@@ -90,7 +90,9 @@ switch($op)
             if ($_POST['usernewpass'] != '')
             {
                 // Vérification de l'ancien mot de passe
-                if (strcmp($user->fields['password'], user::generate_hash($_POST['useroldpass'], $user->fields['login'])) == 0)
+                // bcrypt tire un sel à chaque empreinte : comparer deux empreintes ne
+                // réussissait jamais, il faut vérifier le mot de passe contre l'empreinte
+                if (user::password_verify($_POST['useroldpass'], $user->fields['login'], $user->fields['password']))
                 {
                     // Mots de passes équivalents
                     if ($_POST['usernewpass'] == $_POST['usernewpass_confirm'])

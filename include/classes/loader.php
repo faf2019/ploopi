@@ -690,6 +690,15 @@ abstract class loader
                     $objUser->save();
                 }
 
+                /**
+                 * Empreinte bcrypt de l'ancienne forme, que bcrypt tronquait à 72 octets
+                 * (user::bcrypt_input) : recalculée dès la première connexion réussie. La
+                 * date de dernier changement de mot de passe n'est pas touchée.
+                 */
+                if ($booPasswordOk && empty($fields['password_force_update']) && user::password_needs_rehash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login'], $fields['password'])) {
+                    $db->query("UPDATE ploopi_user SET password = '".$db->addslashes(user::generate_hash($_REQUEST['ploopi_password'], $_REQUEST['ploopi_login']))."' WHERE id = ".(int)$fields['id']);
+                }
+
                 // Vérification de la validité du compte
                 if (!empty($fields['date_expire']))
                 {
