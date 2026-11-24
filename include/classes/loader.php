@@ -227,23 +227,39 @@ abstract class loader
              * Gestionnaire interne de session
              */
 
-            session_set_save_handler(
-                array(__NAMESPACE__.'\session', 'open'),
-                array(__NAMESPACE__.'\session', 'close'),
-                array(__NAMESPACE__.'\session', 'read'),
-                array(__NAMESPACE__.'\session', 'write'),
-                array(__NAMESPACE__.'\session', 'destroy'),
-                array(__NAMESPACE__.'\session', 'gc')
-            );
+            /**
+             * Depuis le 19 novembre 2026 (PHP 8.2.36, 8.3.37, 8.4.28, 8.5.13), PHP refuse
+             * ces appels quand session.upload_progress.enabled est actif (ancien .htaccess,
+             * php.ini) : la session reste alors au gestionnaire de PHP plutôt que de couper
+             * toute page sur une erreur fatale.
+             */
+            try {
+                session_set_save_handler(
+                    array(__NAMESPACE__.'\session', 'open'),
+                    array(__NAMESPACE__.'\session', 'close'),
+                    array(__NAMESPACE__.'\session', 'read'),
+                    array(__NAMESPACE__.'\session', 'write'),
+                    array(__NAMESPACE__.'\session', 'destroy'),
+                    array(__NAMESPACE__.'\session', 'gc')
+                );
 
-            session_name('ploopi'.hash('sha256', _PLOOPI_BASEPATH));
+                session_name('ploopi'.hash('sha256', _PLOOPI_BASEPATH));
+            }
+            catch (\Error $e) {
+                error::syslog(LOG_ERR, "Gestionnaire de session « "._PLOOPI_SESSION_HANDLER." » refusé par PHP ({$e->getMessage()}) : sessions laissées au gestionnaire de PHP. Mettre session.upload_progress.enabled à Off (.htaccess, php.ini)");
+            }
         }
 
         /**
          * Démarrage de la session
          */
-        ini_set('session.gc_probability', 10);
-        ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
+        try {
+            ini_set('session.gc_probability', 10);
+            ini_set('session.gc_maxlifetime', _PLOOPI_SESSIONTIME);
+        }
+        catch (\Error $e) {
+            error::syslog(LOG_WARNING, "Durée des sessions non réglée, refusée par PHP ({$e->getMessage()}) : mettre session.upload_progress.enabled à Off (.htaccess, php.ini)");
+        }
         session_start();
 
         /**
