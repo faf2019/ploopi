@@ -124,16 +124,27 @@ abstract class ploopi_loader
              */
             include_once './include/classes/session.php' ;
 
-            session_set_save_handler(
-                array('ploopi_session', 'open'),
-                array('ploopi_session', 'close'),
-                array('ploopi_session', 'read'),
-                array('ploopi_session', 'write'),
-                array('ploopi_session', 'destroy'),
-                array('ploopi_session', 'gc')
-            );
+            /**
+             * Depuis le 19 novembre 2026 (PHP 8.2.36, 8.3.37, 8.4.28, 8.5.13), PHP refuse
+             * ces appels quand session.upload_progress.enabled est actif (ancien .htaccess,
+             * php.ini) : la session reste alors au gestionnaire de PHP plutôt que de couper
+             * toute page sur une erreur fatale.
+             */
+            try {
+                session_set_save_handler(
+                    array('ploopi_session', 'open'),
+                    array('ploopi_session', 'close'),
+                    array('ploopi_session', 'read'),
+                    array('ploopi_session', 'write'),
+                    array('ploopi_session', 'destroy'),
+                    array('ploopi_session', 'gc')
+                );
 
-            session_name('ploopi'.md5(_PLOOPI_BASEPATH));
+                session_name('ploopi'.md5(_PLOOPI_BASEPATH));
+            }
+            catch (\Error $e) {
+                ploopi_syslog(LOG_ERR, "Gestionnaire de session « "._PLOOPI_SESSION_HANDLER." » refusé par PHP ({$e->getMessage()}) : sessions laissées au gestionnaire de PHP. Mettre session.upload_progress.enabled à Off (.htaccess, php.ini)");
+            }
         }
 
         /**
