@@ -88,7 +88,7 @@ switch($ploopi_op)
                     if (file_exists($documentsfile->getfilepath())) ploopi\fs::downloadfile($documentsfile->getfilepath(),$documentsfile->fields['name'], false, $attachement);
                 } else{
                     // S3 download
-                    if (ploopi\fs_s3::file_exists($documentsfile->getfilepath())) ploopi\fs_s3::downloadfile($documentsfile->fields['s3_bucket'], $documentsfile->fields['id'],$documentsfile->fields['name'], false, $attachement);
+                    if (ploopi\fs_s3::file_exists($documentsfile->getfilepath())) ploopi\fs_s3::downloadfile($documentsfile->fields['s3_bucket'], "{$documentsfile->fields['id']}.{$documentsfile->fields['extension']}", $documentsfile->fields['name'], false, $attachement);
                 }
             }
         }
@@ -136,7 +136,7 @@ switch($ploopi_op)
                         $zip_filename = $documentsfile->fields['name'] . '.zip';
                         $tmp_filepath = $documentsfile->fields['name'] . '.tmp';
 
-                        ploopi\fs_s3::downloadfilelocally($documentsfile->fields['s3_bucket'], $documentsfile->fields['id'],$tmp_filepath);
+                        ploopi\fs_s3::downloadfilelocally($documentsfile->fields['s3_bucket'], "{$documentsfile->fields['id']}.{$documentsfile->fields['extension']}", $tmp_filepath);
 
 
                         $objZip = new ZipArchive();

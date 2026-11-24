@@ -158,11 +158,11 @@ class documentsfile extends data_object
                 }else{
                     // TODO S3 checks
                         if ($this->tmpfile != 'none') {
-                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                            if (!ploopi\fs_s3::upload($this->fields['s3_bucket'],"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         }
 
                         if ($this->file != 'none') {
-                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->file)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                            if (!ploopi\fs_s3::upload($this->fields['s3_bucket'],"{$this->fields['id']}.{$this->fields['extension']}", $this->file)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         }
 
                 }
@@ -201,7 +201,7 @@ class documentsfile extends data_object
                     } else {
                         // TODO S3 checks
                         if ($this->tmpfile != 'none'){
-                            if (!ploopi\fs_s3::upload(_PLOOPI_S3_BUCKET,"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
+                            if (!ploopi\fs_s3::upload($this->fields['s3_bucket'],"{$this->fields['id']}.{$this->fields['extension']}", $this->tmpfile)) $error = _PLOOPI_ERROR_FILENOTWRITABLE;
                         } else $error = _PLOOPI_ERROR_EMPTYFILE;
                     }
                 }
@@ -301,11 +301,12 @@ class documentsfile extends data_object
      */
     public function getfilepath()
     {
-        if(!isset($this->fields['s3_bucket'])){
+        // s3_bucket est NOT NULL DEFAULT '' : isset() était toujours vrai, d'où "s3:///<id>.<ext>" sans S3
+        if (empty($this->fields['s3_bucket'])) {
             return $this->getbasepath()._PLOOPI_SEP."{$this->fields['id']}.{$this->fields['extension']}";
-        } else{
-            return 's3://'.$this->fields['s3_bucket'] . '/' . $this->fields['id'] . '.' . $this->fields['extension'];
         }
+
+        return 's3://'.$this->fields['s3_bucket'] . '/' . $this->fields['id'] . '.' . $this->fields['extension'];
     }
 
     /**
