@@ -152,9 +152,10 @@ switch($http_host)
 
         /**
          * Choix du gestionnaire de session
-         * php : gestionnaire natif de php, indispensable pour l'usage de la fonctionnalité d'upload_progress intégrée à php 5.4
-         * db : gestionnaire propre à Ploopi qui stocke les sessions en base de données. Incompatible avec upload_progress.
-         * file : gestionnaire propre à Ploopi qui stock les sessions dans le dossier "data". Incompatible avec upload_progress.
+         * php : gestionnaire natif de php
+         * db : gestionnaire propre à Ploopi qui stocke les sessions en base de données.
+         * file : gestionnaire propre à Ploopi qui stocke les sessions dans le dossier "data".
+         * db et file exigent session.upload_progress.enabled à Off (défaut de PHP) : sinon erreur fatale au démarrage.
          */
 
         define ('_PLOOPI_SESSION_HANDLER', '<SESSION_HANDLER>'); // php, db, file
